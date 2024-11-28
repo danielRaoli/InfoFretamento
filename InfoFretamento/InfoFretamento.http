@@ -1,0 +1,6 @@
+@InfoFretamento_HostAddress = http://localhost:5293
+
+GET {{InfoFretamento_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
