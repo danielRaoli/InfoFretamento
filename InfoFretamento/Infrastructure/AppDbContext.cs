@@ -25,16 +25,26 @@ namespace InfoFretamento.Infrastructure
 
                 entity.OwnsOne(v => v.Rota, rota =>
                 {
-                    rota.Property(r => r.Saida.UfSaida).HasMaxLength(2);
-                    rota.Property(r => r.Saida.CidadeDestino).HasMaxLength(50);
-                    rota.Property(r => r.Saida.CidadeSaida).HasMaxLength(50);
-                    rota.Property(r => r.Retorno.UfSaida).HasMaxLength(2);
-                    rota.Property(r => r.Retorno.CidadeDestino).HasMaxLength(50);
-                    rota.Property(r => r.Retorno.CidadeSaida).HasMaxLength(50);
+                    // Configurando Saida
+                    rota.OwnsOne(r => r.Saida, saida =>
+                    {
+                        saida.Property(s => s.UfSaida).HasMaxLength(2);
+                        saida.Property(s => s.CidadeDestino).HasMaxLength(50);
+                        saida.Property(s => s.CidadeSaida).HasMaxLength(50);
+                    });
+
+                    // Configurando Retorno
+                    rota.OwnsOne(r => r.Retorno, retorno =>
+                    {
+                        retorno.Property(r => r.UfSaida).HasMaxLength(2);
+                        retorno.Property(r => r.CidadeDestino).HasMaxLength(50);
+                        retorno.Property(r => r.CidadeSaida).HasMaxLength(50);
+                    });
+
                 });
             });
             // Configuração de tipos complexos com Owned Types
-            
+
 
 
             modelBuilder.Entity<Pessoa>(entity =>
@@ -57,6 +67,13 @@ namespace InfoFretamento.Infrastructure
                     endereco.Property(e => e.Bairro).HasMaxLength(100);
                     endereco.Property(e => e.Numero).HasMaxLength(10);
                 });
+
+                entity.OwnsOne(p => p.Documento, documento =>
+                {
+                    documento.Property(d => d.Documento).HasMaxLength(20);
+                    documento.Property(d => d.Tipo).HasMaxLength(20);
+                });
+
             });
 
             modelBuilder.Entity<Habilitacao>(entity =>
@@ -157,7 +174,7 @@ namespace InfoFretamento.Infrastructure
         public DbSet<GrupoDeCusto> GruposDeCusto { get; set; }
         public DbSet<Documento> Documentos { get; set; }
         public DbSet<Habilitacao> Habilitacoes { get; set; }
-
+        public DbSet<User> Users { get; set; }
 
 
     }
