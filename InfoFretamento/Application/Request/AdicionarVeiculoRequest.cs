@@ -14,8 +14,9 @@ namespace InfoFretamento.Application.Request
         public int CapacidadeTank { get; set; }
         public int Ano { get; set; }
         public string Tipo { get; set; } = string.Empty;
+        public string Modelo { get; set; } = string.Empty;
         public int QuantidadePoltronas { get; set; }
-        public List<Despesa> Despesas { get; set; } = [];
+       
 
         public Veiculo ToEntity()
         {
@@ -31,7 +32,8 @@ namespace InfoFretamento.Application.Request
                 Uf = this.Uf,
                 Carroceria = this.Carroceria,
                 QuantidadePoltronas = this.QuantidadePoltronas,
-                LocalEmplacado = this.LocalEmplacado
+                LocalEmplacado = this.LocalEmplacado,
+                Modelo = this.Modelo,   
             };
         }
     }

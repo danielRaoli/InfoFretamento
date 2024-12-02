@@ -66,6 +66,7 @@ namespace InfoFretamento.Infrastructure
                     endereco.Property(e => e.Rua).HasMaxLength(150);
                     endereco.Property(e => e.Bairro).HasMaxLength(100);
                     endereco.Property(e => e.Numero).HasMaxLength(10);
+                    endereco.Property(e => e.Uf).HasMaxLength(2);
                 });
 
                 entity.OwnsOne(p => p.Documento, documento =>
@@ -83,7 +84,7 @@ namespace InfoFretamento.Infrastructure
                       .HasMaxLength(10);
 
                 entity.Property(v => v.Placa)
-                      .HasMaxLength(7)   // Exemplo: "ABC1234"
+                      .HasMaxLength(8)   // Exemplo: "ABC-1234"
                       .IsRequired();
 
                 entity.Property(v => v.Marca)
@@ -96,27 +97,27 @@ namespace InfoFretamento.Infrastructure
                       .HasMaxLength(50);
 
                 entity.Property(v => v.Tipo)
-                      .HasMaxLength(30);
+                      .HasMaxLength(40);
+
+                entity.Property(v => v.Modelo).HasMaxLength(50);
 
                 entity.Property(v => v.QuantidadePoltronas)
-                      .HasDefaultValue(0);  // Definir um valor padrão
+                      .HasDefaultValue(0); 
             });
 
             modelBuilder.Entity<Despesa>(entity =>
             {
                 entity.Property(d => d.DestinoPagamento)
-                      .HasMaxLength(100)    // Limitar a 100 caracteres
-                      .IsRequired();        // Campo obrigatório
-
+                      .HasMaxLength(100);   
+                  
                 entity.Property(d => d.NumeroDocumento)
-                      .HasMaxLength(20)     // Limitar a 20 caracteres (ex: "12345-67890")
-                      .IsRequired();        // Documento obrigatório
+                      .HasMaxLength(20);   
 
                 entity.Property(d => d.ValorTotal)
-                      .HasColumnType("decimal(18,2)");  // Definir precisão e escala para valores monetários
+                      .HasColumnType("decimal(18,2)");  
 
                 entity.Property(d => d.DataLancamento)
-                      .HasColumnType("date");           // Armazenar apenas a data
+                      .HasColumnType("date");           
 
                 entity.Property(d => d.DataCompra)
                       .HasColumnType("date");
@@ -125,17 +126,17 @@ namespace InfoFretamento.Infrastructure
                       .HasColumnType("date");
 
                 entity.Property(d => d.Pago)
-                      .HasDefaultValue(false);          // Valor padrão como não pago
+                      .HasDefaultValue(false);         
 
-                entity.HasOne(d => d.GrupoCusto)        // Relacionamento com GrupoDeCusto
+                entity.HasOne(d => d.GrupoCusto)       
                       .WithMany(g => g.Despesas)
                       .HasForeignKey(d => d.GrupoCustoId)
-                      .OnDelete(DeleteBehavior.Restrict); // Evita exclusão em cascata
+                      .OnDelete(DeleteBehavior.Restrict); 
 
-                entity.HasOne(d => d.Veiculo)           // Relacionamento com Veiculo
-                      .WithMany(v => v.Despesas)                       // Defina se Veiculo terá uma coleção de despesas
+                entity.HasOne(d => d.Veiculo)          
+                      .WithMany(v => v.Despesas)                      
                       .HasForeignKey(d => d.VeiculoId)
-                      .OnDelete(DeleteBehavior.Restrict); // Evita exclusão em cascata
+                      .OnDelete(DeleteBehavior.Restrict); 
             });
 
             // Configuração para GrupoDeCusto
@@ -148,7 +149,7 @@ namespace InfoFretamento.Infrastructure
 
             modelBuilder.Entity<Motorista>(entity =>
             {
-                entity.Property(e => e.Cpf).HasMaxLength(14).IsRequired();
+                entity.Property(e => e.Cpf).HasMaxLength(14);
                 entity.Property(e => e.DataNascimento).HasColumnType("date");
                 entity.OwnsOne(e => e.Habilitacao, habilitacao =>
                 {

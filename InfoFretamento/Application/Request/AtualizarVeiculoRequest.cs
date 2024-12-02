@@ -15,8 +15,8 @@ namespace InfoFretamento.Application.Request
         public int CapacidadeTank { get; set; }
         public int Ano { get; set; }
         public string Tipo { get; set; } = string.Empty;
+        public string Modelo { get; set; } = string.Empty;
         public int QuantidadePoltronas { get; set; }
-        public List<Despesa> Despesas { get; set; } = [];
 
         public override Veiculo UpdateEntity(Veiculo entity)
         {
@@ -31,6 +31,7 @@ namespace InfoFretamento.Application.Request
             entity.Carroceria = this.Carroceria;
             entity.QuantidadePoltronas = this.QuantidadePoltronas;
             entity.LocalEmplacado = this.LocalEmplacado;
+            entity.Modelo = this.Modelo;    
             return entity;
         }
     }

@@ -14,6 +14,7 @@
         public int Ano { get; set; }
         public string Tipo { get; set; } = string.Empty;
         public int QuantidadePoltronas { get; set; }
+        public string Modelo { get; set; } = string.Empty;
         public List<Despesa> Despesas { get; set; } = [];
 
     }

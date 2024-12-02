@@ -4,7 +4,7 @@ using InfoFretamento.Domain.Repositories;
 
 namespace InfoFretamento.Application.Services
 {
-    public class DepesaService(IBaseRepository<Despesa> repository) : BaseService<Despesa, AdicionarDespesaRequest, AtualizarDespesaRequest>(repository)
+    public class DespesaService(IBaseRepository<Despesa> repository) : BaseService<Despesa, AdicionarDespesaRequest, AtualizarDespesaRequest>(repository)
     {
 
     }
