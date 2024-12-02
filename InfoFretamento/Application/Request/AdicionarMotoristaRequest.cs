@@ -2,7 +2,7 @@
 
 namespace InfoFretamento.Application.Request
 {
-    public record AdicionarMotoristaRequest : BasePessoaRequest
+    public record AdicionarMotoristaRequest : BasePessoaRequest, IBaseAdicionarRequest<Motorista>
     {
         public Habilitacao Habilitacao { get; set; }
 

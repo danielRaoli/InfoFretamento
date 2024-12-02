@@ -2,7 +2,7 @@
 
 namespace InfoFretamento.Application.Request
 {
-    public abstract record BasePessoaRequest
+    public abstract record BaseAtualizarPessoaRequest<TEntity> : BaseAtualizarRequest<TEntity>
     {
         public string Nome { get; set; } = string.Empty;
         public DateTime DataNascimento { get; set; }
@@ -10,7 +10,5 @@ namespace InfoFretamento.Application.Request
         public DocumentoCliente Documento { get; set; }
         public Endereco Endereco { get; set; }
         public string Cpf { get; set; } = string.Empty;
-
     }
-
 }

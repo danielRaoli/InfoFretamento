@@ -5,10 +5,8 @@ using InfoFretamento.Domain.Repositories;
 
 namespace InfoFretamento.Application.Services
 {
-    public class ClienteService(IBaseRepository<Cliente> repository) : BaseService<Cliente, AdicionarClienteRequest, AtualizarClienteRequest>(repository)
+    public class VeiculoService(IBaseRepository<Veiculo> repository) : BaseService<Veiculo, AdicionarVeiculoRequest, AtualizarVeiculoRequest>(repository)
     {
        
-
-
     }
 }

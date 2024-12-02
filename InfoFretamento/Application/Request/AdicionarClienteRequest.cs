@@ -3,10 +3,10 @@ using System.Runtime.CompilerServices;
 
 namespace InfoFretamento.Application.Request
 {
-    public record AdicionarClienteRequest : BasePessoaRequest
+    public record AdicionarClienteRequest : BasePessoaRequest, IBaseAdicionarRequest<Cliente>
     {
-        public string TipoPessoa { get; set; } = string.Empty;
+        public string Tipo { get; set; } = string.Empty;
 
-        public Cliente ToEntity() => new Cliente { Nome = this.Nome, DataNascimento = this.DataNascimento, Telefone = this.Telefone, Documento = this.Documento, Endereco = this.Endereco, Cpf = this.Cpf, TipoPessoa = this.TipoPessoa };
+        public Cliente ToEntity() => new Cliente { Nome = this.Nome, DataNascimento = this.DataNascimento, Telefone = this.Telefone, Documento = this.Documento, Endereco = this.Endereco, Cpf = this.Cpf, Tipo = this.Tipo };
     }
 }

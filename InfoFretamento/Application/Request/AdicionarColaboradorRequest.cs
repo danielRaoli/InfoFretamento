@@ -2,7 +2,7 @@
 
 namespace InfoFretamento.Application.Request
 {
-    public record AdicionarColaboradorRequest : BasePessoaRequest
+    public record AdicionarColaboradorRequest : BasePessoaRequest, IBaseAdicionarRequest<Colaborador>
     {
         public  Colaborador ToEntity() => new Colaborador
         {

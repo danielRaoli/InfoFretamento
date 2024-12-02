@@ -76,22 +76,6 @@ namespace InfoFretamento.Infrastructure
 
             });
 
-            modelBuilder.Entity<Habilitacao>(entity =>
-            {
-                entity.Property(h => h.Protocolo)
-                      .HasMaxLength(20)
-                      .IsRequired();
-
-                entity.Property(h => h.Categoria)
-                      .HasMaxLength(3);  // Exemplo: "A", "B", "AB", etc.
-
-                entity.Property(h => h.Cidade)
-                      .HasMaxLength(100);
-
-                entity.Property(h => h.Uf)
-                      .HasMaxLength(2)   // Exemplo: "SP", "RJ"
-                      .IsFixedLength();
-            });
 
             modelBuilder.Entity<Veiculo>(entity =>
             {
@@ -162,6 +146,21 @@ namespace InfoFretamento.Infrastructure
                       .IsRequired();        // Nome obrigatório
             });
 
+            modelBuilder.Entity<Motorista>(entity =>
+            {
+                entity.Property(e => e.Cpf).HasMaxLength(14).IsRequired();
+                entity.Property(e => e.DataNascimento).HasColumnType("date");
+                entity.OwnsOne(e => e.Habilitacao, habilitacao =>
+                {
+                    habilitacao.Property(h => h.Vencimento).HasColumnType("date");
+                    habilitacao.Property(h => h.Uf).HasMaxLength(2);
+                    habilitacao.Property(h => h.Categoria).HasMaxLength(3);
+                    habilitacao.Property(h => h.Protocolo).HasMaxLength(20);
+                });
+
+                entity.Property(e => e.Telefone).HasMaxLength(15);
+            });
+
         }
 
         public DbSet<Cliente> Clientes { get; set; }
@@ -173,7 +172,6 @@ namespace InfoFretamento.Infrastructure
         public DbSet<Despesa> Despesas { get; set; }
         public DbSet<GrupoDeCusto> GruposDeCusto { get; set; }
         public DbSet<Documento> Documentos { get; set; }
-        public DbSet<Habilitacao> Habilitacoes { get; set; }
         public DbSet<User> Users { get; set; }
 
 

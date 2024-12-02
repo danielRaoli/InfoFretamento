@@ -1,9 +1,21 @@
-﻿namespace InfoFretamento.Application.Request
+﻿using InfoFretamento.Domain.Entities;
+
+namespace InfoFretamento.Application.Request
 {
 
-    public record AtualizarColaboradorRequest : BasePessoaRequest
+    public record AtualizarColaboradorRequest : BaseAtualizarPessoaRequest<Colaborador>
     {
-        public int Id { get; set; }
+        public override Colaborador UpdateEntity(Colaborador entity)
+        {
+            entity.Nome = this.Nome;
+            entity.DataNascimento = this.DataNascimento;
+            entity.Telefone = this.Telefone;
+            entity.Documento = this.Documento;
+            entity.Endereco = this.Endereco;
+            entity.Cpf = this.Cpf;
+
+            return entity;
+        }
     }
 
 }

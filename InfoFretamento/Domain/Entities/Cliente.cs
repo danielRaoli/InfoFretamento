@@ -2,7 +2,7 @@
 {
     public class Cliente : Pessoa
     {
-        public string TipoPessoa { get; set; } = string.Empty;
+        public string Tipo { get; set; } = string.Empty;
         public List<Viagem> Viagens { get; set; } = [];
     }
 }
