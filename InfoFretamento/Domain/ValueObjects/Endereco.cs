@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace InfoFretamento.Domain.Entities
+namespace InfoFretamento.Domain.ValueObjects
 {
     [Owned]
     public class Endereco

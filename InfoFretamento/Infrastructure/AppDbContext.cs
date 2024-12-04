@@ -11,17 +11,16 @@ namespace InfoFretamento.Infrastructure
         {
             modelBuilder.Entity<Viagem>(entity =>
             {
-                entity.Property(v => v.HorarioSaida)
-                      .HasMaxLength(5);   // Exemplo: "08:30"
 
-                entity.Property(v => v.HorarioRetorno)
-                      .HasMaxLength(5);
 
                 entity.Property(v => v.TipoServico)
                       .HasMaxLength(50);
 
                 entity.Property(v => v.Status)
                       .HasMaxLength(20);
+
+                entity.Property(v => v.ValorPago).HasColumnType("decimal(18,2)");
+                entity.Property(v => v.ValorContratado).HasColumnType("decimal(18,2)");
 
                 entity.OwnsOne(v => v.Rota, rota =>
                 {
@@ -41,6 +40,28 @@ namespace InfoFretamento.Infrastructure
                         retorno.Property(r => r.CidadeSaida).HasMaxLength(50);
                     });
 
+                });
+
+                entity.OwnsOne(v => v.DataHorarioChegada, horario =>
+                {
+                    horario.Property(h => h.Hora).HasMaxLength(5);
+                    horario.Property(h => h.Data).HasColumnType("date");
+                });
+
+                entity.OwnsOne(v => v.DataHorarioRetorno, horario =>
+                {
+                    horario.Property(h => h.Hora).HasMaxLength(5);
+                    horario.Property(h => h.Data).HasColumnType("date");
+                });
+                entity.OwnsOne(v => v.DataHorarioSaida, horario =>
+                {
+                    horario.Property(h => h.Hora).HasMaxLength(5);
+                    horario.Property(h => h.Data).HasColumnType("date");
+                });
+                entity.OwnsOne(v => v.DataHorarioSaidaGaragem, horario =>
+                {
+                    horario.Property(h => h.Hora).HasMaxLength(5);
+                    horario.Property(h => h.Data).HasColumnType("date");
                 });
             });
             // Configuração de tipos complexos com Owned Types
@@ -102,22 +123,22 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(v => v.Modelo).HasMaxLength(50);
 
                 entity.Property(v => v.QuantidadePoltronas)
-                      .HasDefaultValue(0); 
+                      .HasDefaultValue(0);
             });
 
             modelBuilder.Entity<Despesa>(entity =>
             {
                 entity.Property(d => d.DestinoPagamento)
-                      .HasMaxLength(100);   
-                  
+                      .HasMaxLength(100);
+
                 entity.Property(d => d.NumeroDocumento)
-                      .HasMaxLength(20);   
+                      .HasMaxLength(20);
 
                 entity.Property(d => d.ValorTotal)
-                      .HasColumnType("decimal(18,2)");  
+                      .HasColumnType("decimal(18,2)");
 
                 entity.Property(d => d.DataLancamento)
-                      .HasColumnType("date");           
+                      .HasColumnType("date");
 
                 entity.Property(d => d.DataCompra)
                       .HasColumnType("date");
@@ -126,17 +147,29 @@ namespace InfoFretamento.Infrastructure
                       .HasColumnType("date");
 
                 entity.Property(d => d.Pago)
-                      .HasDefaultValue(false);         
+                      .HasDefaultValue(false);
 
-                entity.HasOne(d => d.GrupoCusto)       
+                entity.HasOne(d => d.GrupoCusto)
                       .WithMany(g => g.Despesas)
                       .HasForeignKey(d => d.GrupoCustoId)
-                      .OnDelete(DeleteBehavior.Restrict); 
+                      .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(d => d.Veiculo)          
-                      .WithMany(v => v.Despesas)                      
+                entity.HasOne(d => d.Veiculo)
+                      .WithMany(v => v.Despesas)
                       .HasForeignKey(d => d.VeiculoId)
-                      .OnDelete(DeleteBehavior.Restrict); 
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(d => d.Viagem)
+                      .WithMany(v => v.Despesas)
+                      .HasForeignKey(d => d.ViagemId)
+                      .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(d => d.ValorTotal)
+                     .HasColumnType("decimal(18,2)");
+                entity.Property(d => d.PagamentoParcial)
+                        .HasColumnType("decimal(18,2)");
+                entity.Property(e => e.FormaPagamento).HasMaxLength(10);
+
             });
 
             // Configuração para GrupoDeCusto
@@ -162,6 +195,22 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(e => e.Telefone).HasMaxLength(15);
             });
 
+            modelBuilder.Entity<Manutencao>(entity =>
+            {
+                entity.Property(e => e.Tipo).HasMaxLength(20);
+                entity.HasOne(e => e.Servico).WithMany(s => s.Manutencoes).HasForeignKey(e => e.ServicoId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(e => e.Veiculo).WithMany(v => v.Manutencoes).HasForeignKey(e => e.VeiculoId).OnDelete(DeleteBehavior.Restrict);
+                entity.Property(e => e.DataVencimento).HasColumnType("date");
+                entity.Property(e => e.DataLancamento).HasColumnType("date");
+                entity.Property(e => e.DataRealizada).HasColumnType("date");
+                entity.Property(e => e.Custo).HasColumnType("decimamal(18,2)");
+            });
+
+            modelBuilder.Entity<Servico>(entity =>
+            {
+                entity.Property(e => e.NomeServico).HasMaxLength(50);
+            });
+
         }
 
         public DbSet<Cliente> Clientes { get; set; }
@@ -174,6 +223,8 @@ namespace InfoFretamento.Infrastructure
         public DbSet<GrupoDeCusto> GruposDeCusto { get; set; }
         public DbSet<Documento> Documentos { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Manutencao> Manutencoes { get; set; }
+        public DbSet<Servico> Servicos { get; set; }
 
 
     }

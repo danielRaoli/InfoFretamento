@@ -12,8 +12,13 @@
         public int ResponsavelId { get; set; }
         public Veiculo Veiculo{ get; set; }
         public int VeiculoId { get; set; }
+        public int ViagemId { get; set; }
+        public Viagem Viagem { get; set; }
         public DateTime Vencimento { get; set; }
         public bool Pago { get; set; }
         public decimal ValorTotal { get; set; }
+        public decimal PagamentoParcial { get; set; }
+        public string FormaPagamento { get; set; } = string.Empty;
+
     }
 }

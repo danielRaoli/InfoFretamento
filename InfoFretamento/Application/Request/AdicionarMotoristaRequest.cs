@@ -1,4 +1,5 @@
 ﻿using InfoFretamento.Domain.Entities;
+using InfoFretamento.Domain.ValueObjects;
 
 namespace InfoFretamento.Application.Request
 {

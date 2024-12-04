@@ -1,4 +1,6 @@
-﻿namespace InfoFretamento.Domain.Entities
+﻿using InfoFretamento.Domain.ValueObjects;
+
+namespace InfoFretamento.Domain.Entities
 {
     public class Pessoa
     {

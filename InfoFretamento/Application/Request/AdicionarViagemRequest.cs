@@ -1,14 +1,15 @@
 ﻿using InfoFretamento.Domain.Entities;
+using InfoFretamento.Domain.ValueObjects;
 
 namespace InfoFretamento.Application.Request
 {
     public record AdicionarViagemRequest : IBaseAdicionarRequest<Viagem>
     {
         public Rota Rota { get; set; }
-        public DateTime DataSaida { get; set; }
-        public string HorarioSaida { get; set; } = string.Empty;
-        public DateTime DataRetorno { get; set; }
-        public string HorarioRetorno { get; set; } = string.Empty;
+        public Horario DataHorarioSaida { get; set; }
+        public Horario DataHorarioRetorno { get; set; }
+        public Horario DataHorarioSaidaGaragem { get; set; }
+        public Horario DataHorarioChegada { get; set; }
         public int ClienteId { get; set; }
         public string TipoServico { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
@@ -19,10 +20,10 @@ namespace InfoFretamento.Application.Request
             return new Viagem
             {
                 Rota = this.Rota,
-                DataSaida = this.DataSaida,
-                HorarioSaida = this.HorarioSaida,
-                DataRetorno = this.DataRetorno,
-                HorarioRetorno = this.HorarioRetorno,
+                DataHorarioSaida = this.DataHorarioSaida,
+                DataHorarioSaidaGaragem = this.DataHorarioSaidaGaragem,
+                DataHorarioRetorno = this.DataHorarioRetorno,
+                DataHorarioChegada = this.DataHorarioChegada,
                 ClienteId = this.ClienteId,
                 TipoServico = this.TipoServico,
                 VeiculoId = this.VeiculoId,

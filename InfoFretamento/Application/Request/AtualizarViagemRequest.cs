@@ -1,14 +1,15 @@
 ﻿using InfoFretamento.Domain.Entities;
+using InfoFretamento.Domain.ValueObjects;
 
 namespace InfoFretamento.Application.Request
 {
     public record AtualizarViagemRequest : BaseAtualizarRequest<Viagem>
     {
         public Rota Rota { get; set; }
-        public DateTime DataSaida { get; set; }
-        public string HorarioSaida { get; set; } = string.Empty;
-        public DateTime DataRetorno { get; set; }
-        public string HorarioRetorno { get; set; } = string.Empty;
+        public Horario DataHorarioSaida { get; set; }
+        public Horario DataHorarioRetorno { get; set; }
+        public Horario DataHorarioSaidaGaragem { get; set; }
+        public Horario DataHorarioChegada { get; set; }
         public int ClienteId { get; set; }
         public string TipoServico { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
@@ -17,10 +18,10 @@ namespace InfoFretamento.Application.Request
         public override Viagem UpdateEntity(Viagem entity)
         {
             entity.Rota = Rota;
-            entity.DataSaida = DataSaida;
-            entity.HorarioSaida = HorarioSaida;
-            entity.DataRetorno = DataRetorno;
-            entity.HorarioRetorno = HorarioRetorno;
+            entity.DataHorarioSaida = DataHorarioSaida;
+            entity.DataHorarioChegada = DataHorarioChegada;
+            entity.DataHorarioRetorno = DataHorarioRetorno;
+            entity.DataHorarioSaidaGaragem = DataHorarioSaidaGaragem;
             entity.ClienteId = ClienteId;
             entity.TipoServico = TipoServico;
             entity.Status = Status;
