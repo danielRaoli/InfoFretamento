@@ -1,6 +1,5 @@
-﻿using InfoFretamento.Application.Request;
+﻿using InfoFretamento.Application.Request.ViagemRequest;
 using InfoFretamento.Application.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InfoFretamento.Controllers
@@ -11,10 +10,21 @@ namespace InfoFretamento.Controllers
     {
         private readonly ViagemService _service = service;
 
+
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] string? prefixoVeiculo)
         {
-            var result = await _service.GetAllAsync();
+            if (startDate == null)
+            {
+                startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            }
+
+            // Define o último dia do mês caso endDate seja nulo
+            if (endDate == null)
+            {
+                endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+            }
+            var result = await _service.GetAllWithFilters(startDate: DateOnly.FromDateTime(startDate.Value), endDate: DateOnly.FromDateTime(endDate.Value), prefixoVeiculo: prefixoVeiculo);
             return Ok(result);
         }
 

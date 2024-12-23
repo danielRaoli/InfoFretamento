@@ -1,6 +1,5 @@
-﻿using InfoFretamento.Application.Request;
+﻿using InfoFretamento.Application.Request.ServicoRequest;
 using InfoFretamento.Application.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InfoFretamento.Controllers

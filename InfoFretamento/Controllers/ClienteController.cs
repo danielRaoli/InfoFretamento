@@ -1,4 +1,4 @@
-﻿using InfoFretamento.Application.Request;
+﻿using InfoFretamento.Application.Request.ClienteRequest;
 using InfoFretamento.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,18 +12,19 @@ namespace InfoFretamento.Controllers
     {
         private readonly ClienteService _service = service;
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
-        }
-
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _service.GetByIdAsync(id);
+            var result = await _service.GetWithIncludes(id);
+            return Ok(result);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllNameContains([FromQuery] string name = null)
+        {
+            var result = await _service.GetAllNameContains(name);
             return Ok(result);
         }
 

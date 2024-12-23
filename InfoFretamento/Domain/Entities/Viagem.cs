@@ -15,6 +15,8 @@ namespace InfoFretamento.Domain.Entities
         public string TipoServico { get; set; } = string.Empty;
         public string TipoViagem { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
+        public int MotoristaId { get; set; }
+        public Motorista Motorista { get; set; }
         public int VeiculoId { get; set; }
         public Veiculo Veiculo { get; set; }
         public string TipoPagamento { get; set; } = string.Empty;
@@ -23,8 +25,8 @@ namespace InfoFretamento.Domain.Entities
         public decimal ValorPago { get; set; }
         public decimal ValorDespesas { get; set; }
         public string Itinerario { get; set; } = string.Empty;
-        public List<Despesa> Despesas { get; set; } 
+        public List<Despesa> Despesas { get; set; } = [];
 
-
+        public List<Receita> Receitas { get; set; } = [];
     }
 }

@@ -7,6 +7,8 @@ namespace InfoFretamento.Domain.Entities
 
      
         public Habilitacao Habilitacao { get; set; }
+        public List<Despesa> Despesas { get; set; } = [];
+        public List<Receita> Receitas { get; set; } = [];
         public List<Viagem> Viagens { get; set; } = [];
     }
 }

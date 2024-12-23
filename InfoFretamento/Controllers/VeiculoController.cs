@@ -1,4 +1,4 @@
-﻿using InfoFretamento.Application.Request;
+﻿using InfoFretamento.Application.Request.VeiculoRequest;
 using InfoFretamento.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +23,7 @@ namespace InfoFretamento.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _service.GetByIdAsync(id);
+            var result = await _service.GetWithInclude(id);
             return Ok(result);
         }
 

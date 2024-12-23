@@ -6,7 +6,7 @@ namespace InfoFretamento.Domain.Entities
     {
         public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;
-        public DateTime DataNascimento { get; set; }
+        public DateOnly DataNascimento { get; set; }
         public string Telefone { get; set; } = string.Empty;
         public DocumentoCliente Documento { get; set; }
         public Endereco Endereco { get; set; }

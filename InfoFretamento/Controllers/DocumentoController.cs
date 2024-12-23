@@ -1,4 +1,4 @@
-﻿using InfoFretamento.Application.Request;
+﻿using InfoFretamento.Application.Request.DocumentoRequest;
 using InfoFretamento.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 

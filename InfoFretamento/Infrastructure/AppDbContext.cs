@@ -28,17 +28,18 @@ namespace InfoFretamento.Infrastructure
                     rota.OwnsOne(r => r.Saida, saida =>
                     {
                         saida.Property(s => s.UfSaida).HasMaxLength(2);
-                        saida.Property(s => s.CidadeDestino).HasMaxLength(50);
                         saida.Property(s => s.CidadeSaida).HasMaxLength(50);
+                        saida.Property(s => s.LocalDeSaida).HasMaxLength(50);
                     });
 
                     // Configurando Retorno
                     rota.OwnsOne(r => r.Retorno, retorno =>
                     {
                         retorno.Property(r => r.UfSaida).HasMaxLength(2);
-                        retorno.Property(r => r.CidadeDestino).HasMaxLength(50);
                         retorno.Property(r => r.CidadeSaida).HasMaxLength(50);
+                        retorno.Property(s => s.LocalDeSaida).HasMaxLength(50);
                     });
+
 
                 });
 
@@ -63,6 +64,19 @@ namespace InfoFretamento.Infrastructure
                     horario.Property(h => h.Hora).HasMaxLength(5);
                     horario.Property(h => h.Data).HasColumnType("date");
                 });
+
+                entity.HasOne(e => e.Motorista).WithMany(m => m.Viagens).HasForeignKey(e => e.MotoristaId);
+
+                entity.HasMany<Despesa>(v => v.Despesas)
+                   .WithOne(p => p.Viagem)
+                   .HasForeignKey(p => p.ViagemId)
+                   .OnDelete(DeleteBehavior.Cascade);
+
+                // Relação com Receitas
+                entity.HasMany<Receita>(v => v.Receitas)
+                    .WithOne(p => p.Viagem)
+                    .HasForeignKey(p => p.ViagemId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
             // Configuração de tipos complexos com Owned Types
 
@@ -81,6 +95,8 @@ namespace InfoFretamento.Infrastructure
                       .HasMaxLength(14)    // CPF no formato 999.999.999-99
                       .IsFixedLength();    // Tamanho fixo para garantir consistência
 
+
+                entity.Property(p => p.DataNascimento).HasColumnType("date");
                 entity.OwnsOne(p => p.Endereco, endereco =>
                 {
                     endereco.Property(e => e.Cidade).HasMaxLength(100);
@@ -96,8 +112,34 @@ namespace InfoFretamento.Infrastructure
                     documento.Property(d => d.Tipo).HasMaxLength(20);
                 });
 
+
+
             });
 
+            modelBuilder.Entity<Motorista>(entity =>
+            {
+                entity.OwnsOne(e => e.Habilitacao, habilitacao =>
+                {
+                    habilitacao.Property(h => h.Vencimento).HasColumnType("date");
+                });
+                entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
+
+                entity.HasMany(e => e.Receitas).WithOne().HasForeignKey(d => d.ResponsavelId);
+            });
+
+            modelBuilder.Entity<Cliente>(entity =>
+            {
+                entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
+
+                entity.HasMany(e => e.Receitas).WithOne().HasForeignKey(d => d.ResponsavelId);
+            });
+
+            modelBuilder.Entity<Fornecedor>(entity =>
+            {
+                entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
+
+                entity.HasMany(e => e.Receitas).WithOne().HasForeignKey(d => d.ResponsavelId);
+            });
 
             modelBuilder.Entity<Veiculo>(entity =>
             {
@@ -128,20 +170,19 @@ namespace InfoFretamento.Infrastructure
 
             modelBuilder.Entity<Despesa>(entity =>
             {
-                entity.Property(d => d.DestinoPagamento)
-                      .HasMaxLength(100);
+                entity.Property(d => d.OrigemPagamento)
+                     .HasMaxLength(100);
 
                 entity.Property(d => d.NumeroDocumento)
-                      .HasMaxLength(20);
+                      .HasMaxLength(50);
 
                 entity.Property(d => d.ValorTotal)
                       .HasColumnType("decimal(18,2)");
 
-                entity.Property(d => d.DataLancamento)
-                      .HasColumnType("date");
-
                 entity.Property(d => d.DataCompra)
                       .HasColumnType("date");
+                entity.Property(d => d.DataEmissao)
+                        .HasColumnType("date");
 
                 entity.Property(d => d.Vencimento)
                       .HasColumnType("date");
@@ -149,56 +190,61 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(d => d.Pago)
                       .HasDefaultValue(false);
 
-                entity.HasOne(d => d.GrupoCusto)
-                      .WithMany(g => g.Despesas)
-                      .HasForeignKey(d => d.GrupoCustoId)
-                      .OnDelete(DeleteBehavior.Restrict);
 
-                entity.HasOne(d => d.Veiculo)
-                      .WithMany(v => v.Despesas)
-                      .HasForeignKey(d => d.VeiculoId)
-                      .OnDelete(DeleteBehavior.Restrict);
-
-                entity.HasOne(d => d.Viagem)
-                      .WithMany(v => v.Despesas)
-                      .HasForeignKey(d => d.ViagemId)
-                      .OnDelete(DeleteBehavior.Restrict);
 
                 entity.Property(d => d.ValorTotal)
                      .HasColumnType("decimal(18,2)");
-                entity.Property(d => d.PagamentoParcial)
-                        .HasColumnType("decimal(18,2)");
+
                 entity.Property(e => e.FormaPagamento).HasMaxLength(10);
 
+                // Relação com Responsável
+                entity.HasOne(e => e.Responsavel)
+                      .WithMany()
+                      .HasForeignKey(p => p.ResponsavelId);
             });
 
-            // Configuração para GrupoDeCusto
-            modelBuilder.Entity<GrupoDeCusto>(entity =>
+
+            modelBuilder.Entity<Receita>(entity =>
             {
-                entity.Property(g => g.Nome)
-                      .HasMaxLength(100)    // Limitar nome a 100 caracteres
-                      .IsRequired();        // Nome obrigatório
+                entity.Property(d => d.OrigemPagamento)
+                     .HasMaxLength(100);
+
+                entity.Property(d => d.NumeroDocumento)
+                      .HasMaxLength(50);
+
+                entity.Property(d => d.ValorTotal)
+                      .HasColumnType("decimal(18,2)");
+
+                entity.Property(d => d.DataCompra)
+                      .HasColumnType("date");
+                entity.Property(d => d.DataEmissao)
+                        .HasColumnType("date");
+
+                entity.Property(d => d.Vencimento)
+                      .HasColumnType("date");
+
+                entity.Property(d => d.Pago)
+                      .HasDefaultValue(false);
+
+
+
+                entity.Property(d => d.ValorTotal)
+                     .HasColumnType("decimal(18,2)");
+
+                entity.Property(e => e.FormaPagamento).HasMaxLength(10);
+
+
+                // Relação com Responsável
+                entity.HasOne(e => e.Responsavel)
+                      .WithMany()
+                      .HasForeignKey(p => p.ResponsavelId);
             });
 
-            modelBuilder.Entity<Motorista>(entity =>
-            {
-                entity.Property(e => e.Cpf).HasMaxLength(14);
-                entity.Property(e => e.DataNascimento).HasColumnType("date");
-                entity.OwnsOne(e => e.Habilitacao, habilitacao =>
-                {
-                    habilitacao.Property(h => h.Vencimento).HasColumnType("date");
-                    habilitacao.Property(h => h.Uf).HasMaxLength(2);
-                    habilitacao.Property(h => h.Categoria).HasMaxLength(3);
-                    habilitacao.Property(h => h.Protocolo).HasMaxLength(20);
-                });
-
-                entity.Property(e => e.Telefone).HasMaxLength(15);
-            });
 
             modelBuilder.Entity<Manutencao>(entity =>
             {
                 entity.Property(e => e.Tipo).HasMaxLength(20);
-                entity.HasOne(e => e.Servico).WithMany(s => s.Manutencoes).HasForeignKey(e => e.ServicoId).OnDelete(DeleteBehavior.Restrict);
+                entity.HasOne(e => e.Servico).WithMany().HasForeignKey(e => e.ServicoId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(e => e.Veiculo).WithMany(v => v.Manutencoes).HasForeignKey(e => e.VeiculoId).OnDelete(DeleteBehavior.Restrict);
                 entity.Property(e => e.DataVencimento).HasColumnType("date");
                 entity.Property(e => e.DataLancamento).HasColumnType("date");
@@ -211,6 +257,33 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(e => e.NomeServico).HasMaxLength(50);
             });
 
+            modelBuilder.Entity<ViagemProgramada>(entity =>
+            {
+                entity.Property(e => e.Descricao).HasMaxLength(150);
+                entity.Property(e => e.FormaPagto).HasMaxLength(14);
+                entity.Property(e => e.Guia).HasMaxLength(20);
+                entity.Property(e => e.Itinerario).HasMaxLength(100);
+                entity.Property(e => e.Observacoes).HasMaxLength(100);
+                entity.HasOne(e => e.Veiculo).WithMany(v => v.ViagensProgramadaas).HasForeignKey(e => e.VeiculoId);
+            });
+
+            modelBuilder.Entity<Passageiro>(entity =>
+            {
+                entity.Property(e => e.Matricula).HasMaxLength(50);
+                entity.Property(e => e.Cartao).HasMaxLength(50);
+
+            });
+
+            modelBuilder.Entity<Passagem>(entity =>
+            {
+                entity.Property(e => e.DataEmissao).HasColumnType("date");
+                entity.Property(e => e.FormaPagamento).HasMaxLength(15);
+                entity.Property(e => e.Situacao).HasMaxLength(15);
+                entity.HasOne(e => e.Viagem).WithMany(v => v.Passagens).HasForeignKey(e => e.ViagemId);
+                entity.HasOne(e => e.Passageiro).WithMany(v => v.Passagens).HasForeignKey(e => e.PassageiroId);
+            });
+
+
         }
 
         public DbSet<Cliente> Clientes { get; set; }
@@ -220,11 +293,14 @@ namespace InfoFretamento.Infrastructure
         public DbSet<Viagem> Viagens { get; set; }
         public DbSet<Veiculo> Veiculos { get; set; }
         public DbSet<Despesa> Despesas { get; set; }
-        public DbSet<GrupoDeCusto> GruposDeCusto { get; set; }
+        public DbSet<Receita> Receitas { get; set; }
         public DbSet<Documento> Documentos { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Manutencao> Manutencoes { get; set; }
         public DbSet<Servico> Servicos { get; set; }
+        public DbSet<ViagemProgramada> ViagensProgramadas { get; set; }
+        public DbSet<Passageiro> Passageiros { get; set; }
+        public DbSet<Passagem> Passagens { get; set; }
 
 
     }

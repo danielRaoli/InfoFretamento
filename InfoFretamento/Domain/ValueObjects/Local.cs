@@ -8,7 +8,6 @@ namespace InfoFretamento.Domain.ValueObjects
 
         public string UfSaida { get; set; } = string.Empty;
         public string CidadeSaida { get; set; } = string.Empty;
-        public string CidadeDestino { get; set; } = string.Empty;
         public string LocalDeSaida { get; set; } = string.Empty;
 
     }

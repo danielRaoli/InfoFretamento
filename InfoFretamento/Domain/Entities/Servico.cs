@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public string NomeServico { get; set; } = string.Empty;
-        public List<Manutencao> Manutencoes { get; set; }
+
     }
 }

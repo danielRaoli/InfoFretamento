@@ -1,4 +1,4 @@
-﻿using InfoFretamento.Application.Request;
+﻿using InfoFretamento.Application.Request.ManutencaoRequest;
 using InfoFretamento.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,9 +11,12 @@ namespace InfoFretamento.Controllers
         private readonly ManutencaoService _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? situacao = null, [FromQuery]DateTime? startDate = null)
         {
-            var result = await _service.GetAllAsync();
+            if (startDate == null) {
+                startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+            }
+            var result = await _service.GetAllWithFilters(DateOnly.FromDateTime(startDate.Value), situacao);
             return Ok(result);
         }
 

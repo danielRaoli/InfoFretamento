@@ -15,8 +15,10 @@
         public string Tipo { get; set; } = string.Empty;
         public int QuantidadePoltronas { get; set; }
         public string Modelo { get; set; } = string.Empty;
-        public List<Manutencao> Manutencoes { get; set; }
+        public List<Manutencao> Manutencoes { get; set; } = [];
         public List<Despesa> Despesas { get; set; } = [];
+        public List<Viagem> Viagens { get; set; } = [];
+        public List<ViagemProgramada> ViagensProgramadaas { get; set; } = [];
 
     }
 }
