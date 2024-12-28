@@ -18,6 +18,8 @@ public record AdicionarViagemRequest : IBaseAdicionarRequest<Viagem>
     public string TipoPagamento { get; set; } = string.Empty;
     public decimal ValorContratado { get; set; }
     public string Itinerario { get; set; } = string.Empty;
+    public int KmFinalVeiculo { get; set; }
+    public int KmInicialVeiculo { get; set; }
     public int VeiculoId { get; set; }
     public int MotoristaId { get; set; }
 
@@ -39,7 +41,8 @@ public record AdicionarViagemRequest : IBaseAdicionarRequest<Viagem>
             ValorContratado = ValorContratado,
             Itinerario = Itinerario,
             MotoristaId = MotoristaId,
-            
+            KmFinalVeiculo= KmFinalVeiculo,
+            KmInicialVeiculo= KmInicialVeiculo
 
         };
     }

@@ -5,13 +5,11 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
 {
     public record AtualizarDespesaRequest : BaseAtualizarRequest<Despesa>
     {
-        public DateTime DataCompra { get; set; }
+        public DateTime DataPagamento { get; set; }
         public string OrigemPagamento { get; set; } = string.Empty;
-        public string NumeroDocumento { get; set; } = string.Empty;
         public int ResponsavelId { get; set; }
         public int ViagemId { get; set; }
         public DateTime Vencimento { get; set; }
-        public bool Pago { get; set; }
         public decimal ValorTotal { get; set; }
         public decimal ValorParcial { get; set; }
         public string FormaPagamento { get; set; } = string.Empty;
@@ -19,13 +17,11 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
 
         public override Despesa UpdateEntity(Despesa entity)
         {
-            entity.DataCompra = DateOnly.FromDateTime(DataCompra);
+            entity.DataCompra = DateOnly.FromDateTime(DataPagamento);
             entity.OrigemPagamento = this.OrigemPagamento;
-            entity.NumeroDocumento = this.NumeroDocumento;
             entity.ResponsavelId = this.ResponsavelId;
             entity.ViagemId = this.ViagemId;
             entity.Vencimento = DateOnly.FromDateTime(Vencimento);
-            entity.Pago = this.Pago;
             entity.ValorTotal = this.ValorTotal;
             entity.ValorParcial = this.ValorParcial;
             entity.FormaPagamento = this.FormaPagamento;

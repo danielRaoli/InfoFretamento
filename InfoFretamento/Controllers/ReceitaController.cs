@@ -1,10 +1,12 @@
 ﻿using InfoFretamento.Application.Request.PagamentosRequest;
 using InfoFretamento.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InfoFretamento.Controllers
 {
+   
     [Route("api/[controller]")]
     [ApiController]
     public class ReceitaController(ReceitaService service) : ControllerBase

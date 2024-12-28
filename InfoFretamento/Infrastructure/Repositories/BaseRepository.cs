@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 using System.Linq;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace InfoFretamento.Infrastructure.Repositories
 {
@@ -10,6 +11,11 @@ namespace InfoFretamento.Infrastructure.Repositories
 
         private readonly AppDbContext _context = context;
         private readonly DbSet<T> _dbSet = context.Set<T>();
+
+        public async Task<IDbContextTransaction> BeginTransactionAsync()
+        {
+            return await _context.Database.BeginTransactionAsync();
+        }
         public async Task<bool> AddAsync(T entity)
         {
             _dbSet.Add(entity);
@@ -26,6 +32,7 @@ namespace InfoFretamento.Infrastructure.Repositories
 
         public async Task<IEnumerable<T>> GetAllAsync()
         {
+            _context.ChangeTracker.Clear();
             var entityList = await _dbSet.ToListAsync();
             return entityList;  
         }

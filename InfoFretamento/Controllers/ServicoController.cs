@@ -1,9 +1,11 @@
 ﻿using InfoFretamento.Application.Request.ServicoRequest;
 using InfoFretamento.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InfoFretamento.Controllers
 {
+    
     [Route("[controller]")]
     [ApiController]
     public class ServicoController(ServicoService service) : ControllerBase

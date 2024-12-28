@@ -11,7 +11,7 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
         public int ResponsavelId { get; set; }
         public int ViagemId { get; set; }
         public DateTime Vencimento { get; set; }
-        public bool Pago { get; set; }
+
         public decimal ValorTotal { get; set; }
         public decimal ValorParcial { get; set; }
         public string FormaPagamento { get; set; } = string.Empty;
@@ -25,7 +25,7 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
             entity.ResponsavelId = this.ResponsavelId;
             entity.ViagemId = this.ViagemId;
             entity.Vencimento = DateOnly.FromDateTime(Vencimento);
-            entity.Pago = this.Pago;
+
             entity.ValorTotal = this.ValorTotal;
             entity.ValorParcial = this.ValorParcial;
             entity.FormaPagamento = this.FormaPagamento;

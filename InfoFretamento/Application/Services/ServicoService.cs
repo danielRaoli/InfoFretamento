@@ -5,7 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace InfoFretamento.Application.Services
 {
-    public class ServicoService(IBaseRepository<Servico> repository, IMemoryCache cache) : BaseService<Servico, AdicionarServicoRequest, AtualizarServicoRequest>(repository, cache)
+    public class ServicoService(IBaseRepository<Servico> repository) : BaseService<Servico, AdicionarServicoRequest, AtualizarServicoRequest>(repository)
     {
     }
 }

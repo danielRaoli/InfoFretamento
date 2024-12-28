@@ -1,11 +1,13 @@
 ﻿using InfoFretamento.Application.Request.ClienteRequest;
 using InfoFretamento.Application.Request.PassageiroRequest;
 using InfoFretamento.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InfoFretamento.Controllers
 {
+    
     [Route("[controller]")]
     [ApiController]
     public class PassageiroController(PassageiroService service) : ControllerBase

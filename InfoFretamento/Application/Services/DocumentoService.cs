@@ -5,7 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace InfoFretamento.Application.Services
 {
-    public class DocumentoService(IBaseRepository<Documento> repository, IMemoryCache cache) : BaseService<Documento, AdicionarDocumentoRequest, AtualizarDocumentoRequest>(repository, cache)
+    public class DocumentoService(IBaseRepository<Documento> repository) : BaseService<Documento, AdicionarDocumentoRequest, AtualizarDocumentoRequest>(repository)
     {
 
     }

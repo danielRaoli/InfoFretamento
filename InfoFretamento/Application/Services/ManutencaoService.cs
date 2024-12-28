@@ -7,18 +7,14 @@ using System.Linq.Expressions;
 
 namespace InfoFretamento.Application.Services
 {
-    public class ManutencaoService(IBaseRepository<Manutencao> repository, IMemoryCache cache) : BaseService<Manutencao, AdicionarManutencaoRequest, AtualizarManutencaoRequest>(repository, cache)
+    public class ManutencaoService(IBaseRepository<Manutencao> repository) : BaseService<Manutencao, AdicionarManutencaoRequest, AtualizarManutencaoRequest>(repository)
     {
         private readonly IBaseRepository<Manutencao> _repository = repository;
-        private readonly IMemoryCache _cache = cache;
+
 
         public async Task<Response<List<Manutencao>>> GetAllWithFilters(DateOnly startDate, string? situacao = null )
         {
-            string cacheKey = $"{typeof(Manutencao).Name}_{startDate.ToString()}_{situacao ?? ""}";
 
-
-            var result = await _cache.GetOrCreateAsync(cacheKey, async entry =>
-            {
 
                 var filters = new List<Expression<Func<Manutencao, bool>>>();
 
@@ -31,11 +27,8 @@ namespace InfoFretamento.Application.Services
                 }
 
 
-                return new List<Manutencao>(response.ToList());
 
-            });
-
-            return new Response<List<Manutencao>>(result);
+            return new Response<List<Manutencao>>(response.ToList());
 
         }
     }

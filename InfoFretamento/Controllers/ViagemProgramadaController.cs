@@ -1,11 +1,13 @@
 ﻿using InfoFretamento.Application.Request.ClienteRequest;
 using InfoFretamento.Application.Request.ViagemProgramadaRequest;
 using InfoFretamento.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InfoFretamento.Controllers
 {
+    
     [Route("[controller]")]
     [ApiController]
     public class ViagemProgramadaController(ViagemProgramadaService service) : ControllerBase
@@ -21,9 +23,9 @@ namespace InfoFretamento.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id, [FromQuery] bool includePassagem = false, [FromQuery] bool includeVeiculo = false)
+        public async Task<IActionResult> Get(int id)
         {
-            var result = await _service.GetByIdAsync(id);
+            var result = await _service.GetByIdIncludeAsync(id);
             return Ok(result);
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System.Linq.Expressions;
 
 namespace InfoFretamento.Domain.Repositories
 {
@@ -11,5 +12,6 @@ namespace InfoFretamento.Domain.Repositories
         Task<bool> DeleteAsync(T entity);
         Task<T?> GetWithFilterAsync(int id, params string[] includes);
         Task<IEnumerable<T>> GetAllWithFilterAsync(IEnumerable<Expression<Func<T, bool>>>? filters = null, params string[] includes);
+        public Task<IDbContextTransaction> BeginTransactionAsync();
     }
 }

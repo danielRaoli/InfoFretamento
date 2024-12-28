@@ -11,10 +11,9 @@ namespace InfoFretamento.Application.Request.ViagemRequest
         public Horario DataHorarioRetorno { get; set; }
         public Horario DataHorarioSaidaGaragem { get; set; }
         public Horario DataHorarioChegada { get; set; }
-        public int ClienteId { get; set; }
         public string TipoServico { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
-        public int VeiculoId { get; set; }
+        public int KmFinalVeiculo { get; set; }
 
         public override Viagem UpdateEntity(Viagem entity)
         {
@@ -23,11 +22,9 @@ namespace InfoFretamento.Application.Request.ViagemRequest
             entity.DataHorarioChegada = DataHorarioChegada;
             entity.DataHorarioRetorno = DataHorarioRetorno;
             entity.DataHorarioSaidaGaragem = DataHorarioSaidaGaragem;
-            entity.ClienteId = ClienteId;
             entity.TipoServico = TipoServico;
             entity.Status = Status;
-            entity.VeiculoId = VeiculoId;
-
+            entity.KmFinalVeiculo = KmFinalVeiculo;
             return entity;
         }
     }

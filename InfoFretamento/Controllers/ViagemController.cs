@@ -1,9 +1,11 @@
 ﻿using InfoFretamento.Application.Request.ViagemRequest;
 using InfoFretamento.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InfoFretamento.Controllers
 {
+    
     [Route("[controller]")]
     [ApiController]
     public class ViagemController(ViagemService service) : ControllerBase
@@ -32,7 +34,7 @@ namespace InfoFretamento.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _service.GetByIdAsync(id);
+            var result = await _service.GetWithFilter(id);
             return Ok(result);
         }
 

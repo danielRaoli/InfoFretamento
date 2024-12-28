@@ -11,7 +11,7 @@ namespace InfoFretamento.Application.Request.DocumentoRequest
 
         public Documento ToEntity()
         {
-            return new Documento { Referencia = Referencia, TipoDocumento = TipoDocumento, Vencimento = Vencimento.ToUniversalTime().AddHours(-3).Date };
+            return new Documento { Referencia = Referencia, TipoDocumento = TipoDocumento, Vencimento = DateOnly.FromDateTime(Vencimento) };
         }
     }
 }

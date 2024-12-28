@@ -11,7 +11,7 @@ namespace InfoFretamento.Application.Request.DocumentoRequest
 
         public override Documento UpdateEntity(Documento entity)
         {
-            entity.Vencimento = Vencimento.ToUniversalTime().AddHours(-3).Date;
+            entity.Vencimento = DateOnly.FromDateTime(Vencimento);
             entity.Referencia = Referencia;
             entity.TipoDocumento = TipoDocumento;
 

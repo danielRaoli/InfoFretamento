@@ -3,8 +3,8 @@ using System;
 using InfoFretamento.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -18,65 +18,144 @@ namespace InfoFretamento.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "8.0.11")
-                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+                .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
+
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.Abastecimento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("CodigoNfe")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Litros")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ValorTotal")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("ViagemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ViagemId")
+                        .IsUnique();
+
+                    b.ToTable("Abastecimentos");
+                });
+
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.Adiantamento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("TipoVerba")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("ValorDeAcerto")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("Verba")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("ViagemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ViagemId")
+                        .IsUnique();
+
+                    b.ToTable("Adiantamentos");
+                });
+
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.AdicionarPeca", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("DataDeEntrada")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PecaId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PrecoTotal")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PecaId");
+
+                    b.ToTable("Adicionamentos");
+                });
 
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Despesa", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CentroCusto")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<DateOnly>("DataCompra")
-                        .HasColumnType("date");
+                        .HasColumnType("DATE");
 
-                    b.Property<DateOnly>("DataEmissao")
-                        .HasColumnType("date");
+                    b.Property<DateOnly>("DataPagamento")
+                        .HasColumnType("DATE");
 
                     b.Property<string>("FormaPagamento")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
-
-                    b.Property<string>("NumeroDocumento")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("OrigemPagamento")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<bool>("Pago")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("ResponsavelId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<decimal>("ValorParcial")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("ValorTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<int?>("VeiculoId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<DateOnly>("Vencimento")
-                        .HasColumnType("date");
+                        .HasColumnType("DATE");
 
                     b.Property<int>("ViagemId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -93,20 +172,20 @@ namespace InfoFretamento.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Referencia")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("TipoDocumento")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
-                    b.Property<DateTime>("Vencimento")
-                        .HasColumnType("timestamp with time zone");
+                    b.Property<DateOnly>("Vencimento")
+                        .HasColumnType("DATE");
 
                     b.HasKey("Id");
 
@@ -117,41 +196,41 @@ namespace InfoFretamento.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<decimal>("Custo")
-                        .HasColumnType("decimamal(18,2)");
+                        .HasColumnType("DECIMAL(18,2)");
 
-                    b.Property<DateTime>("DataLancamento")
-                        .HasColumnType("date");
+                    b.Property<DateOnly>("DataLancamento")
+                        .HasColumnType("DATE");
 
-                    b.Property<DateTime>("DataRealizada")
-                        .HasColumnType("date");
+                    b.Property<DateOnly>("DataRealizada")
+                        .HasColumnType("DATE");
 
-                    b.Property<DateTime>("DataVencimento")
-                        .HasColumnType("date");
+                    b.Property<DateOnly>("DataVencimento")
+                        .HasColumnType("DATE");
 
                     b.Property<int>("KmAtual")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("KmPrevista")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("KmRealizada")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("ServicoId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<int>("VeiculoId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -166,31 +245,31 @@ namespace InfoFretamento.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DataEmissao")
-                        .HasColumnType("date");
+                        .HasColumnType("DATE");
 
                     b.Property<string>("FormaPagamento")
                         .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("character varying(15)");
+                        .HasColumnType("varchar(15)");
 
                     b.Property<int>("PassageiroId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("Poltrona")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("Situacao")
                         .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("character varying(15)");
+                        .HasColumnType("varchar(15)");
 
                     b.Property<int>("ViagemId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -201,37 +280,60 @@ namespace InfoFretamento.Migrations
                     b.ToTable("Passagens");
                 });
 
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.Peca", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<decimal>("Preco")
+                        .HasColumnType("DECIMAL(18,2)");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Pecas");
+                });
+
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Pessoa", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Cpf")
                         .IsRequired()
                         .HasMaxLength(14)
-                        .HasColumnType("character(14)")
+                        .HasColumnType("char(14)")
                         .IsFixedLength();
 
                     b.Property<DateOnly>("DataNascimento")
-                        .HasColumnType("date");
+                        .HasColumnType("DATE");
 
                     b.Property<string>("Discriminator")
                         .IsRequired()
                         .HasMaxLength(13)
-                        .HasColumnType("character varying(13)");
+                        .HasColumnType("varchar(13)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Telefone")
                         .IsRequired()
                         .HasMaxLength(15)
-                        .HasColumnType("character varying(15)");
+                        .HasColumnType("varchar(15)");
 
                     b.HasKey("Id");
 
@@ -246,76 +348,99 @@ namespace InfoFretamento.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CentroCusto")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<DateOnly>("DataCompra")
-                        .HasColumnType("date");
+                        .HasColumnType("DATE");
 
-                    b.Property<DateOnly>("DataEmissao")
-                        .HasColumnType("date");
+                    b.Property<DateOnly>("DataPagamento")
+                        .HasColumnType("DATE");
 
                     b.Property<string>("FormaPagamento")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasColumnType("varchar(10)");
 
                     b.Property<string>("NumeroDocumento")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("OrigemPagamento")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<bool>("Pago")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false);
+                        .HasColumnType("varchar(100)");
 
                     b.Property<int>("ResponsavelId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<decimal>("ValorParcial")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("ValorTotal")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<DateOnly>("Vencimento")
-                        .HasColumnType("date");
+                        .HasColumnType("DATE");
 
                     b.Property<int>("ViagemId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ResponsavelId");
 
-                    b.HasIndex("ViagemId");
+                    b.HasIndex("ViagemId")
+                        .IsUnique();
 
                     b.ToTable("Receitas");
+                });
+
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.RetiradaPeca", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateOnly>("DataDeRetirada")
+                        .HasColumnType("date");
+
+                    b.Property<int>("PecaId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("PrecoTotal")
+                        .HasColumnType("decimal(65,30)");
+
+                    b.Property<int>("Quantidade")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PecaId");
+
+                    b.ToTable("Retiradas");
                 });
 
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Servico", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("NomeServico")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("Id");
 
@@ -326,17 +451,17 @@ namespace InfoFretamento.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("UserName")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -347,62 +472,62 @@ namespace InfoFretamento.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Ano")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("CapacidadeTank")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("Carroceria")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<int>("KmAtual")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("LocalEmplacado")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Marca")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Modelo")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Placa")
                         .IsRequired()
                         .HasMaxLength(8)
-                        .HasColumnType("character varying(8)");
+                        .HasColumnType("varchar(8)");
 
                     b.Property<string>("Prefixo")
                         .IsRequired()
                         .HasMaxLength(10)
-                        .HasColumnType("character varying(10)");
+                        .HasColumnType("varchar(10)");
 
                     b.Property<int>("QuantidadePoltronas")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
+                        .HasColumnType("int")
                         .HasDefaultValue(0);
 
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .HasMaxLength(40)
-                        .HasColumnType("character varying(40)");
+                        .HasColumnType("varchar(40)");
 
                     b.Property<string>("Uf")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
@@ -413,52 +538,58 @@ namespace InfoFretamento.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("ClienteId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("Itinerario")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("KmFinalVeiculo")
+                        .HasColumnType("int");
+
+                    b.Property<int>("KmInicialVeiculo")
+                        .HasColumnType("int");
 
                     b.Property<int>("MotoristaId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<int>("Parcelas")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("TipoPagamento")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("TipoServico")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("TipoViagem")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("ValorContratado")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<decimal>("ValorDespesas")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<decimal>("ValorPago")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<int>("VeiculoId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -475,48 +606,48 @@ namespace InfoFretamento.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Descricao")
                         .IsRequired()
                         .HasMaxLength(150)
-                        .HasColumnType("character varying(150)");
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("FormaPagto")
                         .IsRequired()
                         .HasMaxLength(14)
-                        .HasColumnType("character varying(14)");
+                        .HasColumnType("varchar(14)");
 
                     b.Property<string>("Guia")
                         .IsRequired()
                         .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
+                        .HasColumnType("varchar(20)");
 
                     b.Property<string>("Itinerario")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Observacoes")
                         .IsRequired()
                         .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                        .HasColumnType("varchar(100)");
 
                     b.Property<string>("Responsavel")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Titulo")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.Property<decimal>("ValorPassagem")
-                        .HasColumnType("numeric");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<int>("VeiculoId")
-                        .HasColumnType("integer");
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -531,7 +662,7 @@ namespace InfoFretamento.Migrations
 
                     b.Property<string>("Tipo")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.ToTable("Pessoa", t =>
                         {
@@ -546,6 +677,21 @@ namespace InfoFretamento.Migrations
                 {
                     b.HasBaseType("InfoFretamento.Domain.Entities.Pessoa");
 
+                    b.Property<DateOnly>("FimFerias")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("InicioFerias")
+                        .HasColumnType("date");
+
+                    b.ToTable("Pessoa", t =>
+                        {
+                            t.Property("FimFerias")
+                                .HasColumnName("Colaborador_FimFerias");
+
+                            t.Property("InicioFerias")
+                                .HasColumnName("Colaborador_InicioFerias");
+                        });
+
                     b.HasDiscriminator().HasValue("Colaborador");
                 });
 
@@ -555,7 +701,7 @@ namespace InfoFretamento.Migrations
 
                     b.Property<string>("Tipo")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("longtext");
 
                     b.HasDiscriminator().HasValue("Fornecedor");
                 });
@@ -563,6 +709,12 @@ namespace InfoFretamento.Migrations
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Motorista", b =>
                 {
                     b.HasBaseType("InfoFretamento.Domain.Entities.Pessoa");
+
+                    b.Property<DateOnly>("FimFerias")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly>("InicioFerias")
+                        .HasColumnType("date");
 
                     b.HasDiscriminator().HasValue("Motorista");
                 });
@@ -574,14 +726,47 @@ namespace InfoFretamento.Migrations
                     b.Property<string>("Cartao")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.Property<string>("Matricula")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("varchar(50)");
 
                     b.HasDiscriminator().HasValue("Passageiro");
+                });
+
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.Abastecimento", b =>
+                {
+                    b.HasOne("InfoFretamento.Domain.Entities.Viagem", "Viagem")
+                        .WithOne("Abastecimento")
+                        .HasForeignKey("InfoFretamento.Domain.Entities.Abastecimento", "ViagemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Viagem");
+                });
+
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.Adiantamento", b =>
+                {
+                    b.HasOne("InfoFretamento.Domain.Entities.Viagem", "Viagem")
+                        .WithOne("Adiantamento")
+                        .HasForeignKey("InfoFretamento.Domain.Entities.Adiantamento", "ViagemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Viagem");
+                });
+
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.AdicionarPeca", b =>
+                {
+                    b.HasOne("InfoFretamento.Domain.Entities.Peca", "Peca")
+                        .WithMany()
+                        .HasForeignKey("PecaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Peca");
                 });
 
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Despesa", b =>
@@ -628,7 +813,7 @@ namespace InfoFretamento.Migrations
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Manutencao", b =>
                 {
                     b.HasOne("InfoFretamento.Domain.Entities.Servico", "Servico")
-                        .WithMany("Manutencoes")
+                        .WithMany()
                         .HasForeignKey("ServicoId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -668,17 +853,17 @@ namespace InfoFretamento.Migrations
                     b.OwnsOne("InfoFretamento.Domain.ValueObjects.DocumentoCliente", "Documento", b1 =>
                         {
                             b1.Property<int>("PessoaId")
-                                .HasColumnType("integer");
+                                .HasColumnType("int");
 
                             b1.Property<string>("Documento")
                                 .IsRequired()
                                 .HasMaxLength(20)
-                                .HasColumnType("character varying(20)");
+                                .HasColumnType("varchar(20)");
 
                             b1.Property<string>("Tipo")
                                 .IsRequired()
                                 .HasMaxLength(20)
-                                .HasColumnType("character varying(20)");
+                                .HasColumnType("varchar(20)");
 
                             b1.HasKey("PessoaId");
 
@@ -691,32 +876,32 @@ namespace InfoFretamento.Migrations
                     b.OwnsOne("InfoFretamento.Domain.ValueObjects.Endereco", "Endereco", b1 =>
                         {
                             b1.Property<int>("PessoaId")
-                                .HasColumnType("integer");
+                                .HasColumnType("int");
 
                             b1.Property<string>("Bairro")
                                 .IsRequired()
                                 .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
+                                .HasColumnType("varchar(100)");
 
                             b1.Property<string>("Cidade")
                                 .IsRequired()
                                 .HasMaxLength(100)
-                                .HasColumnType("character varying(100)");
+                                .HasColumnType("varchar(100)");
 
                             b1.Property<string>("Numero")
                                 .IsRequired()
                                 .HasMaxLength(10)
-                                .HasColumnType("character varying(10)");
+                                .HasColumnType("varchar(10)");
 
                             b1.Property<string>("Rua")
                                 .IsRequired()
                                 .HasMaxLength(150)
-                                .HasColumnType("character varying(150)");
+                                .HasColumnType("varchar(150)");
 
                             b1.Property<string>("Uf")
                                 .IsRequired()
                                 .HasMaxLength(2)
-                                .HasColumnType("character varying(2)");
+                                .HasColumnType("varchar(2)");
 
                             b1.HasKey("PessoaId");
 
@@ -760,14 +945,25 @@ namespace InfoFretamento.Migrations
                         .IsRequired();
 
                     b.HasOne("InfoFretamento.Domain.Entities.Viagem", "Viagem")
-                        .WithMany("Receitas")
-                        .HasForeignKey("ViagemId")
+                        .WithOne("Receita")
+                        .HasForeignKey("InfoFretamento.Domain.Entities.Receita", "ViagemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Responsavel");
 
                     b.Navigation("Viagem");
+                });
+
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.RetiradaPeca", b =>
+                {
+                    b.HasOne("InfoFretamento.Domain.Entities.Peca", "Peca")
+                        .WithMany()
+                        .HasForeignKey("PecaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Peca");
                 });
 
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Viagem", b =>
@@ -793,15 +989,15 @@ namespace InfoFretamento.Migrations
                     b.OwnsOne("InfoFretamento.Domain.ValueObjects.Horario", "DataHorarioChegada", b1 =>
                         {
                             b1.Property<int>("ViagemId")
-                                .HasColumnType("integer");
+                                .HasColumnType("int");
 
                             b1.Property<DateOnly>("Data")
-                                .HasColumnType("date");
+                                .HasColumnType("DATE");
 
                             b1.Property<string>("Hora")
                                 .IsRequired()
                                 .HasMaxLength(5)
-                                .HasColumnType("character varying(5)");
+                                .HasColumnType("varchar(5)");
 
                             b1.HasKey("ViagemId");
 
@@ -814,15 +1010,15 @@ namespace InfoFretamento.Migrations
                     b.OwnsOne("InfoFretamento.Domain.ValueObjects.Horario", "DataHorarioRetorno", b1 =>
                         {
                             b1.Property<int>("ViagemId")
-                                .HasColumnType("integer");
+                                .HasColumnType("int");
 
                             b1.Property<DateOnly>("Data")
-                                .HasColumnType("date");
+                                .HasColumnType("DATE");
 
                             b1.Property<string>("Hora")
                                 .IsRequired()
                                 .HasMaxLength(5)
-                                .HasColumnType("character varying(5)");
+                                .HasColumnType("varchar(5)");
 
                             b1.HasKey("ViagemId");
 
@@ -835,15 +1031,15 @@ namespace InfoFretamento.Migrations
                     b.OwnsOne("InfoFretamento.Domain.ValueObjects.Horario", "DataHorarioSaida", b1 =>
                         {
                             b1.Property<int>("ViagemId")
-                                .HasColumnType("integer");
+                                .HasColumnType("int");
 
                             b1.Property<DateOnly>("Data")
-                                .HasColumnType("date");
+                                .HasColumnType("DATE");
 
                             b1.Property<string>("Hora")
                                 .IsRequired()
                                 .HasMaxLength(5)
-                                .HasColumnType("character varying(5)");
+                                .HasColumnType("varchar(5)");
 
                             b1.HasKey("ViagemId");
 
@@ -856,15 +1052,15 @@ namespace InfoFretamento.Migrations
                     b.OwnsOne("InfoFretamento.Domain.ValueObjects.Horario", "DataHorarioSaidaGaragem", b1 =>
                         {
                             b1.Property<int>("ViagemId")
-                                .HasColumnType("integer");
+                                .HasColumnType("int");
 
                             b1.Property<DateOnly>("Data")
-                                .HasColumnType("date");
+                                .HasColumnType("DATE");
 
                             b1.Property<string>("Hora")
                                 .IsRequired()
                                 .HasMaxLength(5)
-                                .HasColumnType("character varying(5)");
+                                .HasColumnType("varchar(5)");
 
                             b1.HasKey("ViagemId");
 
@@ -877,7 +1073,7 @@ namespace InfoFretamento.Migrations
                     b.OwnsOne("InfoFretamento.Domain.ValueObjects.Rota", "Rota", b1 =>
                         {
                             b1.Property<int>("ViagemId")
-                                .HasColumnType("integer");
+                                .HasColumnType("int");
 
                             b1.HasKey("ViagemId");
 
@@ -889,22 +1085,22 @@ namespace InfoFretamento.Migrations
                             b1.OwnsOne("InfoFretamento.Domain.ValueObjects.Local", "Retorno", b2 =>
                                 {
                                     b2.Property<int>("RotaViagemId")
-                                        .HasColumnType("integer");
+                                        .HasColumnType("int");
 
                                     b2.Property<string>("CidadeSaida")
                                         .IsRequired()
                                         .HasMaxLength(50)
-                                        .HasColumnType("character varying(50)");
+                                        .HasColumnType("varchar(50)");
 
                                     b2.Property<string>("LocalDeSaida")
                                         .IsRequired()
                                         .HasMaxLength(50)
-                                        .HasColumnType("character varying(50)");
+                                        .HasColumnType("varchar(50)");
 
                                     b2.Property<string>("UfSaida")
                                         .IsRequired()
                                         .HasMaxLength(2)
-                                        .HasColumnType("character varying(2)");
+                                        .HasColumnType("varchar(2)");
 
                                     b2.HasKey("RotaViagemId");
 
@@ -917,22 +1113,22 @@ namespace InfoFretamento.Migrations
                             b1.OwnsOne("InfoFretamento.Domain.ValueObjects.Local", "Saida", b2 =>
                                 {
                                     b2.Property<int>("RotaViagemId")
-                                        .HasColumnType("integer");
+                                        .HasColumnType("int");
 
                                     b2.Property<string>("CidadeSaida")
                                         .IsRequired()
                                         .HasMaxLength(50)
-                                        .HasColumnType("character varying(50)");
+                                        .HasColumnType("varchar(50)");
 
                                     b2.Property<string>("LocalDeSaida")
                                         .IsRequired()
                                         .HasMaxLength(50)
-                                        .HasColumnType("character varying(50)");
+                                        .HasColumnType("varchar(50)");
 
                                     b2.Property<string>("UfSaida")
                                         .IsRequired()
                                         .HasMaxLength(2)
-                                        .HasColumnType("character varying(2)");
+                                        .HasColumnType("varchar(2)");
 
                                     b2.HasKey("RotaViagemId");
 
@@ -982,18 +1178,18 @@ namespace InfoFretamento.Migrations
                     b.OwnsOne("InfoFretamento.Domain.ValueObjects.HorarioLocal", "Chegada", b1 =>
                         {
                             b1.Property<int>("ViagemProgramadaId")
-                                .HasColumnType("integer");
+                                .HasColumnType("int");
 
                             b1.Property<DateOnly>("Data")
                                 .HasColumnType("date");
 
                             b1.Property<string>("Hora")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasColumnType("longtext");
 
                             b1.Property<string>("Local")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasColumnType("longtext");
 
                             b1.HasKey("ViagemProgramadaId");
 
@@ -1006,18 +1202,18 @@ namespace InfoFretamento.Migrations
                     b.OwnsOne("InfoFretamento.Domain.ValueObjects.HorarioLocal", "Retorno", b1 =>
                         {
                             b1.Property<int>("ViagemProgramadaId")
-                                .HasColumnType("integer");
+                                .HasColumnType("int");
 
                             b1.Property<DateOnly>("Data")
                                 .HasColumnType("date");
 
                             b1.Property<string>("Hora")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasColumnType("longtext");
 
                             b1.Property<string>("Local")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasColumnType("longtext");
 
                             b1.HasKey("ViagemProgramadaId");
 
@@ -1030,18 +1226,18 @@ namespace InfoFretamento.Migrations
                     b.OwnsOne("InfoFretamento.Domain.ValueObjects.HorarioLocal", "Saida", b1 =>
                         {
                             b1.Property<int>("ViagemProgramadaId")
-                                .HasColumnType("integer");
+                                .HasColumnType("int");
 
                             b1.Property<DateOnly>("Data")
                                 .HasColumnType("date");
 
                             b1.Property<string>("Hora")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasColumnType("longtext");
 
                             b1.Property<string>("Local")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasColumnType("longtext");
 
                             b1.HasKey("ViagemProgramadaId");
 
@@ -1068,26 +1264,26 @@ namespace InfoFretamento.Migrations
                     b.OwnsOne("InfoFretamento.Domain.ValueObjects.Habilitacao", "Habilitacao", b1 =>
                         {
                             b1.Property<int>("MotoristaId")
-                                .HasColumnType("integer");
+                                .HasColumnType("int");
 
                             b1.Property<string>("Categoria")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasColumnType("longtext");
 
                             b1.Property<string>("Cidade")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasColumnType("longtext");
 
                             b1.Property<string>("Protocolo")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasColumnType("longtext");
 
                             b1.Property<string>("Uf")
                                 .IsRequired()
-                                .HasColumnType("text");
+                                .HasColumnType("longtext");
 
                             b1.Property<DateOnly>("Vencimento")
-                                .HasColumnType("date");
+                                .HasColumnType("DATE");
 
                             b1.HasKey("MotoristaId");
 
@@ -1099,11 +1295,6 @@ namespace InfoFretamento.Migrations
 
                     b.Navigation("Habilitacao")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("InfoFretamento.Domain.Entities.Servico", b =>
-                {
-                    b.Navigation("Manutencoes");
                 });
 
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Veiculo", b =>
@@ -1119,9 +1310,16 @@ namespace InfoFretamento.Migrations
 
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Viagem", b =>
                 {
+                    b.Navigation("Abastecimento")
+                        .IsRequired();
+
+                    b.Navigation("Adiantamento")
+                        .IsRequired();
+
                     b.Navigation("Despesas");
 
-                    b.Navigation("Receitas");
+                    b.Navigation("Receita")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("InfoFretamento.Domain.Entities.ViagemProgramada", b =>

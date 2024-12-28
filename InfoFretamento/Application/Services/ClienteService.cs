@@ -6,7 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace InfoFretamento.Application.Services
 {
-    public class ClienteService(IBaseRepository<Cliente> repository, IPessoaRepository<Cliente> pessoaRepository, IMemoryCache cache) : BasePessoaService<Cliente, AdicionarClienteRequest, AtualizarClienteRequest>(repository, pessoaRepository, cache)
+    public class ClienteService(IBaseRepository<Cliente> repository, IPessoaRepository<Cliente> pessoaRepository) : BasePessoaService<Cliente, AdicionarClienteRequest, AtualizarClienteRequest>(repository, pessoaRepository)
     {
 
         private readonly IBaseRepository<Cliente> _repository = repository;

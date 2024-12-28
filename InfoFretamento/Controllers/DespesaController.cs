@@ -1,11 +1,13 @@
 ﻿using InfoFretamento.Application.Request.PagamentosRequest;
 using InfoFretamento.Application.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace InfoFretamento.Controllers
 {
+    
     [Route("[controller]")]
     [ApiController]
     public class DespesaController(DespesaService service) : ControllerBase
@@ -13,7 +15,7 @@ namespace InfoFretamento.Controllers
         private readonly DespesaService _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery]DateTime? endDate)
+        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery]DateTime? endDate, [FromQuery] string? prefixo = null)
         {
             if (startDate == null)
             {
@@ -26,7 +28,7 @@ namespace InfoFretamento.Controllers
                 endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
             }
 
-            var result = await _service.GetAllWithFilterAsync(DateOnly.FromDateTime(startDate.Value), DateOnly.FromDateTime(endDate.Value));
+            var result = await _service.GetAllWithFilterAsync(DateOnly.FromDateTime(startDate.Value), DateOnly.FromDateTime(endDate.Value),prefixo );
             return Ok(result);
         }
 
