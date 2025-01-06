@@ -5,21 +5,24 @@ namespace InfoFretamento.Application.Request.PassagemRequest
 {
     public record AtualizarPassagemRequest : BaseAtualizarRequest<Passagem>
     {
-        public int ViagemId { get; set; }
         public int PassageiroId { get; set; }
-        public DateTime DataEmissao { get; set; }
         public string FormaPagamento { get; set; } = string.Empty;
         public int Poltrona { get; set; }
         public string Situacao { get; set; } = string.Empty;
+        public string EmailPassageiro { get; set; } = string.Empty;
+        public string TelefonePassageiro { get; set; } = string.Empty;
+        public string CpfPassageiro { get; set; } = string.Empty;
+        public string NomePassageiro { get; set; } = string.Empty;
         public override Passagem UpdateEntity(Passagem entity)
         {
-            entity.ViagemId = ViagemId;
             entity.PassageiroId = PassageiroId;
-            entity.DataEmissao = DataEmissao;
             entity.FormaPagamento = FormaPagamento;
             entity.Poltrona = Poltrona;
             entity.Situacao = Situacao;
-
+            entity.CpfPassageiro = CpfPassageiro;
+            entity.EmailPassageiro = EmailPassageiro;
+            entity.TelefonePassageiro = TelefonePassageiro;
+            entity.NomePassageiro = NomePassageiro;
             return entity;
         }
     }

@@ -6,7 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace InfoFretamento.Application.Services
 {
-    public class VeiculoService(IBaseRepository<Veiculo> repository) : BaseService<Veiculo, AdicionarVeiculoRequest, AtualizarVeiculoRequest>(repository)
+    public class VeiculoService(IBaseRepository<Veiculo> repository, IMemoryCache cache, CacheManager cacheManager) : BaseService<Veiculo, AdicionarVeiculoRequest, AtualizarVeiculoRequest>(repository, cache,cacheManager)
     {
        private readonly IBaseRepository<Veiculo> _repository = repository;
         

@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace InfoFretamento.Application.Services
 {
-    public class DespesaService(IBaseRepository<Despesa> repository, IMemoryCache cache) : BaseService<Despesa, AdicionarDespesaRequest, AtualizarDespesaRequest>(repository)
+    public class DespesaService(IBaseRepository<Despesa> repository, IMemoryCache cache, CacheManager cacheManager) : BaseService<Despesa, AdicionarDespesaRequest, AtualizarDespesaRequest>(repository,cache,cacheManager)
     {
         private readonly IBaseRepository<Despesa> _repository = repository;
 

@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace InfoFretamento.Application.Services
 {
-    public class ReceitaService(IBaseRepository<Receita> repository) : BaseService<Receita, AdicionarReceitaRequest, AtualizarReceitaRequest>(repository)
+    public class ReceitaService(IBaseRepository<Receita> repository, IMemoryCache memoryCache, CacheManager cacheManager) : BaseService<Receita, AdicionarReceitaRequest, AtualizarReceitaRequest>(repository, memoryCache, cacheManager)
     {
         private readonly IBaseRepository<Receita> _repository = repository;
 

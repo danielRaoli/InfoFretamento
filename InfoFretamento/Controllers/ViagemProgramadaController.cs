@@ -10,6 +10,7 @@ namespace InfoFretamento.Controllers
     
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ViagemProgramadaController(ViagemProgramadaService service) : ControllerBase
     {
         private readonly ViagemProgramadaService _service = service;

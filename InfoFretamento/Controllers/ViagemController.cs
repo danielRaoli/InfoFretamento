@@ -8,6 +8,7 @@ namespace InfoFretamento.Controllers
     
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ViagemController(ViagemService service) : ControllerBase
     {
         private readonly ViagemService _service = service;

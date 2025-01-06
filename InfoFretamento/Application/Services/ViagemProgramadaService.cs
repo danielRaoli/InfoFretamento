@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace InfoFretamento.Application.Services
 {
-    public class ViagemProgramadaService(IBaseRepository<ViagemProgramada> repository) : BaseService<ViagemProgramada, AdicionarViagemProgramadaRequest, AtualizarViagemProgramadaRequest>(repository)
+    public class ViagemProgramadaService(IBaseRepository<ViagemProgramada> repository, IMemoryCache memoryCache, CacheManager cacheManager) : BaseService<ViagemProgramada, AdicionarViagemProgramadaRequest, AtualizarViagemProgramadaRequest>(repository, memoryCache, cacheManager)
     {
         private readonly IBaseRepository<ViagemProgramada> _repository = repository;
         public async Task<Response<ViagemProgramada?>> GetByIdIncludeAsync(int id)

@@ -1,4 +1,4 @@
-﻿using InfoFretamento.Application.Request.PagamentosRequest;
+﻿ using InfoFretamento.Application.Request.PagamentosRequest;
 using InfoFretamento.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +10,7 @@ namespace InfoFretamento.Controllers
     
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class DespesaController(DespesaService service) : ControllerBase
     {
         private readonly DespesaService _service = service;

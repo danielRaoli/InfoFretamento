@@ -1,4 +1,4 @@
-﻿using InfoFretamento.Application.Request.ViagemRequest;
+﻿    using InfoFretamento.Application.Request.ViagemRequest;
 using InfoFretamento.Application.Responses;
 using InfoFretamento.Domain.Entities;
 using InfoFretamento.Domain.Repositories;
@@ -7,11 +7,13 @@ using System.Linq.Expressions;
 
 namespace InfoFretamento.Application.Services
 {
-    public class ViagemService(IBaseRepository<Viagem> repository, IBaseRepository<Receita> receitaRepository, IBaseRepository<Veiculo> veiculoRepository) : BaseService<Viagem, AdicionarViagemRequest, AtualizarViagemRequest>(repository)
+    public class ViagemService(IBaseRepository<Viagem> repository, IBaseRepository<Receita> receitaRepository, IBaseRepository<Veiculo> veiculoRepository, IMemoryCache memoryCache, CacheManager cacheManager) : BaseService<Viagem, AdicionarViagemRequest, AtualizarViagemRequest>(repository, memoryCache,cacheManager)
     {
         private readonly IBaseRepository<Viagem> _repository = repository;
         private readonly IBaseRepository<Receita> _receitaRepository = receitaRepository;
         private readonly IBaseRepository<Veiculo> _veiculoRepository = veiculoRepository;
+        private readonly IMemoryCache _memoryCache = memoryCache;
+        private readonly CacheManager _cacheManager = cacheManager;
         public override async Task<Response<Viagem?>> AddAsync(AdicionarViagemRequest createRequest)
         {
             using var transaction = await _repository.BeginTransactionAsync();
@@ -48,6 +50,7 @@ namespace InfoFretamento.Application.Services
                 }
 
                 await transaction.CommitAsync();
+                _cacheManager.ClearAll($"{typeof(Viagem).Name}");
                 return result;
             }
             catch (Exception ex)
@@ -65,21 +68,29 @@ namespace InfoFretamento.Application.Services
 
         public async Task<Response<List<Viagem>>> GetAllWithFilters(DateOnly startDate, DateOnly endDate, string? prefixoVeiculo = null)
         {
+            var cacheKey = $"{typeof(Viagem).Name}_{startDate}_{endDate}_{prefixoVeiculo ?? "null"}";
 
-            var filters = new List<Expression<Func<Viagem, bool>>>();
+            var viagens = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
+            {
+                entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
+                entry.SlidingExpiration = TimeSpan.FromMinutes(10);
 
+                var filters = new List<Expression<Func<Viagem, bool>>>
+            {
+                d => d.DataHorarioSaida.Data >= startDate,
+                d => d.DataHorarioSaida.Data <= endDate
+            };
 
-            filters.Add(d => d.DataHorarioSaida.Data >= startDate); // Converte DateOnly para DateTime
+                if (!string.IsNullOrEmpty(prefixoVeiculo))
+                    filters.Add(d => d.Veiculo.Prefixo == prefixoVeiculo);
 
-            filters.Add(d => d.DataHorarioSaida.Data <= endDate); // Converte DateOnly para DateTime
+                var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Motorista", "Cliente", "Veiculo" });
+                return response.ToList();
+            });
 
-            if (!string.IsNullOrEmpty(prefixoVeiculo)) filters.Add(d => d.Veiculo.Prefixo == prefixoVeiculo);
+            _cacheManager.AddKey(cacheKey);
 
-
-            var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Motorista", "Cliente", "Veiculo" });
-
-
-            return new Response<List<Viagem>>(response.ToList());
+            return new Response<List<Viagem>>(viagens);
         }
 
         public override async Task<Response<Viagem?>> UpdateAsync(AtualizarViagemRequest updateRequest)
@@ -147,6 +158,7 @@ namespace InfoFretamento.Application.Services
 
                 // Confirma a transação
                 await transaction.CommitAsync();
+                _cacheManager.ClearAll($"{typeof(Viagem).Name}");
                 return new Response<Viagem?>(viagem);
             }
             catch (Exception ex)

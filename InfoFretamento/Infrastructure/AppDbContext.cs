@@ -47,6 +47,13 @@ namespace InfoFretamento.Infrastructure
                 });
                 entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
                 entity.HasMany(e => e.Receitas).WithOne().HasForeignKey(d => d.ResponsavelId);
+
+                entity.HasMany(e => e.Ferias).WithOne().HasForeignKey(f => f.ResponsavelId);
+            });
+
+            modelBuilder.Entity<Colaborador>(e =>
+            {
+                e.HasMany(e => e.Ferias).WithOne().HasForeignKey(f => f.ResponsavelId);
             });
 
             modelBuilder.Entity<Cliente>(entity =>
@@ -232,11 +239,7 @@ namespace InfoFretamento.Infrastructure
                 entity.HasOne(e => e.Veiculo).WithMany(v => v.ViagensProgramadaas).HasForeignKey(e => e.VeiculoId);
             });
 
-            modelBuilder.Entity<Passageiro>(entity =>
-            {
-                entity.Property(e => e.Matricula).HasMaxLength(50);
-                entity.Property(e => e.Cartao).HasMaxLength(50);
-            });
+
 
             modelBuilder.Entity<Passagem>(entity =>
             {
@@ -244,7 +247,6 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(e => e.FormaPagamento).HasMaxLength(15);
                 entity.Property(e => e.Situacao).HasMaxLength(15);
                 entity.HasOne(e => e.Viagem).WithMany(v => v.Passagens).HasForeignKey(e => e.ViagemId);
-                entity.HasOne(e => e.Passageiro).WithMany(v => v.Passagens).HasForeignKey(e => e.PassageiroId);
             });
 
             modelBuilder.Entity<Peca>(entity =>
@@ -256,6 +258,13 @@ namespace InfoFretamento.Infrastructure
             {
                 entity.Property(d => d.Vencimento).HasColumnType("DATE");
             });
+
+            modelBuilder.Entity<Ferias>(entity =>
+            {
+                entity.Property(e => e.InicioFerias).HasColumnType("DATE");
+                entity.Property(e => e.FimFerias).HasColumnType("DATE");
+            });
+            
         }
 
 
@@ -272,13 +281,13 @@ namespace InfoFretamento.Infrastructure
         public DbSet<Manutencao> Manutencoes { get; set; }
         public DbSet<Servico> Servicos { get; set; }
         public DbSet<ViagemProgramada> ViagensProgramadas { get; set; }
-        public DbSet<Passageiro> Passageiros { get; set; }
         public DbSet<Passagem> Passagens { get; set; }
         public DbSet<Abastecimento> Abastecimentos { get; set; }
         public DbSet<Peca> Pecas { get; set; }
         public DbSet<Adiantamento> Adiantamentos { get; set; }
         public DbSet<RetiradaPeca> Retiradas { get; set; }
         public DbSet<AdicionarPeca> Adicionamentos { get; set; }
+        public DbSet<Ferias> Ferias { get; set; }
 
 
 

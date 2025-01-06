@@ -16,6 +16,7 @@ builder.Services.AddDbContext<AppDbContext>(opts => opts.UseMySql(connectionStri
 
 builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
 builder.Services.AddScoped(typeof(IPessoaRepository<>), typeof(PessoaRepository<>));
+builder.Services.AddScoped<EstoqueRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ReceitaService>();
@@ -29,13 +30,15 @@ builder.Services.AddScoped<DocumentoService>();
 builder.Services.AddScoped<ManutencaoService>();
 builder.Services.AddScoped<ViagemProgramadaService>();
 builder.Services.AddScoped<ServicoService>();
-builder.Services.AddScoped<PassageiroService>();
 builder.Services.AddScoped<ViagemService>();
 builder.Services.AddScoped<PassagemService>();
 builder.Services.AddScoped<AdiantamentoService>();
 builder.Services.AddScoped<AbastecimentoService>();
+builder.Services.AddScoped<EstoqueService>();
+builder.Services.AddScoped<PecaService>();
+builder.Services.AddScoped<FeriasService>();
 builder.Services.AddScoped<AuthService>();
-
+builder.Services.AddSingleton<CacheManager>();
 builder.Services.AddScoped<DbSeed>();
 
 builder.Services.AddAuthentication(options =>
@@ -63,15 +66,17 @@ builder.Services.AddControllers().AddJsonOptions( options =>
     options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
 });
 
+builder.Services.AddMemoryCache();
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(opts => opts.AddPolicy("AppCors", policy =>
 {
-    policy.AllowAnyOrigin()
+    policy.WithOrigins("http://localhost:3000")
     .AllowAnyHeader()
-    .AllowAnyMethod();
+    .AllowAnyMethod().AllowCredentials();
 
 }));
 

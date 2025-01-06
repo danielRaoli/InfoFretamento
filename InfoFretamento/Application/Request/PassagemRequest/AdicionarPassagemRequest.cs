@@ -13,6 +13,10 @@ namespace InfoFretamento.Application.Request.PassagemRequest
         public string FormaPagamento { get; set; } = string.Empty;
         public int Poltrona { get; set; }
         public string Situacao { get; set; } = string.Empty;
+        public string EmailPassageiro { get; set; } = string.Empty;
+        public string TelefonePassageiro { get; set; } = string.Empty;
+        public string CpfPassageiro { get; set; } = string.Empty;
+        public string NomePassageiro { get; set; } = string.Empty;
         public Passagem ToEntity()
         {
             return new Passagem
@@ -22,7 +26,11 @@ namespace InfoFretamento.Application.Request.PassagemRequest
                 DataEmissao = DataEmissao,
                 FormaPagamento = FormaPagamento,
                 Poltrona = Poltrona,
-                Situacao = Situacao
+                Situacao = Situacao,
+                EmailPassageiro = EmailPassageiro,
+                TelefonePassageiro = TelefonePassageiro,
+                CpfPassageiro = CpfPassageiro,
+                NomePassageiro = NomePassageiro,
             };
         }
     }

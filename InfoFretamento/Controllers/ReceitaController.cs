@@ -9,6 +9,7 @@ namespace InfoFretamento.Controllers
    
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ReceitaController(ReceitaService service) : ControllerBase
     {
         private readonly ReceitaService _service = service;

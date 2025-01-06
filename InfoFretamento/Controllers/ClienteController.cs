@@ -10,6 +10,7 @@ namespace InfoFretamento.Controllers
     
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ClienteController(ClienteService service) : ControllerBase
     {
         private readonly ClienteService _service = service;

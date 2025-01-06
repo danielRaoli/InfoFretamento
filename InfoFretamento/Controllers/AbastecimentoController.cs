@@ -8,6 +8,7 @@ namespace InfoFretamento.Controllers
     
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class AbastecimentoController(AbastecimentoService service) : ControllerBase
     {
 

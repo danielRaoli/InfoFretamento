@@ -9,7 +9,7 @@ namespace InfoFretamento.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    
+    [Authorize]
     public class AdiantamentoController(AdiantamentoService service) : ControllerBase
     {
         private readonly AdiantamentoService _service = service;

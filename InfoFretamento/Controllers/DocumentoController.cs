@@ -8,6 +8,7 @@ namespace InfoFretamento.Controllers
     
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class DocumentoController(DocumentoService service) : ControllerBase
     {
         private readonly DocumentoService _service = service;

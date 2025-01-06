@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace InfoFretamento.Application.Services
 {
-    public class ManutencaoService(IBaseRepository<Manutencao> repository) : BaseService<Manutencao, AdicionarManutencaoRequest, AtualizarManutencaoRequest>(repository)
+    public class ManutencaoService(IBaseRepository<Manutencao> repository, IMemoryCache memoryCache, CacheManager cacheManager) : BaseService<Manutencao, AdicionarManutencaoRequest, AtualizarManutencaoRequest>(repository, memoryCache, cacheManager)
     {
         private readonly IBaseRepository<Manutencao> _repository = repository;
 

@@ -4,6 +4,7 @@ using InfoFretamento.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfoFretamento.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250103183549_ferias-table")]
+    partial class feriastable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,25 +281,13 @@ namespace InfoFretamento.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CpfPassageiro")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<DateTime>("DataEmissao")
                         .HasColumnType("DATE");
-
-                    b.Property<string>("EmailPassageiro")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("FormaPagamento")
                         .IsRequired()
                         .HasMaxLength(15)
                         .HasColumnType("varchar(15)");
-
-                    b.Property<string>("NomePassageiro")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<int>("PassageiroId")
                         .HasColumnType("int");
@@ -309,14 +300,12 @@ namespace InfoFretamento.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("varchar(15)");
 
-                    b.Property<string>("TelefonePassageiro")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<int>("ViagemId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PassageiroId");
 
                     b.HasIndex("ViagemId");
 
@@ -746,6 +735,23 @@ namespace InfoFretamento.Migrations
                     b.HasDiscriminator().HasValue("Motorista");
                 });
 
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.Passageiro", b =>
+                {
+                    b.HasBaseType("InfoFretamento.Domain.Entities.Pessoa");
+
+                    b.Property<string>("Cartao")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Matricula")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
+
+                    b.HasDiscriminator().HasValue("Passageiro");
+                });
+
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Abastecimento", b =>
                 {
                     b.HasOne("InfoFretamento.Domain.Entities.Viagem", "Viagem")
@@ -864,11 +870,19 @@ namespace InfoFretamento.Migrations
 
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Passagem", b =>
                 {
+                    b.HasOne("InfoFretamento.Domain.Entities.Passageiro", "Passageiro")
+                        .WithMany("Passagens")
+                        .HasForeignKey("PassageiroId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("InfoFretamento.Domain.Entities.ViagemProgramada", "Viagem")
                         .WithMany("Passagens")
                         .HasForeignKey("ViagemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Passageiro");
 
                     b.Navigation("Viagem");
                 });
@@ -1390,6 +1404,11 @@ namespace InfoFretamento.Migrations
                     b.Navigation("Receitas");
 
                     b.Navigation("Viagens");
+                });
+
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.Passageiro", b =>
+                {
+                    b.Navigation("Passagens");
                 });
 #pragma warning restore 612, 618
         }

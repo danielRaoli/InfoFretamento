@@ -6,7 +6,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace InfoFretamento.Application.Services;
 
-public class FornecedorService(IBaseRepository<Fornecedor> repository, IPessoaRepository<Fornecedor> pessoaRepository) : BasePessoaService<Fornecedor, AdicionarFornecedorRequest, AtualizarFornecedorRequest>(repository, pessoaRepository)
+public class FornecedorService(IBaseRepository<Fornecedor> repository, IPessoaRepository<Fornecedor> pessoaRepository, IMemoryCache memoryCache, CacheManager cacheManager) : BasePessoaService<Fornecedor, AdicionarFornecedorRequest, AtualizarFornecedorRequest>(repository, pessoaRepository, memoryCache, cacheManager)
 {
     private readonly IBaseRepository<Fornecedor> _repository = repository;
 

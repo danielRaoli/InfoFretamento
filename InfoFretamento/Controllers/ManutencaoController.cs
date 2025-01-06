@@ -8,6 +8,7 @@ namespace InfoFretamento.Controllers
     
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ManutencaoController(ManutencaoService service) : ControllerBase
     {
         private readonly ManutencaoService _service = service;

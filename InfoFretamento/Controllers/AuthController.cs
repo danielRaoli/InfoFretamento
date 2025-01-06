@@ -1,7 +1,6 @@
 ﻿using InfoFretamento.Application.Request.Auth;
 using InfoFretamento.Application.Services;
-
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InfoFretamento.Controllers

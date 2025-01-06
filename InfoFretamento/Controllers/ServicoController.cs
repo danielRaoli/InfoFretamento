@@ -8,6 +8,7 @@ namespace InfoFretamento.Controllers
     
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class ServicoController(ServicoService service) : ControllerBase
     {
         private readonly ServicoService _service = service;

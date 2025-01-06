@@ -5,7 +5,7 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace InfoFretamento.Application.Services
 {
-    public class PassagemService(IBaseRepository<Passagem> repository) : BaseService<Passagem, AdicionarPassagemRequest,AtualizarPassagemRequest>(repository)
+    public class PassagemService(IBaseRepository<Passagem> repository, IMemoryCache cache, CacheManager cacheManager) : BaseService<Passagem, AdicionarPassagemRequest,AtualizarPassagemRequest>(repository, cache, cacheManager)
     {
     }
 }

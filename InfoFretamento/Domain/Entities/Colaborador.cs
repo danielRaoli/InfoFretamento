@@ -2,7 +2,6 @@
 {
     public class Colaborador : Pessoa
     {
-        public DateOnly InicioFerias { get; set; }
-        public DateOnly FimFerias{ get; set; }
+        public List<Ferias> Ferias { get; set; } = [];
     }
 }

@@ -10,6 +10,7 @@ namespace InfoFretamento.Controllers
     
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class MotoristaController(MotoristaService service) : ControllerBase
     {
         private readonly MotoristaService _service = service;

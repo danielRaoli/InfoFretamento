@@ -8,6 +8,7 @@ namespace InfoFretamento.Controllers
    
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class PassagemController(PassagemService service) : ControllerBase
     {
         private readonly PassagemService _service = service;

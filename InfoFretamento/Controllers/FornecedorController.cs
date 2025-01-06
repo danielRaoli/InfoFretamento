@@ -10,6 +10,7 @@ namespace InfoFretamento.Controllers
     
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class FornecedorController(FornecedorService service) : ControllerBase
     {
         private readonly FornecedorService _service = service;
