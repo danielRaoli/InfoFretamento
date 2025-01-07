@@ -122,7 +122,7 @@ namespace InfoFretamento.Application.Services
                 new Response<AdicionarPeca?>(null, 500, "Nao foi possivel atualizar o estoque no momento");
             }
 
-            _cacheManager.ClearAll($"{typeof(RetiradaPeca).Name}");
+            _cacheManager.ClearAll($"{typeof(AdicionarPeca).Name}");
             _cacheManager.ClearAll($"{typeof(Peca).Name}");
             return new Response<AdicionarPeca?>(result);
 
@@ -164,7 +164,7 @@ namespace InfoFretamento.Application.Services
                 new Response<RetiradaPeca>(null, 500, "Erro ao tentar remover retirada do historico");
             }
 
-            _cacheManager.ClearAll($"{typeof(RetiradaPeca).Name}");
+            _cacheManager.ClearAll($"{typeof(AdicionarPeca).Name}");
             _cacheManager.ClearAll($"{typeof(Peca).Name}");
             return new Response<RetiradaPeca>(null);
         }
