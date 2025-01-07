@@ -100,14 +100,14 @@ namespace InfoFretamento.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("/retirada")]
+        [HttpDelete("/retirada/{id}")]
         public async Task<IActionResult> RemoverRetirada([FromRoute] int id)
         {
             var response = await _estoqueService.RemoverRetirada(id);
             return Ok(response);
         }
 
-        [HttpDelete("/reestoque")]
+        [HttpDelete("/reestoque/{id}")]
         public async Task<IActionResult> RemoverAdicionamento([FromRoute] int id)
         {
             var response = await _estoqueService.RemoverRetirada(id);

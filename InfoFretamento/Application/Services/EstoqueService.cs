@@ -16,6 +16,7 @@ namespace InfoFretamento.Application.Services
 
 
         public async Task<Response<List<RetiradaPeca>>> GetAllRetiradas(DateOnly minDate, DateOnly maxDate, string? prefixoVeiculo = null)
+        
         {
             var cacheKey = $"{typeof(RetiradaPeca).Name}_{minDate}_{maxDate}_{prefixoVeiculo ?? "null"}";
             var result = await _memoryCache.GetOrCreateAsync(cacheKey, async entry =>
@@ -79,6 +80,7 @@ namespace InfoFretamento.Application.Services
             if (result is null) { new Response<RetiradaPeca>(null, 500, "Nao foi possivel atualizar o estoque no momento"); }
 
             _cacheManager.ClearAll($"{typeof(RetiradaPeca).Name}");
+            _cacheManager.ClearAll($"{typeof(Peca).Name}");
 
             return new Response<RetiradaPeca>(result);
 
@@ -121,6 +123,7 @@ namespace InfoFretamento.Application.Services
             }
 
             _cacheManager.ClearAll($"{typeof(RetiradaPeca).Name}");
+            _cacheManager.ClearAll($"{typeof(Peca).Name}");
             return new Response<AdicionarPeca?>(result);
 
         }
@@ -141,7 +144,7 @@ namespace InfoFretamento.Application.Services
                 new Response<RetiradaPeca>(null, 500, "Erro ao tentar remover retirada do historico");
             }
             _cacheManager.ClearAll($"{typeof(RetiradaPeca).Name}");
-
+            _cacheManager.ClearAll($"{typeof(Peca).Name}");
             return new Response<RetiradaPeca>(null);
         }
 
@@ -162,6 +165,7 @@ namespace InfoFretamento.Application.Services
             }
 
             _cacheManager.ClearAll($"{typeof(RetiradaPeca).Name}");
+            _cacheManager.ClearAll($"{typeof(Peca).Name}");
             return new Response<RetiradaPeca>(null);
         }
 

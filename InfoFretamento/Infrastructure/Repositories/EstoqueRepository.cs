@@ -30,7 +30,7 @@ namespace InfoFretamento.Infrastructure.Repositories
             query = query.Include(r => r.Veiculo).Include(r => r.Peca);
             if (veiculo != null)
             {
-                query.Where(r => r.Veiculo.Prefixo.Equals(veiculo));
+                query = query.Where(r => r.Veiculo.Prefixo.Equals(veiculo));
             }
 
             query.Where(r => r.DataDeRetirada >= minDate && r.DataDeRetirada <= maxDate);
