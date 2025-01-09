@@ -24,7 +24,7 @@ namespace InfoFretamento.Application.Services
 
 
             // Busca os dados no repositório
-            var response = await _repository.GetAllWithFilterAsync(filters);
+            var response = await _repository.GetAllWithFilterAsync(filters, ["Responsavel"]);
 
 
             return new Response<List<Ferias>>(response.ToList());

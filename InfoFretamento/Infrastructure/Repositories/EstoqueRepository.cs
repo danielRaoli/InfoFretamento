@@ -33,7 +33,7 @@ namespace InfoFretamento.Infrastructure.Repositories
                 query = query.Where(r => r.Veiculo.Prefixo.Equals(veiculo));
             }
 
-            query.Where(r => r.DataDeRetirada >= minDate && r.DataDeRetirada <= maxDate);
+             query = query.Where(r => r.DataDeRetirada >= minDate && r.DataDeRetirada <= maxDate);
             return await query.ToListAsync();
 
 

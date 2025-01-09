@@ -12,7 +12,7 @@ namespace InfoFretamento.Application.Services
 
         public async Task<Response<Motorista?>> GetWithIncludes(int id)
         {
-            var response = await _repository.GetWithFilterAsync(id, new string[] { "Despesas", "Receitas" });
+            var response = await _repository.GetWithFilterAsync(id, new string[] { "Ferias" });
             return response != null ? new Response<Motorista?>(response) : new Response<Motorista?>(null, 404, "motorista não encontrado");
         }
     }

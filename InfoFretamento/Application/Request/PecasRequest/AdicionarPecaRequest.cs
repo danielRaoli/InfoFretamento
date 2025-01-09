@@ -11,7 +11,7 @@ namespace InfoFretamento.Application.Request.PecasRequest
 
         public AdicionarPeca ToEntity()
         {
-           return new AdicionarPeca { PecaId = PecaId, Quantidade = Quantidade, PrecoTotal = PrecoTotal };
+           return new AdicionarPeca { PecaId = PecaId, Quantidade = Quantidade, PrecoTotal = PrecoTotal, DataDeEntrada = DateOnly.FromDateTime(DateTime.Now) };
         }
     }
 }

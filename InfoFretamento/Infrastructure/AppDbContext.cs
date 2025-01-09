@@ -47,7 +47,6 @@ namespace InfoFretamento.Infrastructure
                 });
                 entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
                 entity.HasMany(e => e.Receitas).WithOne().HasForeignKey(d => d.ResponsavelId);
-
                 entity.HasMany(e => e.Ferias).WithOne().HasForeignKey(f => f.ResponsavelId);
             });
 
@@ -261,6 +260,9 @@ namespace InfoFretamento.Infrastructure
 
             modelBuilder.Entity<Ferias>(entity =>
             {
+                entity.HasOne(f => f.Responsavel)
+                 .WithMany()
+                 .HasForeignKey(f => f.ResponsavelId);
                 entity.Property(e => e.InicioFerias).HasColumnType("DATE");
                 entity.Property(e => e.FimFerias).HasColumnType("DATE");
             });
