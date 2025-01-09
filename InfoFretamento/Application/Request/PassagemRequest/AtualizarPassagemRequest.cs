@@ -5,7 +5,7 @@ namespace InfoFretamento.Application.Request.PassagemRequest
 {
     public record AtualizarPassagemRequest : BaseAtualizarRequest<Passagem>
     {
-        public int PassageiroId { get; set; }
+
         public string FormaPagamento { get; set; } = string.Empty;
         public int Poltrona { get; set; }
         public string Situacao { get; set; } = string.Empty;
@@ -15,7 +15,7 @@ namespace InfoFretamento.Application.Request.PassagemRequest
         public string NomePassageiro { get; set; } = string.Empty;
         public override Passagem UpdateEntity(Passagem entity)
         {
-            entity.PassageiroId = PassageiroId;
+
             entity.FormaPagamento = FormaPagamento;
             entity.Poltrona = Poltrona;
             entity.Situacao = Situacao;

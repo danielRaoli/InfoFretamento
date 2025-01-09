@@ -6,7 +6,7 @@ namespace InfoFretamento.Application.Request.ClienteRequest
     public record AtualizarClienteRequest : BaseAtualizarPessoaRequest<Cliente>
     {
         public string Tipo { get; set; } = string.Empty;
-
+        public string NomeFantasia { get; set; } = string.Empty;
         public override Cliente UpdateEntity(Cliente entity)
         {
 
@@ -17,7 +17,7 @@ namespace InfoFretamento.Application.Request.ClienteRequest
             entity.Endereco = Endereco;
             entity.Cpf = Cpf;
             entity.Tipo = Tipo;
-
+            entity.NomeFantasia = NomeFantasia; 
             return entity;
         }
     }

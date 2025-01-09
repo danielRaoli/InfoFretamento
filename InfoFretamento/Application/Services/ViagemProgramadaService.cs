@@ -19,7 +19,6 @@ namespace InfoFretamento.Application.Services
                         includes: new string[]
                         {
                             "Passagens",
-                            "Passagens.Passageiro",
                             "Veiculo"
                         }
                     );

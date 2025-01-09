@@ -18,5 +18,7 @@ namespace InfoFretamento.Application.Services
             var response = await _repository.GetWithFilterAsync(id, new string[] { "Despesas", "Receitas","Viagens" });
             return response != null ? new Response<Cliente?>(response) : new Response<Cliente?>(null, 404, "motorista não encontrado");
         }
+
+
     }
 }

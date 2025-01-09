@@ -4,6 +4,7 @@ using InfoFretamento.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfoFretamento.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250109182222_change passagem table")]
+    partial class changepassagemtable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -700,19 +703,12 @@ namespace InfoFretamento.Migrations
                 {
                     b.HasBaseType("InfoFretamento.Domain.Entities.Pessoa");
 
-                    b.Property<string>("NomeFantasia")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.ToTable("Pessoa", t =>
                         {
-                            t.Property("NomeFantasia")
-                                .HasColumnName("Cliente_NomeFantasia");
-
                             t.Property("Tipo")
                                 .HasColumnName("Cliente_Tipo");
                         });
@@ -730,10 +726,6 @@ namespace InfoFretamento.Migrations
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Fornecedor", b =>
                 {
                     b.HasBaseType("InfoFretamento.Domain.Entities.Pessoa");
-
-                    b.Property<string>("NomeFantasia")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Tipo")
                         .IsRequired()
