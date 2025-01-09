@@ -16,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(opts => opts.UseMySql(connectionStri
 
 builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
 builder.Services.AddScoped(typeof(IPessoaRepository<>), typeof(PessoaRepository<>));
+builder.Services.AddScoped<DashBoardRepository>();
+builder.Services.AddScoped<DashBoardService>();
 builder.Services.AddScoped<EstoqueRepository>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
