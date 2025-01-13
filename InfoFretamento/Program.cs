@@ -77,9 +77,10 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(opts => opts.AddPolicy("AppCors", policy =>
 {
-    policy.AllowAnyOrigin()
+    policy.WithOrigins("https://sistema-fretamento.vercel.app", "http://localhost:3000")
     .AllowAnyHeader()
-    .AllowAnyMethod();
+    .AllowAnyMethod()
+    .AllowCredentials();
 
 }));
 
