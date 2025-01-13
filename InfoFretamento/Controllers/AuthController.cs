@@ -12,11 +12,11 @@ namespace InfoFretamento.Controllers
         private readonly AuthService _userService = service;
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
+        public IActionResult Login([FromBody] LoginRequest loginRequest)
         {
             try
             {
-                var response = await _userService.Login(loginRequest);
+                var response = _userService.Login(loginRequest);
 
                 return Ok(response);
             }

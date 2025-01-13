@@ -13,13 +13,13 @@ namespace InfoFretamento.Controllers
     {
         private readonly PassagemService _service = service;
 
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [HttpGet("viagem/{viagemId}")]
+        public async Task<IActionResult> GetAll([FromRoute] int viagemId)
         {
-            var result = await _service.GetAllAsync();
+            var result = await _service.GetAll(viagemId);
             return Ok(result);
         }
-
+          
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)

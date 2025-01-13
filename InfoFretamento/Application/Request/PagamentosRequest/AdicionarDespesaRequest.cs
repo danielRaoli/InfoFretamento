@@ -15,7 +15,7 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
         public decimal ValorParcial { get; set; }
         public string FormaPagamento { get; set; } = string.Empty;
         public string CentroCusto { get; set; } = string.Empty;
-
+        public string Descricao { get; set; } = string.Empty;
 
         public Despesa ToEntity()
         {
@@ -30,7 +30,8 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
                 Vencimento = DateOnly.FromDateTime(Vencimento),
                 ValorTotal = ValorTotal,
                 ValorParcial = ValorParcial,
-                FormaPagamento = FormaPagamento,    
+                FormaPagamento = FormaPagamento,   
+                Descricao = Descricao,
             };
         }
     }

@@ -14,6 +14,7 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
         public decimal ValorParcial { get; set; }
         public string FormaPagamento { get; set; } = string.Empty;
         public string CentroCusto { get; set; } = string.Empty;
+        public string Descricao { get; set; } = string.Empty;
 
         public override Despesa UpdateEntity(Despesa entity)
         {
@@ -26,6 +27,7 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
             entity.ValorParcial = this.ValorParcial;
             entity.FormaPagamento = this.FormaPagamento;
             entity.CentroCusto = this.CentroCusto;
+            entity.Descricao = Descricao;
 
             return entity;
         }

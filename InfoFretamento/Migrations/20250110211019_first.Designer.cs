@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfoFretamento.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250109221026_colaborador-table")]
-    partial class colaboradortable
+    [Migration("20250110211019_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -132,6 +132,11 @@ namespace InfoFretamento.Migrations
                     b.Property<DateOnly>("DataPagamento")
                         .HasColumnType("DATE");
 
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
+
                     b.Property<string>("FormaPagamento")
                         .IsRequired()
                         .HasMaxLength(10)
@@ -179,13 +184,18 @@ namespace InfoFretamento.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("Pendente")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Referencia")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
 
                     b.Property<string>("TipoDocumento")
                         .IsRequired()
-                        .HasColumnType("longtext");
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
 
                     b.Property<DateOnly>("Vencimento")
                         .HasColumnType("DATE");
@@ -266,6 +276,21 @@ namespace InfoFretamento.Migrations
                     b.HasIndex("VeiculoId");
 
                     b.ToTable("Manutencoes");
+                });
+
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.MotoristaViagem", b =>
+                {
+                    b.Property<int>("MotoristaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ViagemId")
+                        .HasColumnType("int");
+
+                    b.HasKey("MotoristaId", "ViagemId");
+
+                    b.HasIndex("ViagemId");
+
+                    b.ToTable("MotoristaViagens");
                 });
 
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Passagem", b =>
@@ -490,27 +515,6 @@ namespace InfoFretamento.Migrations
                     b.ToTable("Servicos");
                 });
 
-            modelBuilder.Entity("InfoFretamento.Domain.Entities.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Veiculo", b =>
                 {
                     b.Property<int>("Id")
@@ -518,6 +522,10 @@ namespace InfoFretamento.Migrations
                         .HasColumnType("int");
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Acessorios")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<int>("Ano")
                         .HasColumnType("int");
@@ -598,7 +606,7 @@ namespace InfoFretamento.Migrations
                     b.Property<int>("KmInicialVeiculo")
                         .HasColumnType("int");
 
-                    b.Property<int>("MotoristaId")
+                    b.Property<int?>("MotoristaId")
                         .HasColumnType("int");
 
                     b.Property<int>("Parcelas")
@@ -703,12 +711,24 @@ namespace InfoFretamento.Migrations
                 {
                     b.HasBaseType("InfoFretamento.Domain.Entities.Pessoa");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("varchar(100)");
+
+                    b.Property<string>("NomeFantasia")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.ToTable("Pessoa", t =>
                         {
+                            t.Property("NomeFantasia")
+                                .HasColumnName("Cliente_NomeFantasia");
+
                             t.Property("Tipo")
                                 .HasColumnName("Cliente_Tipo");
                         });
@@ -727,6 +747,10 @@ namespace InfoFretamento.Migrations
                 {
                     b.HasBaseType("InfoFretamento.Domain.Entities.Pessoa");
 
+                    b.Property<string>("NomeFantasia")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<string>("Tipo")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -737,6 +761,9 @@ namespace InfoFretamento.Migrations
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Motorista", b =>
                 {
                     b.HasBaseType("InfoFretamento.Domain.Entities.Pessoa");
+
+                    b.Property<DateOnly>("DataAdmissao")
+                        .HasColumnType("DATE");
 
                     b.HasDiscriminator().HasValue("Motorista");
                 });
@@ -855,6 +882,25 @@ namespace InfoFretamento.Migrations
                     b.Navigation("Servico");
 
                     b.Navigation("Veiculo");
+                });
+
+            modelBuilder.Entity("InfoFretamento.Domain.Entities.MotoristaViagem", b =>
+                {
+                    b.HasOne("InfoFretamento.Domain.Entities.Motorista", "Motorista")
+                        .WithMany("MotoristaViagens")
+                        .HasForeignKey("MotoristaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InfoFretamento.Domain.Entities.Viagem", "Viagem")
+                        .WithMany("MotoristaViagens")
+                        .HasForeignKey("ViagemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Motorista");
+
+                    b.Navigation("Viagem");
                 });
 
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Passagem", b =>
@@ -1002,11 +1048,9 @@ namespace InfoFretamento.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InfoFretamento.Domain.Entities.Motorista", "Motorista")
+                    b.HasOne("InfoFretamento.Domain.Entities.Motorista", null)
                         .WithMany("Viagens")
-                        .HasForeignKey("MotoristaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MotoristaId");
 
                     b.HasOne("InfoFretamento.Domain.Entities.Veiculo", "Veiculo")
                         .WithMany("Viagens")
@@ -1187,8 +1231,6 @@ namespace InfoFretamento.Migrations
                     b.Navigation("DataHorarioSaidaGaragem")
                         .IsRequired();
 
-                    b.Navigation("Motorista");
-
                     b.Navigation("Rota")
                         .IsRequired();
 
@@ -1346,6 +1388,8 @@ namespace InfoFretamento.Migrations
 
                     b.Navigation("Despesas");
 
+                    b.Navigation("MotoristaViagens");
+
                     b.Navigation("Receita")
                         .IsRequired();
                 });
@@ -1381,6 +1425,8 @@ namespace InfoFretamento.Migrations
                     b.Navigation("Despesas");
 
                     b.Navigation("Ferias");
+
+                    b.Navigation("MotoristaViagens");
 
                     b.Navigation("Receitas");
 

@@ -73,10 +73,16 @@ namespace InfoFretamento.Infrastructure.Repositories
         {
             IQueryable<T> query = _dbSet;
 
-            // Adiciona os includes dinâmicos (incluindo relacionamentos aninhados)
             foreach (var include in includes)
             {
-                query = query.Include(include);
+                var properties = include.Split('.');
+                query = query.Include(properties[0]); // Inclui a propriedade principal
+
+                if (properties.Length > 1)
+                {
+                    // Caminhos aninhados devem ser resolvidos dinamicamente
+                    query = query.Include($"{properties[0]}.{properties[1]}");
+                }
             }
 
             if (filters != null)

@@ -7,6 +7,8 @@ namespace InfoFretamento.Application.Request.ViagemRequest
     public record AtualizarViagemRequest : BaseAtualizarRequest<Viagem>
     {
         public Rota Rota { get; set; }
+        public int VeiculoId { get; set; }
+        public List<int> MotoristasId { get; set; } = [];
         public Horario DataHorarioSaida { get; set; }
         public Horario DataHorarioRetorno { get; set; }
         public Horario DataHorarioSaidaGaragem { get; set; }
@@ -25,6 +27,8 @@ namespace InfoFretamento.Application.Request.ViagemRequest
             entity.TipoServico = TipoServico;
             entity.Status = Status;
             entity.KmFinalVeiculo = KmFinalVeiculo;
+            entity.VeiculoId = VeiculoId;
+            
             return entity;
         }
     }

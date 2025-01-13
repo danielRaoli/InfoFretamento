@@ -8,6 +8,7 @@ namespace InfoFretamento.Application.Request.MotoristaRequest
     {
 
         public Habilitacao Habilitacao { get; set; }
+        public DateTime DataAdmissao { get; set; }
 
         public override Motorista UpdateEntity(Motorista entity)
         {
@@ -18,7 +19,7 @@ namespace InfoFretamento.Application.Request.MotoristaRequest
             entity.Endereco = Endereco;
             entity.Cpf = Cpf;
             entity.Habilitacao = Habilitacao;
-
+            entity.DataAdmissao = DateOnly.FromDateTime(DataAdmissao);
             return entity;
         }
     }

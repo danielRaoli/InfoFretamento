@@ -19,6 +19,7 @@
         public List<Despesa> Despesas { get; set; } = [];
         public List<Viagem> Viagens { get; set; } = [];
         public List<ViagemProgramada> ViagensProgramadaas { get; set; } = [];
+        public string Acessorios { get; set; } = string.Empty;
 
     }
 }

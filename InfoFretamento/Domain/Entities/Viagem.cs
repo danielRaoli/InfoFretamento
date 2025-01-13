@@ -15,8 +15,7 @@ namespace InfoFretamento.Domain.Entities
         public string TipoServico { get; set; } = string.Empty;
         public string TipoViagem { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
-        public int MotoristaId { get; set; }
-        public Motorista Motorista { get; set; }
+        public List<MotoristaViagem> MotoristaViagens { get; set; } = [];
         public int VeiculoId { get; set; }
         public Veiculo Veiculo { get; set; }
         public string TipoPagamento { get; set; } = string.Empty;

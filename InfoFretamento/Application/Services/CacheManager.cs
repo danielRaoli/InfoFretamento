@@ -24,7 +24,7 @@ namespace InfoFretamento.Application.Services
 
         // Limpa todas as chaves armazenadas
         public void ClearAll(string cacheKey)
-        {
+         {
             // Filtra as chaves que contêm o prefixo fornecido
             var cacheKeys = _cacheKeys.Where(k => k.Contains(cacheKey)).ToList();
 

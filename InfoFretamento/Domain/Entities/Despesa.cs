@@ -15,6 +15,7 @@
         public decimal ValorParcial { get; set; }
         public string FormaPagamento { get; set; } = string.Empty;
         public string CentroCusto { get; set; } = string.Empty;
+        public string Descricao { get; set; } = string.Empty;
         public bool Pago => ValorParcial == ValorTotal;
     }
 }

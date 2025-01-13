@@ -17,15 +17,16 @@ builder.Services.AddDbContext<AppDbContext>(opts => opts.UseMySql(connectionStri
 builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
 builder.Services.AddScoped(typeof(IPessoaRepository<>), typeof(PessoaRepository<>));
 builder.Services.AddScoped<DashBoardRepository>();
+builder.Services.AddScoped<MotoristaViagemRepository>();
 builder.Services.AddScoped<DashBoardService>();
 builder.Services.AddScoped<EstoqueRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ReceitaService>();
 builder.Services.AddScoped<DespesaService>();
 builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<MotoristaService>();
 builder.Services.AddScoped<FornecedorService>();
+builder.Services.AddScoped<ColaboradorService>();
 builder.Services.AddScoped<VeiculoService>();
 builder.Services.AddScoped<DespesaService>();
 builder.Services.AddScoped<DocumentoService>();
@@ -41,7 +42,7 @@ builder.Services.AddScoped<PecaService>();
 builder.Services.AddScoped<FeriasService>();
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddSingleton<CacheManager>();
-builder.Services.AddScoped<DbSeed>();
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -96,19 +97,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var dbInitializer = services.GetRequiredService<DbSeed>();
-        await dbInitializer.SeedAsync(); // Executa o método de seed
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"Erro ao inicializar o banco de dados: {ex.Message}");
-    }
-}
 
 app.Run();

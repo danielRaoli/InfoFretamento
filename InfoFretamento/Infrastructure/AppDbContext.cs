@@ -45,6 +45,8 @@ namespace InfoFretamento.Infrastructure
                 {
                     habilitacao.Property(h => h.Vencimento).HasColumnType("DATE");
                 });
+
+                entity.Property(e => e.DataAdmissao).HasColumnType("DATE");
                 entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
                 entity.HasMany(e => e.Receitas).WithOne().HasForeignKey(d => d.ResponsavelId);
                 entity.HasMany(e => e.Ferias).WithOne().HasForeignKey(f => f.ResponsavelId);
@@ -57,12 +59,15 @@ namespace InfoFretamento.Infrastructure
 
             modelBuilder.Entity<Cliente>(entity =>
             {
+                entity.Property(e => e.Email).HasMaxLength(100);
+                entity.Property(e => e.Nome).HasMaxLength(100);
                 entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
                 entity.HasMany(e => e.Receitas).WithOne().HasForeignKey(d => d.ResponsavelId);
             });
 
             modelBuilder.Entity<Fornecedor>(entity =>
             {
+                entity.Property(e => e.Nome).HasMaxLength(100);
                 entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
                 entity.HasMany(e => e.Receitas).WithOne().HasForeignKey(d => d.ResponsavelId);
             });
@@ -146,7 +151,7 @@ namespace InfoFretamento.Infrastructure
                     horario.Property(h => h.Data).HasColumnType("DATE");
                 });
 
-                entity.HasOne(e => e.Motorista).WithMany(m => m.Viagens).HasForeignKey(e => e.MotoristaId);
+               
 
                 entity.HasMany(v => v.Despesas)
                    .WithOne(p => p.Viagem)
@@ -181,6 +186,11 @@ namespace InfoFretamento.Infrastructure
                 entity.HasOne(e => e.Responsavel)
                       .WithMany()
                       .HasForeignKey(p => p.ResponsavelId);
+
+                entity.Property(d => d.Descricao)
+                   .HasMaxLength(150);
+
+                
             });
 
             modelBuilder.Entity<Receita>(entity =>
@@ -256,6 +266,11 @@ namespace InfoFretamento.Infrastructure
             modelBuilder.Entity<Documento>(entity =>
             {
                 entity.Property(d => d.Vencimento).HasColumnType("DATE");
+                entity.Property(d => d.Referencia)
+                     .HasMaxLength(150);
+                entity.Property(d => d.TipoDocumento)
+                   .HasMaxLength(100);
+
             });
 
             modelBuilder.Entity<Ferias>(entity =>
@@ -266,7 +281,20 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(e => e.InicioFerias).HasColumnType("DATE");
                 entity.Property(e => e.FimFerias).HasColumnType("DATE");
             });
-            
+
+            modelBuilder.Entity<MotoristaViagem>()
+        .HasKey(mv => new { mv.MotoristaId, mv.ViagemId }); // Chave composta
+
+            modelBuilder.Entity<MotoristaViagem>()
+                .HasOne(mv => mv.Motorista)
+                .WithMany(m => m.MotoristaViagens)
+                .HasForeignKey(mv => mv.MotoristaId);
+
+            modelBuilder.Entity<MotoristaViagem>()
+                .HasOne(mv => mv.Viagem)
+                .WithMany(v => v.MotoristaViagens)
+                .HasForeignKey(mv => mv.ViagemId);
+
         }
 
 
@@ -275,11 +303,11 @@ namespace InfoFretamento.Infrastructure
         public DbSet<Fornecedor> Fornecedores { get; set; }
         public DbSet<Colaborador> Colaboradores { get; set; }
         public DbSet<Viagem> Viagens { get; set; }
+        public DbSet<MotoristaViagem> MotoristaViagens { get; set; }
         public DbSet<Veiculo> Veiculos { get; set; }
         public DbSet<Despesa> Despesas { get; set; }
         public DbSet<Receita> Receitas { get; set; }
         public DbSet<Documento> Documentos { get; set; }
-        public DbSet<User> Users { get; set; }
         public DbSet<Manutencao> Manutencoes { get; set; }
         public DbSet<Servico> Servicos { get; set; }
         public DbSet<ViagemProgramada> ViagensProgramadas { get; set; }

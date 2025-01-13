@@ -17,7 +17,7 @@ namespace InfoFretamento.Application.Request.VeiculoRequest
         public string Tipo { get; set; } = string.Empty;
         public string Modelo { get; set; } = string.Empty;
         public int QuantidadePoltronas { get; set; }
-
+        public string Acessorios { get; set; } = string.Empty;
 
         public Veiculo ToEntity()
         {
@@ -35,6 +35,7 @@ namespace InfoFretamento.Application.Request.VeiculoRequest
                 QuantidadePoltronas = QuantidadePoltronas,
                 LocalEmplacado = LocalEmplacado,
                 Modelo = Modelo,
+                Acessorios = Acessorios,
             };
         }
     }

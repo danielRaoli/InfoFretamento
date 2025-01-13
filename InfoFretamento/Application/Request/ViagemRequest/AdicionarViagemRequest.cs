@@ -21,7 +21,7 @@ public record AdicionarViagemRequest : IBaseAdicionarRequest<Viagem>
     public int KmFinalVeiculo { get; set; }
     public int KmInicialVeiculo { get; set; }
     public int VeiculoId { get; set; }
-    public int MotoristaId { get; set; }
+    public List<int> MotoristasId { get; set; } = [];
 
     public Viagem ToEntity()
     {
@@ -40,8 +40,11 @@ public record AdicionarViagemRequest : IBaseAdicionarRequest<Viagem>
             TipoPagamento = TipoPagamento,
             ValorContratado = ValorContratado,
             Itinerario = Itinerario,
-            MotoristaId = MotoristaId,
-            KmFinalVeiculo= KmFinalVeiculo,
+            MotoristaViagens = MotoristasId.Select(motoristaId => new MotoristaViagem
+            {
+                MotoristaId = motoristaId
+            }).ToList(),
+            KmFinalVeiculo = KmFinalVeiculo,
             KmInicialVeiculo= KmInicialVeiculo
 
         };

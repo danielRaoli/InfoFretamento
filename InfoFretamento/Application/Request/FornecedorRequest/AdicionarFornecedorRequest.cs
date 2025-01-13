@@ -6,6 +6,7 @@ namespace InfoFretamento.Application.Request.FornecedorRequest
     public record AdicionarFornecedorRequest : BasePessoaRequest, IBaseAdicionarRequest<Fornecedor>
     {
         public string Tipo { get; set; } = string.Empty;
+        public string NomeFantasia { get; set; } = string.Empty;
 
         public Fornecedor ToEntity() => new Fornecedor
         {
@@ -15,7 +16,9 @@ namespace InfoFretamento.Application.Request.FornecedorRequest
             Documento = Documento,
             Endereco = Endereco,
             Cpf = Cpf,
-            Tipo = Tipo
+            Tipo = Tipo,
+            NomeFantasia = NomeFantasia
+            
         };
     }
 }

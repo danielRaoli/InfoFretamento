@@ -22,10 +22,11 @@ namespace InfoFretamento.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Vencimento = table.Column<DateOnly>(type: "DATE", nullable: false),
-                    TipoDocumento = table.Column<string>(type: "longtext", nullable: false)
+                    TipoDocumento = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Referencia = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
+                    Referencia = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Pendente = table.Column<bool>(type: "tinyint(1)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,14 +80,17 @@ namespace InfoFretamento.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Discriminator = table.Column<string>(type: "varchar(13)", maxLength: 13, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Cliente_NomeFantasia = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Email = table.Column<string>(type: "varchar(100)", maxLength: 100, nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Cliente_Tipo = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    Colaborador_InicioFerias = table.Column<DateOnly>(type: "date", nullable: true),
-                    Colaborador_FimFerias = table.Column<DateOnly>(type: "date", nullable: true),
+                    NomeFantasia = table.Column<string>(type: "longtext", nullable: true)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Tipo = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    InicioFerias = table.Column<DateOnly>(type: "date", nullable: true),
-                    FimFerias = table.Column<DateOnly>(type: "date", nullable: true),
+                    DataAdmissao = table.Column<DateOnly>(type: "DATE", nullable: true),
                     Habilitacao_Protocolo = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Habilitacao_Vencimento = table.Column<DateOnly>(type: "DATE", nullable: true),
@@ -95,10 +99,6 @@ namespace InfoFretamento.Migrations
                     Habilitacao_Cidade = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Habilitacao_Uf = table.Column<string>(type: "longtext", nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Cartao = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Matricula = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -119,23 +119,6 @@ namespace InfoFretamento.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Servicos", x => x.Id);
-                })
-                .Annotation("MySql:CharSet", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    UserName = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    Password = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.Id);
                 })
                 .Annotation("MySql:CharSet", "utf8mb4");
 
@@ -164,6 +147,8 @@ namespace InfoFretamento.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     QuantidadePoltronas = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Modelo = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    Acessorios = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -196,23 +181,22 @@ namespace InfoFretamento.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "Retiradas",
+                name: "Ferias",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PecaId = table.Column<int>(type: "int", nullable: false),
-                    Quantidade = table.Column<int>(type: "int", nullable: false),
-                    PrecoTotal = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
-                    DataDeRetirada = table.Column<DateOnly>(type: "date", nullable: false)
+                    ResponsavelId = table.Column<int>(type: "int", nullable: false),
+                    InicioFerias = table.Column<DateOnly>(type: "DATE", nullable: false),
+                    FimFerias = table.Column<DateOnly>(type: "DATE", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Retiradas", x => x.Id);
+                    table.PrimaryKey("PK_Ferias", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Retiradas_Pecas_PecaId",
-                        column: x => x.PecaId,
-                        principalTable: "Pecas",
+                        name: "FK_Ferias_Pessoa_ResponsavelId",
+                        column: x => x.ResponsavelId,
+                        principalTable: "Pessoa",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 })
@@ -255,6 +239,36 @@ namespace InfoFretamento.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Retiradas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    PecaId = table.Column<int>(type: "int", nullable: false),
+                    VeiculoId = table.Column<int>(type: "int", nullable: false),
+                    Quantidade = table.Column<int>(type: "int", nullable: false),
+                    PrecoTotal = table.Column<decimal>(type: "decimal(65,30)", nullable: false),
+                    DataDeRetirada = table.Column<DateOnly>(type: "date", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Retiradas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Retiradas_Pecas_PecaId",
+                        column: x => x.PecaId,
+                        principalTable: "Pecas",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Retiradas_Veiculos_VeiculoId",
+                        column: x => x.VeiculoId,
+                        principalTable: "Veiculos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Viagens",
                 columns: table => new
                 {
@@ -291,7 +305,6 @@ namespace InfoFretamento.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Status = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
-                    MotoristaId = table.Column<int>(type: "int", nullable: false),
                     VeiculoId = table.Column<int>(type: "int", nullable: false),
                     TipoPagamento = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -302,7 +315,8 @@ namespace InfoFretamento.Migrations
                     Itinerario = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     KmInicialVeiculo = table.Column<int>(type: "int", nullable: false),
-                    KmFinalVeiculo = table.Column<int>(type: "int", nullable: false)
+                    KmFinalVeiculo = table.Column<int>(type: "int", nullable: false),
+                    MotoristaId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -317,8 +331,7 @@ namespace InfoFretamento.Migrations
                         name: "FK_Viagens_Pessoa_MotoristaId",
                         column: x => x.MotoristaId,
                         principalTable: "Pessoa",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Viagens_Veiculos_VeiculoId",
                         column: x => x.VeiculoId,
@@ -447,6 +460,8 @@ namespace InfoFretamento.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CentroCusto = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
+                    Descricao = table.Column<string>(type: "varchar(150)", maxLength: 150, nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     VeiculoId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -465,6 +480,31 @@ namespace InfoFretamento.Migrations
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Despesas_Viagens_ViagemId",
+                        column: x => x.ViagemId,
+                        principalTable: "Viagens",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySql:CharSet", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "MotoristaViagens",
+                columns: table => new
+                {
+                    MotoristaId = table.Column<int>(type: "int", nullable: false),
+                    ViagemId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MotoristaViagens", x => new { x.MotoristaId, x.ViagemId });
+                    table.ForeignKey(
+                        name: "FK_MotoristaViagens_Pessoa_MotoristaId",
+                        column: x => x.MotoristaId,
+                        principalTable: "Pessoa",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MotoristaViagens_Viagens_ViagemId",
                         column: x => x.ViagemId,
                         principalTable: "Viagens",
                         principalColumn: "Id",
@@ -519,7 +559,14 @@ namespace InfoFretamento.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ViagemId = table.Column<int>(type: "int", nullable: false),
-                    PassageiroId = table.Column<int>(type: "int", nullable: false),
+                    EmailPassageiro = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    TelefonePassageiro = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    CpfPassageiro = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
+                    NomePassageiro = table.Column<string>(type: "longtext", nullable: false)
+                        .Annotation("MySql:CharSet", "utf8mb4"),
                     DataEmissao = table.Column<DateTime>(type: "DATE", nullable: false),
                     FormaPagamento = table.Column<string>(type: "varchar(15)", maxLength: 15, nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
@@ -530,12 +577,6 @@ namespace InfoFretamento.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Passagens", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Passagens_Pessoa_PassageiroId",
-                        column: x => x.PassageiroId,
-                        principalTable: "Pessoa",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Passagens_ViagensProgramadas_ViagemId",
                         column: x => x.ViagemId,
@@ -578,6 +619,11 @@ namespace InfoFretamento.Migrations
                 column: "ViagemId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Ferias_ResponsavelId",
+                table: "Ferias",
+                column: "ResponsavelId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Manutencoes_ServicoId",
                 table: "Manutencoes",
                 column: "ServicoId");
@@ -588,9 +634,9 @@ namespace InfoFretamento.Migrations
                 column: "VeiculoId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Passagens_PassageiroId",
-                table: "Passagens",
-                column: "PassageiroId");
+                name: "IX_MotoristaViagens_ViagemId",
+                table: "MotoristaViagens",
+                column: "ViagemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Passagens_ViagemId",
@@ -612,6 +658,11 @@ namespace InfoFretamento.Migrations
                 name: "IX_Retiradas_PecaId",
                 table: "Retiradas",
                 column: "PecaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Retiradas_VeiculoId",
+                table: "Retiradas",
+                column: "VeiculoId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Viagens_ClienteId",
@@ -653,7 +704,13 @@ namespace InfoFretamento.Migrations
                 name: "Documentos");
 
             migrationBuilder.DropTable(
+                name: "Ferias");
+
+            migrationBuilder.DropTable(
                 name: "Manutencoes");
+
+            migrationBuilder.DropTable(
+                name: "MotoristaViagens");
 
             migrationBuilder.DropTable(
                 name: "Passagens");
@@ -663,9 +720,6 @@ namespace InfoFretamento.Migrations
 
             migrationBuilder.DropTable(
                 name: "Retiradas");
-
-            migrationBuilder.DropTable(
-                name: "Users");
 
             migrationBuilder.DropTable(
                 name: "Servicos");

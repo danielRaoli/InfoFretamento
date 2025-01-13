@@ -8,7 +8,7 @@ namespace InfoFretamento.Application.Services
     public class TokenService(IConfiguration configuration) : ITokenService
     {
         private readonly IConfiguration _configuration = configuration;
-        public string GenerateToken(string email)
+        public string GenerateToken(string email, string role)
         {
 
             var key = _configuration["TokenConfiguration:SecurityKey"];
@@ -20,6 +20,7 @@ namespace InfoFretamento.Application.Services
             var claims = new ClaimsIdentity(
                 [
                     new Claim(ClaimTypes.Email, email),
+                    new Claim(ClaimTypes.Role, role )
                 ]);
 
             var tokenDescriptor = new SecurityTokenDescriptor

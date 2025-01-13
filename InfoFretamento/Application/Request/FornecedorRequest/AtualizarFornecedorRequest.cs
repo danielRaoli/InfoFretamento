@@ -6,6 +6,7 @@ namespace InfoFretamento.Application.Request.FornecedorRequest
     public record AtualizarFornecedorRequest : BaseAtualizarPessoaRequest<Fornecedor>
     {
         public string Tipo { get; set; } = string.Empty;
+        public string NomeFantasia { get; set; } = string.Empty;
 
         public override Fornecedor UpdateEntity(Fornecedor entity)
         {
@@ -16,7 +17,7 @@ namespace InfoFretamento.Application.Request.FornecedorRequest
             entity.Endereco = Endereco;
             entity.Cpf = Cpf;
             entity.Tipo = Tipo;
-
+            entity.NomeFantasia = NomeFantasia;
             return entity;
         }
     }

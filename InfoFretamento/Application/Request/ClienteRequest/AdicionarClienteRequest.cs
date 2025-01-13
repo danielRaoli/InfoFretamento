@@ -7,6 +7,7 @@ namespace InfoFretamento.Application.Request.ClienteRequest
     {
         public string Tipo { get; set; } = string.Empty;
         public string NomeFantasia { get; set; } = string.Empty;
-        public Cliente ToEntity() => new Cliente { Nome = Nome, DataNascimento = DateOnly.FromDateTime(DataNascimento), Telefone = Telefone, Documento = Documento, Endereco = Endereco, Cpf = Cpf, Tipo = Tipo, NomeFantasia = NomeFantasia };
+        public string Email { get; set; } = string.Empty;
+        public Cliente ToEntity() => new Cliente { Nome = Nome, DataNascimento = DateOnly.FromDateTime(DataNascimento), Telefone = Telefone, Documento = Documento, Endereco = Endereco, Cpf = Cpf, Tipo = Tipo, NomeFantasia = NomeFantasia, Email = Email };
     }
 }
