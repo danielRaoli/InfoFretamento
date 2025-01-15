@@ -1,41 +1,27 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
+using System.Collections.Concurrent;
 
 namespace InfoFretamento.Application.Services
 {
-    public class CacheManager
+    public class CacheManager(IMemoryCache cache)
     {
-        private readonly IMemoryCache _cache;
-        private  List<string> _cacheKeys = new();
+        private readonly IMemoryCache _cache = cache;
+        private readonly ConcurrentDictionary<string, byte> _cacheKeys = new();
 
-        public CacheManager(IMemoryCache cache)
-        {
-            _cache = cache;
-        }
-
-        // Adiciona uma chave à lista
         public void AddKey(string key)
         {
-            if (!_cacheKeys.Contains(key))
-            {
-                _cacheKeys.Add(key);
-            }
+            _cacheKeys.TryAdd(key, 0);
         }
 
-
-        // Limpa todas as chaves armazenadas
         public void ClearAll(string cacheKey)
-         {
-            // Filtra as chaves que contêm o prefixo fornecido
-            var cacheKeys = _cacheKeys.Where(k => k.Contains(cacheKey)).ToList();
+        {
+            var keysToRemove = _cacheKeys.Keys.Where(k => k.Contains(cacheKey)).ToList();
 
-            // Remove do cache as chaves filtradas
-            foreach (var key in cacheKeys)
+            foreach (var key in keysToRemove)
             {
                 _cache.Remove(key);
+                _cacheKeys.TryRemove(key, out _);
             }
-
-            // Agora remove apenas as chaves que foram realmente removidas do cache
-            _cacheKeys = _cacheKeys.Where(k => !k.Contains(cacheKey)).ToList();
         }
     }
 }

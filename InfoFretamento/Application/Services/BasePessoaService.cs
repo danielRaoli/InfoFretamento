@@ -1,5 +1,4 @@
 ﻿using InfoFretamento.Application.Request.Base;
-using InfoFretamento.Application.Request.MotoristaRequest;
 using InfoFretamento.Application.Responses;
 using InfoFretamento.Domain.Entities;
 using InfoFretamento.Domain.Repositories;
@@ -46,6 +45,7 @@ namespace InfoFretamento.Application.Services
             var cachekey = $"{typeof(TEntity).Name}_{name ?? "null"}";
             var result = await _memoryCache.GetOrCreateAsync(cachekey, async entry =>
             {
+                _cacheManager.AddKey(cachekey);
                 if (name != null)
                 {
                     return await _pessoaRepository.GetAllNameContains(name);

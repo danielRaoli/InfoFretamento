@@ -47,6 +47,7 @@ namespace InfoFretamento.Application.Services
 
             var data = await _cache.GetOrCreateAsync(cacheKey, async entry =>
             {
+                _cacheManager.AddKey(cacheKey);
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
                 entry.SlidingExpiration = TimeSpan.FromMinutes(10);
 
@@ -54,7 +55,7 @@ namespace InfoFretamento.Application.Services
                 return result.ToList();
             });
 
-            _cacheManager.AddKey(cacheKey);
+           
 
             return new Response<List<TEntity>>(data);
         }
