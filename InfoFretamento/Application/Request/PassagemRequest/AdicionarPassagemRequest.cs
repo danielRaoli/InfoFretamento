@@ -16,6 +16,9 @@ namespace InfoFretamento.Application.Request.PassagemRequest
         public string TelefonePassageiro { get; set; } = string.Empty;
         public string CpfPassageiro { get; set; } = string.Empty;
         public string NomePassageiro { get; set; } = string.Empty;
+        public string Tipo  { get; set; } = string.Empty;
+        public decimal ValorTotal { get; set; }
+        public string CidadePassageiro { get; set; } = string.Empty;
         public Passagem ToEntity()
         {
             return new Passagem
@@ -29,6 +32,9 @@ namespace InfoFretamento.Application.Request.PassagemRequest
                 TelefonePassageiro = TelefonePassageiro,
                 CpfPassageiro = CpfPassageiro,
                 NomePassageiro = NomePassageiro,
+                CidadePassageiro = CidadePassageiro,
+                Tipo = Tipo,
+                ValorTotal = ValorTotal,
             };
         }
     }

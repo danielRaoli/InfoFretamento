@@ -13,5 +13,8 @@
         public string FormaPagamento { get; set; } = string.Empty;
         public int Poltrona { get; set; }
         public string Situacao { get; set; } = string.Empty;
+        public string CidadePassageiro { get; set; } = string.Empty;
+        public string Tipo { get; set; } = string.Empty;
+        public decimal ValorTotal { get; set; }
     }
 }

@@ -246,6 +246,9 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(e => e.Itinerario).HasMaxLength(100);
                 entity.Property(e => e.Observacoes).HasMaxLength(100);
                 entity.HasOne(e => e.Veiculo).WithMany(v => v.ViagensProgramadaas).HasForeignKey(e => e.VeiculoId);
+                entity.Property(e => e.ValorPassagem).HasColumnType("DECIMAL(18,2)");
+                entity.Property(e => e.ValorPassagemIdaVolta).HasColumnType("DECIMAL(18,2)");
+
             });
 
 
@@ -256,6 +259,8 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(e => e.FormaPagamento).HasMaxLength(15);
                 entity.Property(e => e.Situacao).HasMaxLength(15);
                 entity.HasOne(e => e.Viagem).WithMany(v => v.Passagens).HasForeignKey(e => e.ViagemId);
+                entity.Property(e => e.Tipo).HasMaxLength(20);
+                entity.Property(e => e.ValorTotal).HasColumnType("DECIMAL(18,2)");
             });
 
             modelBuilder.Entity<Peca>(entity =>

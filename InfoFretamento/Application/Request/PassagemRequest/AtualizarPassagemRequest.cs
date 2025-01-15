@@ -13,6 +13,9 @@ namespace InfoFretamento.Application.Request.PassagemRequest
         public string TelefonePassageiro { get; set; } = string.Empty;
         public string CpfPassageiro { get; set; } = string.Empty;
         public string NomePassageiro { get; set; } = string.Empty;
+        public string CidadePassageiro { get; set; } = string.Empty;
+        public string Tipo { get; set; } = string.Empty;
+        public decimal ValorTotal { get; set; }
         public override Passagem UpdateEntity(Passagem entity)
         {
 
@@ -23,6 +26,10 @@ namespace InfoFretamento.Application.Request.PassagemRequest
             entity.EmailPassageiro = EmailPassageiro;
             entity.TelefonePassageiro = TelefonePassageiro;
             entity.NomePassageiro = NomePassageiro;
+            entity.ValorTotal = ValorTotal;
+            entity.Tipo = Tipo;
+            entity.CidadePassageiro = CidadePassageiro;
+            entity.ValorTotal = ValorTotal;
             return entity;
         }
     }

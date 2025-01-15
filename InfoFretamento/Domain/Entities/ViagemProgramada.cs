@@ -11,6 +11,7 @@ namespace InfoFretamento.Domain.Entities
         public HorarioLocal Retorno { get; set; }
         public HorarioLocal Chegada { get; set; }
         public decimal ValorPassagem { get; set; }
+        public decimal ValorPassagemIdaVolta { get; set; }
         public string FormaPagto { get; set; } = string.Empty;
         public string Responsavel { get; set; } = string.Empty;
         public string Guia { get; set; } = string.Empty;

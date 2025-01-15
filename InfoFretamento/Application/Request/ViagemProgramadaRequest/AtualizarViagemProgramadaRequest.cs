@@ -12,6 +12,7 @@ namespace InfoFretamento.Application.Request.ViagemProgramadaRequest
         public HorarioLocal Retorno { get; set; }
         public HorarioLocal Chegada { get; set; }
         public decimal ValorPassagem { get; set; }
+        public decimal ValorPassagemIdaVolta {get; set; }
         public string FormaPagto { get; set; } = string.Empty;
         public string Responsavel { get; set; } = string.Empty;
         public string Guia { get; set; } = string.Empty;
@@ -33,7 +34,7 @@ namespace InfoFretamento.Application.Request.ViagemProgramadaRequest
             entity.Itinerario = Itinerario; // Atualiza o itinerário
             entity.Observacoes = Observacoes; // Atualiza as observações
             entity.VeiculoId = VeiculoId; // Atualiza o ID do veículo
-
+            entity.ValorPassagemIdaVolta = ValorPassagemIdaVolta;
             return entity;
         }
     }

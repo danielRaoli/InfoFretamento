@@ -17,6 +17,8 @@ namespace InfoFretamento.Application.Request.ViagemProgramadaRequest
         public string Guia { get; set; } = string.Empty;
         public string Itinerario { get; set; } = string.Empty;
         public string Observacoes { get; set; } = string.Empty;
+        public decimal ValorPassagemIdaVolta { get; set; }
+       
         public int VeiculoId { get; set; }
 
         public ViagemProgramada ToEntity()
@@ -34,7 +36,8 @@ namespace InfoFretamento.Application.Request.ViagemProgramadaRequest
                 Guia = Guia,
                 Itinerario = Itinerario,
                 Observacoes = Observacoes,
-                VeiculoId = VeiculoId
+                VeiculoId = VeiculoId,
+                ValorPassagemIdaVolta = ValorPassagemIdaVolta,
             };
         }
     }
