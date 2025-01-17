@@ -11,7 +11,8 @@
         public string NomePassageiro { get; set; } = string.Empty;
         public DateTime DataEmissao { get; set; }
         public string FormaPagamento { get; set; } = string.Empty;
-        public int Poltrona { get; set; }
+        public int? PoltronaIda { get; set; }
+        public int? PoltronaVolta { get; set; }
         public string Situacao { get; set; } = string.Empty;
         public string CidadePassageiro { get; set; } = string.Empty;
         public string Tipo { get; set; } = string.Empty;

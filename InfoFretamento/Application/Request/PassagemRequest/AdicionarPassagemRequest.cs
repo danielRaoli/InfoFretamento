@@ -10,7 +10,8 @@ namespace InfoFretamento.Application.Request.PassagemRequest
         public int ViagemId { get; set; }
         public DateTime DataEmissao { get; set; }
         public string FormaPagamento { get; set; } = string.Empty;
-        public int Poltrona { get; set; }
+        public int? PoltronaIda { get; set; }
+        public int? PoltronaVolta { get; set; }
         public string Situacao { get; set; } = string.Empty;
         public string EmailPassageiro { get; set; } = string.Empty;
         public string TelefonePassageiro { get; set; } = string.Empty;
@@ -26,7 +27,8 @@ namespace InfoFretamento.Application.Request.PassagemRequest
                 ViagemId = ViagemId,
                 DataEmissao = DataEmissao,
                 FormaPagamento = FormaPagamento,
-                Poltrona = Poltrona,
+                PoltronaIda = PoltronaIda,
+                PoltronaVolta = PoltronaVolta,
                 Situacao = Situacao,
                 EmailPassageiro = EmailPassageiro,
                 TelefonePassageiro = TelefonePassageiro,

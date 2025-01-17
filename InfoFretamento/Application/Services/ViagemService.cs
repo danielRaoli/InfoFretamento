@@ -52,7 +52,6 @@ namespace InfoFretamento.Application.Services
                     var receita = new Receita
                     {
                         CentroCusto = "viagens",
-                        ResponsavelId = viagem.ClienteId,
                         DataCompra = DateOnly.FromDateTime(DateTime.Now),
                         ViagemId = viagem.Id,
                         ValorTotal = viagem.ValorContratado,
@@ -88,7 +87,7 @@ namespace InfoFretamento.Application.Services
 
         public async Task<Response<Viagem>> GetWithFilter(int id)
         {
-            var response = await _repository.GetWithFilterAsync(id, new string[] { "Receita", "Despesas", "MotoristaViagens","MotoristaViagens.Motorista", "Cliente", "Veiculo", "Adiantamento", "Abastecimento" });
+            var response = await _repository.GetWithFilterAsync(id, new string[] { "Receita","Receita.Pagamentos", "Despesas", "MotoristaViagens","MotoristaViagens.Motorista", "Cliente", "Veiculo", "Adiantamento", "Abastecimento" });
             return new Response<Viagem>(response);
         }
 
@@ -110,7 +109,7 @@ namespace InfoFretamento.Application.Services
                 if (!string.IsNullOrEmpty(prefixoVeiculo))
                     filters.Add(d => d.Veiculo.Prefixo == prefixoVeiculo);
 
-                var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "MotoristaViagens", "MotoristaViagens.Motorista", "Cliente", "Veiculo" });
+                var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Receita", "Receita.Pagamentos","MotoristaViagens", "MotoristaViagens.Motorista", "Cliente", "Veiculo" });
                 return response.ToList();
             });
 
@@ -178,9 +177,7 @@ namespace InfoFretamento.Application.Services
                             DataPagamento = DateOnly.FromDateTime(DateTime.Now),
                             DataCompra = DateOnly.FromDateTime(DateTime.Now),
                             OrigemPagamento = "cliente",
-                            ResponsavelId = viagem.ClienteId,
                             ValorTotal = viagem.ValorContratado,
-                            ValorParcial = 0,
                             FormaPagamento = viagem.TipoPagamento,
                             CentroCusto = "Viagem"
                         };

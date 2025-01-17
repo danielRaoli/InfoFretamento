@@ -21,7 +21,6 @@ namespace InfoFretamento.Domain.Entities
         public string TipoPagamento { get; set; } = string.Empty;
         public int Parcelas { get; set; }
         public decimal ValorContratado { get; set; }
-        public decimal ValorPago { get; set; }
         public decimal ValorDespesas { get; set; }
         public string Itinerario { get; set; } = string.Empty;
         public List<Despesa> Despesas { get; set; } = [];
@@ -30,6 +29,7 @@ namespace InfoFretamento.Domain.Entities
         public int KmInicialVeiculo { get; set; }
         public int KmFinalVeiculo { get; set; }
         public Receita Receita { get; set; }
+        public decimal ValorPago => Receita?.ValorPago ?? 0 ;
         public decimal TotalDespesa => Despesas?.Sum(d => d.ValorTotal) ?? 0;
 
         public decimal ValorLiquidoViagem => CalcularValorLiquido();

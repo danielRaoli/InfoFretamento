@@ -22,7 +22,7 @@ namespace InfoFretamento.Application.Services
 
                 filters.Add(d => d.DataCompra <= dateEnd); // Converte DateOnly para DateTime
 
-                var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Viagem", "Responsavel" });
+                var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Viagem", "Viagem.Cliente", "Viagem.Veiculo", "Pagamentos" });
 
 
             return new Response<List<Receita?>>(response.ToList());

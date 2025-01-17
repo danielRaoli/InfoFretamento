@@ -32,11 +32,11 @@ namespace InfoFretamento.Application.Services
                 return new Response<Passagem?>(null, 404, "A viagem da passagem respctiva nao foi encontrada");
             }
 
-            if (createRequest.Tipo.ToUpper().Equals("IDA"))
+            if (createRequest.Tipo.ToUpper().Equals("IDA") || createRequest.Tipo.ToUpper().Equals("VOLTA"))
             {
                 createRequest.ValorTotal = viagemDaPassagem.ValorPassagem;
             }
-            else
+            else if(createRequest.Tipo.ToUpper().Equals("IDA-VOLTA"))
             {
                 createRequest.ValorTotal = viagemDaPassagem.ValorPassagemIdaVolta;
             }
@@ -46,7 +46,9 @@ namespace InfoFretamento.Application.Services
 
         public override async Task<Response<Passagem?>> UpdateAsync(AtualizarPassagemRequest updateRequest)
         {
-            var entity = await _repository.GetWithFilterAsync(updateRequest.Id, "Viagem");
+
+
+            var entity = await _repository.GetByIdAsync(updateRequest.Id);
             if (entity == null)
             {
                 return new Response<Passagem?>(null, 404, "Passagem nao foi encontrada");
@@ -56,16 +58,8 @@ namespace InfoFretamento.Application.Services
             {
                 return new Response<Passagem?>(null, 404, "Viagem nao foi encontrada");
             }
-
-            if (updateRequest.Tipo.ToUpper().Equals("IDA") && entity.Tipo.ToUpper() != "IDA" )
-            {
-                updateRequest.ValorTotal = entity.Viagem.ValorPassagem;
-            }
-            else if(updateRequest.Tipo.Equals("IDA-VOLTA") && entity.Tipo.ToUpper() != "IDA-VOLTA")
-            {
-                updateRequest.ValorTotal = entity.Viagem.ValorPassagemIdaVolta;
-            }
-
+            
+           
 
             entity = updateRequest.UpdateEntity(entity);
             var result = await _repository.UpdateAsync(entity);

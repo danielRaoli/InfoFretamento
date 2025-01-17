@@ -4,6 +4,7 @@ using InfoFretamento.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfoFretamento.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250116135121_add-poltronavolta")]
+    partial class addpoltronavolta
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -290,30 +293,6 @@ namespace InfoFretamento.Migrations
                     b.ToTable("MotoristaViagens");
                 });
 
-            modelBuilder.Entity("InfoFretamento.Domain.Entities.Pagamento", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateOnly>("DataPagamento")
-                        .HasColumnType("DATE");
-
-                    b.Property<int>("ReceitaId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("ValorPago")
-                        .HasColumnType("DECIMAL(18,2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ReceitaId");
-
-                    b.ToTable("Pagamentos");
-                });
-
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Passagem", b =>
                 {
                     b.Property<int>("Id")
@@ -455,9 +434,6 @@ namespace InfoFretamento.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int?>("ClienteId")
-                        .HasColumnType("int");
-
                     b.Property<DateOnly>("DataCompra")
                         .HasColumnType("DATE");
 
@@ -479,6 +455,12 @@ namespace InfoFretamento.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
+                    b.Property<int>("ResponsavelId")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("ValorParcial")
+                        .HasColumnType("decimal(65,30)");
+
                     b.Property<decimal>("ValorTotal")
                         .HasColumnType("DECIMAL(18,2)");
 
@@ -490,7 +472,7 @@ namespace InfoFretamento.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClienteId");
+                    b.HasIndex("ResponsavelId");
 
                     b.HasIndex("ViagemId")
                         .IsUnique();
@@ -668,6 +650,9 @@ namespace InfoFretamento.Migrations
 
                     b.Property<decimal>("ValorDespesas")
                         .HasColumnType("decimal(65,30)");
+
+                    b.Property<decimal>("ValorPago")
+                        .HasColumnType("DECIMAL(18,2)");
 
                     b.Property<int>("VeiculoId")
                         .HasColumnType("int");
@@ -936,17 +921,6 @@ namespace InfoFretamento.Migrations
                     b.Navigation("Viagem");
                 });
 
-            modelBuilder.Entity("InfoFretamento.Domain.Entities.Pagamento", b =>
-                {
-                    b.HasOne("InfoFretamento.Domain.Entities.Receita", "Receita")
-                        .WithMany("Pagamentos")
-                        .HasForeignKey("ReceitaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Receita");
-                });
-
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Passagem", b =>
                 {
                     b.HasOne("InfoFretamento.Domain.Entities.ViagemProgramada", "Viagem")
@@ -1032,13 +1006,35 @@ namespace InfoFretamento.Migrations
                 {
                     b.HasOne("InfoFretamento.Domain.Entities.Cliente", null)
                         .WithMany("Receitas")
-                        .HasForeignKey("ClienteId");
+                        .HasForeignKey("ResponsavelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InfoFretamento.Domain.Entities.Fornecedor", null)
+                        .WithMany("Receitas")
+                        .HasForeignKey("ResponsavelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InfoFretamento.Domain.Entities.Motorista", null)
+                        .WithMany("Receitas")
+                        .HasForeignKey("ResponsavelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("InfoFretamento.Domain.Entities.Pessoa", "Responsavel")
+                        .WithMany()
+                        .HasForeignKey("ResponsavelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("InfoFretamento.Domain.Entities.Viagem", "Viagem")
                         .WithOne("Receita")
                         .HasForeignKey("InfoFretamento.Domain.Entities.Receita", "ViagemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Responsavel");
 
                     b.Navigation("Viagem");
                 });
@@ -1389,11 +1385,6 @@ namespace InfoFretamento.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("InfoFretamento.Domain.Entities.Receita", b =>
-                {
-                    b.Navigation("Pagamentos");
-                });
-
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Veiculo", b =>
                 {
                     b.Navigation("Despesas");
@@ -1443,6 +1434,8 @@ namespace InfoFretamento.Migrations
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Fornecedor", b =>
                 {
                     b.Navigation("Despesas");
+
+                    b.Navigation("Receitas");
                 });
 
             modelBuilder.Entity("InfoFretamento.Domain.Entities.Motorista", b =>
@@ -1452,6 +1445,8 @@ namespace InfoFretamento.Migrations
                     b.Navigation("Ferias");
 
                     b.Navigation("MotoristaViagens");
+
+                    b.Navigation("Receitas");
 
                     b.Navigation("Viagens");
                 });

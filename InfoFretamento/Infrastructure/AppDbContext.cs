@@ -48,7 +48,6 @@ namespace InfoFretamento.Infrastructure
 
                 entity.Property(e => e.DataAdmissao).HasColumnType("DATE");
                 entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
-                entity.HasMany(e => e.Receitas).WithOne().HasForeignKey(d => d.ResponsavelId);
                 entity.HasMany(e => e.Ferias).WithOne().HasForeignKey(f => f.ResponsavelId);
             });
 
@@ -62,14 +61,19 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(e => e.Email).HasMaxLength(100);
                 entity.Property(e => e.Nome).HasMaxLength(100);
                 entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
-                entity.HasMany(e => e.Receitas).WithOne().HasForeignKey(d => d.ResponsavelId);
+
+            });
+
+            modelBuilder.Entity<Pagamento>(entity =>
+            {
+                entity.Property(e => e.ValorPago).HasColumnType("DECIMAL(18,2)");
+                entity.Property(e => e.DataPagamento).HasColumnType("DATE");
             });
 
             modelBuilder.Entity<Fornecedor>(entity =>
             {
                 entity.Property(e => e.Nome).HasMaxLength(100);
                 entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
-                entity.HasMany(e => e.Receitas).WithOne().HasForeignKey(d => d.ResponsavelId);
             });
 
             modelBuilder.Entity<Veiculo>(entity =>
@@ -107,7 +111,6 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(v => v.Status)
                       .HasMaxLength(20);
 
-                entity.Property(v => v.ValorPago).HasColumnType("DECIMAL(18,2)");
                 entity.Property(v => v.ValorContratado).HasColumnType("DECIMAL(18,2)");
 
                 entity.OwnsOne(v => v.Rota, rota =>
@@ -217,9 +220,7 @@ namespace InfoFretamento.Infrastructure
 
                 entity.Property(e => e.FormaPagamento).HasMaxLength(10);
 
-                entity.HasOne(e => e.Responsavel)
-                      .WithMany()
-                      .HasForeignKey(p => p.ResponsavelId);
+                entity.HasMany(r => r.Pagamentos).WithOne(p => p.Receita).HasForeignKey(p => p.ReceitaId);
             });
 
             modelBuilder.Entity<Manutencao>(entity =>
@@ -309,6 +310,7 @@ namespace InfoFretamento.Infrastructure
         public DbSet<Colaborador> Colaboradores { get; set; }
         public DbSet<Viagem> Viagens { get; set; }
         public DbSet<MotoristaViagem> MotoristaViagens { get; set; }
+        public DbSet<Pagamento> Pagamentos { get; set; }
         public DbSet<Veiculo> Veiculos { get; set; }
         public DbSet<Despesa> Despesas { get; set; }
         public DbSet<Receita> Receitas { get; set; }

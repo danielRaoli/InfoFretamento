@@ -13,7 +13,6 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
         public int ViagemId { get; set; }
         public DateTime Vencimento { get; set; }
         public decimal ValorTotal { get; set; }
-        public decimal ValorParcial { get; set; }
         public string FormaPagamento { get; set; } = string.Empty;
         public string CentroCusto { get; set; } = string.Empty;
 
@@ -28,10 +27,8 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
                 OrigemPagamento = OrigemPagamento,
                 NumeroDocumento = NumeroDocumento,
                 CentroCusto = CentroCusto,
-                ResponsavelId = ResponsavelId,
                 Vencimento = DateOnly.FromDateTime(Vencimento),
                 ValorTotal = ValorTotal,
-                ValorParcial = ValorParcial,
             };
         }
     }

@@ -25,6 +25,7 @@ builder.Services.AddScoped<ReceitaService>();
 builder.Services.AddScoped<DespesaService>();
 builder.Services.AddScoped<ClienteService>();
 builder.Services.AddScoped<MotoristaService>();
+builder.Services.AddScoped<PagamentoService>();
 builder.Services.AddScoped<FornecedorService>();
 builder.Services.AddScoped<ColaboradorService>();
 builder.Services.AddScoped<VeiculoService>();

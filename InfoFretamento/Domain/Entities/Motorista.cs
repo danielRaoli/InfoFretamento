@@ -10,7 +10,6 @@ namespace InfoFretamento.Domain.Entities
         public List<MotoristaViagem> MotoristaViagens { get; set; } = [];
         public Habilitacao Habilitacao { get; set; }
         public List<Despesa> Despesas { get; set; } = [];
-        public List<Receita> Receitas { get; set; } = [];
         public List<Viagem> Viagens { get; set; } = [];
     }
 }
