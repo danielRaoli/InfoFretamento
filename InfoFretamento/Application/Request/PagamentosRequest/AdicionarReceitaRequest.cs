@@ -5,9 +5,7 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
 {
     public  record AdicionarReceitaRequest : IBaseAdicionarRequest<Receita>
     {
-        public DateTime DataPagamento { get; set; }
-        public DateTime DataCompra { get; set; }
-        public string OrigemPagamento { get; set; } = string.Empty; // 
+        public string OrigemPagamento { get; set; } = string.Empty; 
         public string NumeroDocumento { get; set; } = string.Empty;
         public int ResponsavelId { get; set; }
         public int ViagemId { get; set; }
@@ -21,9 +19,9 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
         {
             return new Receita
             {
-                DataPagamento = DateOnly.FromDateTime(DataPagamento),
+               
                 ViagemId = ViagemId,
-                DataCompra = DateOnly.FromDateTime(DataCompra),
+                DataCompra = DateOnly.FromDateTime(DateTime.Now),
                 OrigemPagamento = OrigemPagamento,
                 NumeroDocumento = NumeroDocumento,
                 CentroCusto = CentroCusto,

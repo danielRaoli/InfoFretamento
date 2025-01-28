@@ -23,23 +23,12 @@ namespace InfoFretamento.Domain.Entities
         public decimal ValorContratado { get; set; }
         public decimal ValorDespesas { get; set; }
         public string Itinerario { get; set; } = string.Empty;
-        public List<Despesa> Despesas { get; set; } = [];
-        public Abastecimento Abastecimento { get; set; }
+
+        public List<Abastecimento> Abastecimentos { get; set; }
         public Adiantamento Adiantamento { get; set; }
         public int KmInicialVeiculo { get; set; }
         public int KmFinalVeiculo { get; set; }
         public Receita Receita { get; set; }
         public decimal ValorPago => Receita?.ValorPago ?? 0 ;
-        public decimal TotalDespesa => Despesas?.Sum(d => d.ValorTotal) ?? 0;
-
-        public decimal ValorLiquidoViagem => CalcularValorLiquido();
-
-        private decimal CalcularValorLiquido()
-        {
-            var valorAbastecimento = Abastecimento?.ValorTotal ?? 0;
-            var valorAdiantamento = Adiantamento?.Diferenca ?? 0;
-
-            return ValorContratado - valorAbastecimento - valorAdiantamento - TotalDespesa;
-        }
     }
 }

@@ -7,5 +7,6 @@ namespace InfoFretamento.Application.Services
 {
     public class AdiantamentoService(IBaseRepository<Adiantamento> repository, IMemoryCache memoryCache, CacheManager cacheManager) : BaseService<Adiantamento, AdicionarAdiantamentoRequest,AtualizarAdiantamentoRequest>(repository,memoryCache, cacheManager)
     {
+
     }
 }

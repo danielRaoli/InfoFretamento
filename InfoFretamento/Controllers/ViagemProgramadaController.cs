@@ -18,12 +18,12 @@ namespace InfoFretamento.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var result = await _service.GetAllAsync();
+            var result = await _service.GetAllWithIncludes();
             return Ok(result);
         }
 
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}")] 
         public async Task<IActionResult> Get(int id)
         {
             var result = await _service.GetByIdIncludeAsync(id);

@@ -9,7 +9,7 @@ namespace InfoFretamento.Domain.Entities
         public DateOnly DataAdmissao { get; set; }
         public List<MotoristaViagem> MotoristaViagens { get; set; } = [];
         public Habilitacao Habilitacao { get; set; }
-        public List<Despesa> Despesas { get; set; } = [];
         public List<Viagem> Viagens { get; set; } = [];
+        public Salario Salario { get; set; }
     }
 }

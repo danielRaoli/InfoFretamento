@@ -8,10 +8,11 @@ using System.Linq.Expressions;
 
 namespace InfoFretamento.Application.Services
 {
-    public class ViagemService(IBaseRepository<Viagem> repository, IBaseRepository<Receita> receitaRepository, IBaseRepository<Veiculo> veiculoRepository, IMemoryCache memoryCache, CacheManager cacheManager, MotoristaViagemRepository motoristaViagemRepository) : BaseService<Viagem, AdicionarViagemRequest, AtualizarViagemRequest>(repository, memoryCache,cacheManager)
+    public class ViagemService(IBaseRepository<Viagem> repository, IBaseRepository<Receita> receitaRepository, IBaseRepository<Veiculo> veiculoRepository, IMemoryCache memoryCache, CacheManager cacheManager, MotoristaViagemRepository motoristaViagemRepository, DespesaRepository despesaRepository) : BaseService<Viagem, AdicionarViagemRequest, AtualizarViagemRequest>(repository, memoryCache,cacheManager)
     {
         private readonly IBaseRepository<Viagem> _repository = repository;
         private readonly IBaseRepository<Receita> _receitaRepository = receitaRepository;
+        private readonly DespesaRepository _despesaRepository = despesaRepository;
         private readonly IBaseRepository<Veiculo> _veiculoRepository = veiculoRepository;
         private readonly IMemoryCache _memoryCache = memoryCache;
         private readonly CacheManager _cacheManager = cacheManager;
@@ -66,6 +67,7 @@ namespace InfoFretamento.Application.Services
                     }
 
                     result.Message = "Viagem confirmada, motoristas associados e receita criada com sucesso.";
+                    _cacheManager.ClearAll($"{typeof(Receita).Name}");
                 }
                 else
                 {
@@ -85,10 +87,16 @@ namespace InfoFretamento.Application.Services
             }
         }
 
-        public async Task<Response<Viagem>> GetWithFilter(int id)
+        public async Task<Response<ViagemResponse>> GetWithFilter(int id)
         {
-            var response = await _repository.GetWithFilterAsync(id, new string[] { "Receita","Receita.Pagamentos", "Despesas", "MotoristaViagens","MotoristaViagens.Motorista", "Cliente", "Veiculo", "Adiantamento", "Abastecimento" });
-            return new Response<Viagem>(response);
+            var viagem = await _repository.GetWithFilterAsync(id, new string[] { "Receita","Receita.Pagamentos", "MotoristaViagens","MotoristaViagens.Motorista", "Cliente", "Veiculo", "Adiantamento", "Abastecimentos" });
+            if(viagem == null)
+            {
+                return new Response<ViagemResponse>(null,404,"Viagem nao encontrada") ;
+            }
+            var despesas = await _despesaRepository.GetByEntityId(id, "Viagem");
+           
+            return new Response<ViagemResponse>(new ViagemResponse { Viagem= viagem, Despesas = despesas});
         }
 
         public async Task<Response<List<Viagem>>> GetAllWithFilters(DateOnly startDate, DateOnly endDate, string? prefixoVeiculo = null)
@@ -109,7 +117,7 @@ namespace InfoFretamento.Application.Services
                 if (!string.IsNullOrEmpty(prefixoVeiculo))
                     filters.Add(d => d.Veiculo.Prefixo == prefixoVeiculo);
 
-                var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Receita", "Receita.Pagamentos","MotoristaViagens", "MotoristaViagens.Motorista", "Cliente", "Veiculo" });
+                var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Receita", "Receita.Pagamentos","Abastecimentos","MotoristaViagens", "MotoristaViagens.Motorista", "Cliente", "Veiculo" });
                 return response.ToList();
             });
 
@@ -174,15 +182,16 @@ namespace InfoFretamento.Application.Services
                         viagem.Receita = new Receita
                         {
                             ViagemId = viagem.Id,
-                            DataPagamento = DateOnly.FromDateTime(DateTime.Now),
                             DataCompra = DateOnly.FromDateTime(DateTime.Now),
                             OrigemPagamento = "cliente",
                             ValorTotal = viagem.ValorContratado,
                             FormaPagamento = viagem.TipoPagamento,
-                            CentroCusto = "Viagem"
+                            CentroCusto = "Viagem",
+                            Vencimento = viagem.DataHorarioSaida.Data
                         };
 
                         await _receitaRepository.AddAsync(viagem.Receita);
+                        _cacheManager.ClearAll($"{typeof(Receita).Name}");
                     }
                 }
 
@@ -198,6 +207,7 @@ namespace InfoFretamento.Application.Services
                             veiculo.KmAtual = viagem.KmFinalVeiculo;
                             await _veiculoRepository.UpdateAsync(veiculo);
                         }
+                        _cacheManager.ClearAll($"{typeof(Veiculo).Name}");
                     }
                 }
 

@@ -14,12 +14,12 @@ namespace InfoFretamento.Controllers
         private readonly ManutencaoService _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? situacao = null, [FromQuery]DateTime? startDate = null)
+        public async Task<IActionResult> GetAll([FromQuery] bool? situacao = null, [FromQuery]DateTime? startDate = null, [FromQuery] string? veiculo = null)
         {
             if (startDate == null) {
                 startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             }
-            var result = await _service.GetAllWithFilters(DateOnly.FromDateTime(startDate.Value), situacao);
+            var result = await _service.GetAllWithFilters(DateOnly.FromDateTime(startDate.Value), situacao, veiculo);
             return Ok(result);
         }
 
@@ -27,14 +27,14 @@ namespace InfoFretamento.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(int id)
         {
-            var result = await _service.GetByIdAsync(id);
+            var result = await _service.GetById(id);
             return Ok(result);
         }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AdicionarManutencaoRequest request)
         {
-            var result = await _service.AddAsync(request);
+            var result = await _service.AddManutencaoAsync(request);
             return Ok(result);
         }
 

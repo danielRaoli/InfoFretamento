@@ -7,6 +7,8 @@
         public int PecaId { get; set; }
         public int Quantidade { get; set; }
         public decimal PrecoTotal { get; set; }
+        public string TipoPagamento { get; set; } = string.Empty;
+        public int Parcelas { get; set; }
         public DateOnly DataDeEntrada { get; set; }
     }
 }

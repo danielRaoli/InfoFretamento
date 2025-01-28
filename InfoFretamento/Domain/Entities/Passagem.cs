@@ -9,7 +9,7 @@
         public string TelefonePassageiro { get; set; } = string.Empty;
         public string CpfPassageiro  { get; set; } = string.Empty;
         public string NomePassageiro { get; set; } = string.Empty;
-        public DateTime DataEmissao { get; set; }
+        public DateOnly DataEmissao { get; set; }
         public string FormaPagamento { get; set; } = string.Empty;
         public int? PoltronaIda { get; set; }
         public int? PoltronaVolta { get; set; }
@@ -17,5 +17,7 @@
         public string CidadePassageiro { get; set; } = string.Empty;
         public string Tipo { get; set; } = string.Empty;
         public decimal ValorTotal { get; set; }
+        public string ParadaPassageiro { get; set; } = string.Empty;
+
     }
 }

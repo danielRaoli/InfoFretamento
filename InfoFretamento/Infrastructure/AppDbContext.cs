@@ -47,22 +47,43 @@ namespace InfoFretamento.Infrastructure
                 });
 
                 entity.Property(e => e.DataAdmissao).HasColumnType("DATE");
-                entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
                 entity.HasMany(e => e.Ferias).WithOne().HasForeignKey(f => f.ResponsavelId);
-            });
+                entity.HasOne(c => c.Salario).WithOne()
+                .HasForeignKey<Salario>(s => s.Id) // Usa a PK de Salario como FK
+                .OnDelete(DeleteBehavior.Restrict);
+                });
 
             modelBuilder.Entity<Colaborador>(e =>
             {
                 e.HasMany(e => e.Ferias).WithOne().HasForeignKey(f => f.ResponsavelId);
+                e.HasOne(e => e.Salario).WithOne().HasForeignKey<Salario>(s => s.Id);
             });
 
             modelBuilder.Entity<Cliente>(entity =>
             {
                 entity.Property(e => e.Email).HasMaxLength(100);
                 entity.Property(e => e.Nome).HasMaxLength(100);
-                entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
 
             });
+
+            modelBuilder.Entity<Salario>(entity =>
+            {
+                entity.HasOne(e => e.Responsavel).WithOne().HasForeignKey<Salario>(e => e.ResponsavelId);
+                entity.Property(p => p.DataVale).HasColumnType("DATE");
+                entity.Property(p => p.DataSalario).HasColumnType("DATE");
+                entity.Property(p => p.ValorTotal).HasColumnType("DECIMAL(18,2)");
+               
+            });
+
+
+            modelBuilder.Entity<DespesaMensal>(entity =>
+            {
+
+                entity.Property(p => p.DataPagamento).HasColumnType("DATE");
+                entity.Property(p => p.ValorTotal).HasColumnType("DECIMAL(18,2)");
+                entity.Property(p => p.CentroDeCusto).HasMaxLength(50);
+            });
+
 
             modelBuilder.Entity<Pagamento>(entity =>
             {
@@ -73,7 +94,6 @@ namespace InfoFretamento.Infrastructure
             modelBuilder.Entity<Fornecedor>(entity =>
             {
                 entity.Property(e => e.Nome).HasMaxLength(100);
-                entity.HasMany(e => e.Despesas).WithOne().HasForeignKey(d => d.ResponsavelId);
             });
 
             modelBuilder.Entity<Veiculo>(entity =>
@@ -154,23 +174,18 @@ namespace InfoFretamento.Infrastructure
                     horario.Property(h => h.Data).HasColumnType("DATE");
                 });
 
-               
-
-                entity.HasMany(v => v.Despesas)
-                   .WithOne(p => p.Viagem)
-                   .HasForeignKey(p => p.ViagemId)
-                   .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(v => v.Receita)
                     .WithOne(p => p.Viagem)
                     .HasForeignKey<Receita>(v => v.ViagemId)
                     .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasMany(e => e.Abastecimentos).WithOne(a => a.Viagem).HasForeignKey(a => a.ViagemId);
             });
 
             modelBuilder.Entity<Despesa>(entity =>
             {
-                entity.Property(d => d.OrigemPagamento)
-                     .HasMaxLength(100);
+
 
                 entity.Property(d => d.ValorTotal)
                       .HasColumnType("DECIMAL(18,2)");
@@ -186,14 +201,29 @@ namespace InfoFretamento.Infrastructure
 
                 entity.Property(e => e.FormaPagamento).HasMaxLength(10);
 
-                entity.HasOne(e => e.Responsavel)
-                      .WithMany()
-                      .HasForeignKey(p => p.ResponsavelId);
+                entity.HasMany(e => e.Pagamentos).WithOne(p => p.Despesa).HasForeignKey(p => p.DespesaId);
+                entity.HasMany(e => e.Boletos).WithOne(p => p.Despesa).HasForeignKey(p => p.DespesaId);
 
                 entity.Property(d => d.Descricao)
                    .HasMaxLength(150);
 
-                
+
+            });
+
+            modelBuilder.Entity<PagamentoDespesa>(e =>
+            {
+                e.Property(p => p.ValorPago).HasColumnType("DECIMAL(18,2)");
+                e.Property(p => p.DataPagamento).HasColumnType("DATE");
+
+            });
+
+            modelBuilder.Entity<Boleto>(e =>
+            {
+                e.Property(p => p.Juros).HasColumnType("DECIMAL(18,2)");
+                e.Property(p => p.Valor).HasColumnType("DECIMAL(18,2)");
+
+                e.Property(p => p.DataEmissao).HasColumnType("DATE");
+                e.Property(p => p.Vencimento).HasColumnType("DATE");
             });
 
             modelBuilder.Entity<Receita>(entity =>
@@ -209,8 +239,7 @@ namespace InfoFretamento.Infrastructure
 
                 entity.Property(d => d.DataCompra)
                       .HasColumnType("DATE");
-                entity.Property(d => d.DataPagamento)
-                      .HasColumnType("DATE");
+
 
                 entity.Property(d => d.Vencimento)
                       .HasColumnType("DATE");
@@ -228,7 +257,7 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(e => e.Tipo).HasMaxLength(20);
                 entity.HasOne(e => e.Servico).WithMany().HasForeignKey(e => e.ServicoId).OnDelete(DeleteBehavior.Restrict);
                 entity.HasOne(e => e.Veiculo).WithMany(v => v.Manutencoes).HasForeignKey(e => e.VeiculoId).OnDelete(DeleteBehavior.Restrict);
-                entity.Property(e => e.DataVencimento).HasColumnType("DATE");
+                entity.Property(e => e.DataPrevista).HasColumnType("DATE");
                 entity.Property(e => e.DataLancamento).HasColumnType("DATE");
                 entity.Property(e => e.DataRealizada).HasColumnType("DATE");
                 entity.Property(e => e.Custo).HasColumnType("DECIMAL(18,2)");
@@ -325,7 +354,8 @@ namespace InfoFretamento.Infrastructure
         public DbSet<RetiradaPeca> Retiradas { get; set; }
         public DbSet<AdicionarPeca> Adicionamentos { get; set; }
         public DbSet<Ferias> Ferias { get; set; }
-
+        public DbSet<PagamentoDespesa> PagamentosDespesa { get; set; }
+        public DbSet<Boleto> Boletos { get; set; }
 
 
     }

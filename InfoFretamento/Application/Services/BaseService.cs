@@ -76,7 +76,7 @@ namespace InfoFretamento.Application.Services
         /// <summary>
         /// Remove um item e limpa o cache.
         /// </summary>
-        public async Task<Response<TEntity?>> RemoveAsync(int id)
+        public virtual async Task<Response<TEntity?>> RemoveAsync(int id)
         {
             var entity = await _repository.GetByIdAsync(id);
             if (entity is null)

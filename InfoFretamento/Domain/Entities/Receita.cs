@@ -3,7 +3,6 @@
     public class Receita
     {
         public int Id { get; set; }
-        public DateOnly DataPagamento { get; set; }
         public DateOnly DataCompra { get; set; }
         public string OrigemPagamento { get; set; } = string.Empty; //motorista, cliente, fornecedor 
         public string NumeroDocumento { get; set; } = string.Empty;

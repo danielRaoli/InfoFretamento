@@ -1,4 +1,5 @@
-﻿ using InfoFretamento.Application.Request.PagamentosRequest;
+﻿using InfoFretamento.Application.Request.PagamentoDespesaRequest;
+using InfoFretamento.Application.Request.PagamentosRequest;
 using InfoFretamento.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,23 +17,39 @@ namespace InfoFretamento.Controllers
         private readonly DespesaService _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery]DateTime? endDate, [FromQuery] string? prefixo = null)
+        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery]DateTime? endDate, [FromQuery] int? despesaCode = null)
         {
-            if (startDate == null)
+            if (startDate == null && despesaCode == null)
             {
                 startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             }
 
             // Define o último dia do mês caso endDate seja nulo
-            if (endDate == null)
+            if (endDate == null && despesaCode == null)
             {
                 endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
             }
 
-            var result = await _service.GetAllWithFilterAsync(DateOnly.FromDateTime(startDate.Value), DateOnly.FromDateTime(endDate.Value),prefixo );
+            var result = await _service.GetAllWithFilterAsync(startDate, endDate, despesaCode);
             return Ok(result);
         }
 
+        [HttpGet("{id}/{name}")]
+        public async Task<IActionResult> GetByEntity([FromRoute]int id, [FromRoute] string name )
+        {
+          
+            var result = await _service.GetByEntityId(id, name);
+            return Ok(result);
+        }
+
+        [HttpGet("despesastatus")]
+        public async Task<IActionResult> GetAllPendentes([FromQuery] string status)
+        {
+
+
+            var result = await _service.GetAllPendentes(status);
+            return Ok(result);
+        }
 
 
         [HttpGet("{id}")]
@@ -49,6 +66,27 @@ namespace InfoFretamento.Controllers
             return Ok(result);
         }
 
+        [HttpPost("pagamentodespesa")]
+        public async Task<IActionResult> AdicionarPagamento([FromBody] AdicionarPagamentoDespesa request)
+        {
+            var result = await _service.AdicionarPagamento(request);
+            return Ok(result);
+        }
+
+        [HttpPost("pagamentoboleto/{id}")]
+        public async Task<IActionResult> PagarBoleto([FromRoute]int id)
+        {
+            var result = await _service.PagarBoleto(id);
+            return Ok(result);
+        }
+
+
+        [HttpDelete("pagamentodespesa/{id}")]
+        public async Task<IActionResult> AdicionarPagamento([FromRoute] int id)
+        {
+            var result = await _service.RemoverPagamento(id);
+            return Ok(result);
+        }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Put(int id, [FromBody] AtualizarDespesaRequest request)

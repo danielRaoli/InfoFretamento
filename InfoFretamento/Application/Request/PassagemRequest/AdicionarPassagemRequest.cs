@@ -8,7 +8,6 @@ namespace InfoFretamento.Application.Request.PassagemRequest
     public record AdicionarPassagemRequest : IBaseAdicionarRequest<Passagem>
     {
         public int ViagemId { get; set; }
-        public DateTime DataEmissao { get; set; }
         public string FormaPagamento { get; set; } = string.Empty;
         public int? PoltronaIda { get; set; }
         public int? PoltronaVolta { get; set; }
@@ -19,13 +18,15 @@ namespace InfoFretamento.Application.Request.PassagemRequest
         public string NomePassageiro { get; set; } = string.Empty;
         public string Tipo  { get; set; } = string.Empty;
         public decimal ValorTotal { get; set; }
+        public decimal ValorPersonalizado { get; set; }
         public string CidadePassageiro { get; set; } = string.Empty;
+        public string ParadaPassageiro { get; set; } = string.Empty;
         public Passagem ToEntity()
         {
             return new Passagem
             {
                 ViagemId = ViagemId,
-                DataEmissao = DataEmissao,
+                DataEmissao = DateOnly.FromDateTime(DateTime.Now),
                 FormaPagamento = FormaPagamento,
                 PoltronaIda = PoltronaIda,
                 PoltronaVolta = PoltronaVolta,

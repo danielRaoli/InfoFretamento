@@ -6,25 +6,25 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InfoFretamento.Migrations
 {
     /// <inheritdoc />
-    public partial class adddatepagamento : Migration
+    public partial class updatereceita : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<DateOnly>(
+            migrationBuilder.DropColumn(
                 name: "DataPagamento",
-                table: "Pagamentos",
-                type: "DATE",
-                nullable: false,
-                defaultValue: new DateOnly(1, 1, 1));
+                table: "Receitas");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            migrationBuilder.AddColumn<DateOnly>(
                 name: "DataPagamento",
-                table: "Pagamentos");
+                table: "Receitas",
+                type: "DATE",
+                nullable: false,
+                defaultValue: new DateOnly(1, 1, 1));
         }
     }
 }

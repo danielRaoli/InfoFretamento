@@ -16,9 +16,14 @@ builder.Services.AddDbContext<AppDbContext>(opts => opts.UseMySql(connectionStri
 
 builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
 builder.Services.AddScoped(typeof(IPessoaRepository<>), typeof(PessoaRepository<>));
+builder.Services.AddScoped<PagamentoRepository>();
 builder.Services.AddScoped<DashBoardRepository>();
 builder.Services.AddScoped<MotoristaViagemRepository>();
+builder.Services.AddScoped<BoletoRepository>();
+builder.Services.AddScoped<DespesaRepository>();
 builder.Services.AddScoped<DashBoardService>();
+builder.Services.AddScoped<SalarioService>();
+builder.Services.AddScoped<DespesaMensalService>();
 builder.Services.AddScoped<EstoqueRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<ReceitaService>();
