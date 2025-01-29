@@ -22,6 +22,7 @@ public record AdicionarViagemRequest : IBaseAdicionarRequest<Viagem>
     public int KmInicialVeiculo { get; set; }
     public int VeiculoId { get; set; }
     public List<int> MotoristasId { get; set; } = [];
+    public decimal ValorParcial { get; set; }
 
     public Viagem ToEntity()
     {

@@ -38,6 +38,7 @@ namespace InfoFretamento.Application.Request.PassagemRequest
                 CidadePassageiro = CidadePassageiro,
                 Tipo = Tipo,
                 ValorTotal = ValorTotal,
+                ParadaPassageiro = ParadaPassageiro
             };
         }
     }

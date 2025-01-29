@@ -17,6 +17,7 @@ namespace InfoFretamento.Application.Request.ViagemRequest
         public string Itinerario { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
         public int KmFinalVeiculo { get; set; }
+        public decimal ValorParcial { get; set; }
 
         public override Viagem UpdateEntity(Viagem entity)
         {

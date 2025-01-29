@@ -32,7 +32,7 @@ namespace InfoFretamento.Application.Services
                 return new Response<Passagem?>(null, 404, "A viagem da passagem respctiva nao foi encontrada");
             }
 
-            if (createRequest.Tipo.ToUpper().Equals("IDA") || createRequest.Tipo.ToUpper().Equals("VOLTA") && createRequest.ValorPersonalizado == 0)
+            if ((createRequest.Tipo.ToUpper().Equals("IDA") || createRequest.Tipo.ToUpper().Equals("VOLTA")) && createRequest.ValorPersonalizado == 0)
             {
                 createRequest.ValorTotal = viagemDaPassagem.ValorPassagem;
             }
@@ -59,7 +59,9 @@ namespace InfoFretamento.Application.Services
                 return new Response<Passagem?>(null, 404, "Passagem nao foi encontrada");
             }
 
-            if (entity.Viagem == null)
+            var viagem = await _viagemRepository.GetByIdAsync(entity.ViagemId);
+
+            if (viagem == null)
             {
                 return new Response<Passagem?>(null, 404, "Viagem nao foi encontrada");
             }

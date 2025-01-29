@@ -13,6 +13,7 @@ namespace InfoFretamento.Application.Request.PassagemRequest
         public string CpfPassageiro { get; set; } = string.Empty;
         public string NomePassageiro { get; set; } = string.Empty;
         public string CidadePassageiro { get; set; } = string.Empty;
+        public string ParadaPassageiro { get; set; } = string.Empty;
         public override Passagem UpdateEntity(Passagem entity)
         {
 
@@ -23,6 +24,7 @@ namespace InfoFretamento.Application.Request.PassagemRequest
             entity.TelefonePassageiro = TelefonePassageiro;
             entity.NomePassageiro = NomePassageiro;
             entity.CidadePassageiro = CidadePassageiro;
+            entity.ParadaPassageiro = ParadaPassageiro;
             return entity;
         }
     }

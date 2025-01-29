@@ -8,12 +8,13 @@ using System.Linq.Expressions;
 
 namespace InfoFretamento.Application.Services
 {
-    public class ViagemService(IBaseRepository<Viagem> repository, IBaseRepository<Receita> receitaRepository, IBaseRepository<Veiculo> veiculoRepository, IMemoryCache memoryCache, CacheManager cacheManager, MotoristaViagemRepository motoristaViagemRepository, DespesaRepository despesaRepository) : BaseService<Viagem, AdicionarViagemRequest, AtualizarViagemRequest>(repository, memoryCache,cacheManager)
+    public class ViagemService(IBaseRepository<Viagem> repository, IBaseRepository<Receita> receitaRepository, IBaseRepository<Veiculo> veiculoRepository, IMemoryCache memoryCache, CacheManager cacheManager, MotoristaViagemRepository motoristaViagemRepository, DespesaRepository despesaRepository, IBaseRepository<Pagamento> pagamentoRepository) : BaseService<Viagem, AdicionarViagemRequest, AtualizarViagemRequest>(repository, memoryCache,cacheManager)
     {
         private readonly IBaseRepository<Viagem> _repository = repository;
         private readonly IBaseRepository<Receita> _receitaRepository = receitaRepository;
         private readonly DespesaRepository _despesaRepository = despesaRepository;
         private readonly IBaseRepository<Veiculo> _veiculoRepository = veiculoRepository;
+        private readonly IBaseRepository<Pagamento> _pagamentoRepository = pagamentoRepository;
         private readonly IMemoryCache _memoryCache = memoryCache;
         private readonly CacheManager _cacheManager = cacheManager;
         private readonly MotoristaViagemRepository _motoristaViagemRepository = motoristaViagemRepository;
@@ -57,13 +58,26 @@ namespace InfoFretamento.Application.Services
                         ViagemId = viagem.Id,
                         ValorTotal = viagem.ValorContratado,
                         OrigemPagamento = "cliente",
+                        Vencimento = viagem.DataHorarioSaida.Data
                     };
 
                     var receitaCriada = await _receitaRepository.AddAsync(receita);
 
                     if (!receitaCriada)
                     {
-                        throw new Exception("Erro ao criar a receita associada.");
+                        await transaction.RollbackAsync();
+                        return new Response<Viagem?>(null, 500, "Não foi possivel criar a viagem e seus respectivos pagamentos");
+                    }
+
+                    if(createRequest.ValorParcial >0)
+                    {
+                        var pagamento = new Pagamento { ReceitaId = receita.Id, DataPagamento = DateOnly.FromDateTime(DateTime.Now), ValorPago = createRequest.ValorParcial };
+                        var pagamentoCriado = await _pagamentoRepository.AddAsync(pagamento);
+                        if (!pagamentoCriado) 
+                        {
+                            await transaction.RollbackAsync();
+                            return new Response<Viagem?>(null, 500, "Não foi possivel criar a viagem e seus respectivos pagamentos");
+                        }
                     }
 
                     result.Message = "Viagem confirmada, motoristas associados e receita criada com sucesso.";
@@ -190,7 +204,25 @@ namespace InfoFretamento.Application.Services
                             Vencimento = viagem.DataHorarioSaida.Data
                         };
 
-                        await _receitaRepository.AddAsync(viagem.Receita);
+                        var receitaCriada =   await _receitaRepository.AddAsync(viagem.Receita);
+                        if (!receitaCriada)
+                        {
+                            await transaction.RollbackAsync();
+                            return new Response<Viagem?>(null, 500, "Não foi possivel criar a viagem e seus respectivos pagamentos");
+                        }
+
+                        if (updateRequest.ValorParcial > 0)
+                        {
+                            var pagamento = new Pagamento { ReceitaId = viagem.Receita.Id, DataPagamento = DateOnly.FromDateTime(DateTime.Now), ValorPago = updateRequest.ValorParcial };
+                            var pagamentoCriado = await _pagamentoRepository.AddAsync(pagamento);
+                            if (!pagamentoCriado)
+                            {
+                                await transaction.RollbackAsync();
+                                return new Response<Viagem?>(null, 500, "Não foi possivel criar a viagem e seus respectivos pagamentos");
+                            }
+                        }
+
+
                         _cacheManager.ClearAll($"{typeof(Receita).Name}");
                     }
                 }

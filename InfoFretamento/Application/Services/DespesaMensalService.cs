@@ -7,5 +7,6 @@ namespace InfoFretamento.Application.Services
 {
     public class DespesaMensalService(IBaseRepository<DespesaMensal> repository, IMemoryCache cache, CacheManager cacheManager): BaseService<DespesaMensal, AdicionarDespesaMensal, AtualizarDespesaMensal>(repository, cache, cacheManager)
     {
+        
     }
 }

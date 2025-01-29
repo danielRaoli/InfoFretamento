@@ -105,7 +105,7 @@ namespace InfoFretamento.Application.Services
                 }
 
 
-                if (request.Quantidade < 0 || request.Quantidade == 0 || request.Quantidade > peca.Quantidade)
+                if (request.Quantidade < 0 || request.Quantidade == 0)
                 {
                     return new Response<AdicionarPeca?>(null, 400, "Valor da quantidade de peças é inválido");
                 }

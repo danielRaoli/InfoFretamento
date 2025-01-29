@@ -18,6 +18,7 @@ namespace InfoFretamento.Infrastructure.Repositories
         {
             var entity = await _context.Boletos.FirstOrDefaultAsync(b => b.Id == id);
             return entity;
+         
         }
 
         public async Task<bool> Pagar(Boleto boleto)

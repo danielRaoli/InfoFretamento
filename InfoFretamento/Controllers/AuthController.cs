@@ -26,5 +26,11 @@ namespace InfoFretamento.Controllers
             }
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> HelfCheck()
+        {
+            return Ok("Hello World");
+        }
     }
 }
