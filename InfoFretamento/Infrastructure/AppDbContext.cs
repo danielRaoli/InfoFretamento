@@ -6,7 +6,6 @@ namespace InfoFretamento.Infrastructure
     public class AppDbContext(DbContextOptions<AppDbContext> opts) : DbContext(opts)
     {
 
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Pessoa>(entity =>
@@ -48,15 +47,12 @@ namespace InfoFretamento.Infrastructure
 
                 entity.Property(e => e.DataAdmissao).HasColumnType("DATE");
                 entity.HasMany(e => e.Ferias).WithOne().HasForeignKey(f => f.ResponsavelId);
-                entity.HasOne(c => c.Salario).WithOne()
-                .HasForeignKey<Salario>(s => s.Id) // Usa a PK de Salario como FK
-                .OnDelete(DeleteBehavior.Restrict);
-                });
 
+            });
             modelBuilder.Entity<Colaborador>(e =>
             {
                 e.HasMany(e => e.Ferias).WithOne().HasForeignKey(f => f.ResponsavelId);
-                e.HasOne(e => e.Salario).WithOne().HasForeignKey<Salario>(s => s.Id);
+
             });
 
             modelBuilder.Entity<Cliente>(entity =>
@@ -69,17 +65,20 @@ namespace InfoFretamento.Infrastructure
             modelBuilder.Entity<Salario>(entity =>
             {
                 entity.HasOne(e => e.Responsavel).WithOne().HasForeignKey<Salario>(e => e.ResponsavelId);
-                entity.Property(p => p.DataVale).HasColumnType("DATE");
-                entity.Property(p => p.DataSalario).HasColumnType("DATE");
+
                 entity.Property(p => p.ValorTotal).HasColumnType("DECIMAL(18,2)");
-               
+                entity.HasOne(s => s.Responsavel) // Salario tem um Responsavel
+                            .WithOne() // Responsavel pode ter vários Salarios
+                            .HasForeignKey<Salario>(s => s.ResponsavelId) // FK aponta para a PK de Responsavel
+                            .OnDelete(DeleteBehavior.Restrict); // Evita deleção em cascata
+
             });
 
 
             modelBuilder.Entity<DespesaMensal>(entity =>
             {
 
-                entity.Property(p => p.DataPagamento).HasColumnType("DATE");
+
                 entity.Property(p => p.ValorTotal).HasColumnType("DECIMAL(18,2)");
                 entity.Property(p => p.CentroDeCusto).HasMaxLength(50);
             });
@@ -330,7 +329,10 @@ namespace InfoFretamento.Infrastructure
                 .WithMany(v => v.MotoristaViagens)
                 .HasForeignKey(mv => mv.ViagemId);
 
+
         }
+
+
 
 
         public DbSet<Cliente> Clientes { get; set; }

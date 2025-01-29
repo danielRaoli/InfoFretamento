@@ -27,9 +27,10 @@ namespace InfoFretamento.Controllers
             return Ok(response);
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateSalario(AtualizarSalarioRequest request)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateSalario([FromRoute] int id,AtualizarSalarioRequest request)
         {
+            request.Id = id;
             var response = await _sarioService.UpdateAsync(request);
             return Ok(response);
         }
@@ -56,9 +57,10 @@ namespace InfoFretamento.Controllers
             return Ok(response);
         }
 
-        [HttpPut("despesamensal")]
-        public async Task<IActionResult> UpdateSalario(AtualizarDespesaMensal request)
+        [HttpPut("despesamensal/{id}")]
+        public async Task<IActionResult> UpdateSalario([FromRoute] int id, AtualizarDespesaMensal request)
         {
+            request.Id=id;
             var response = await _despesaMensalService.UpdateAsync(request);
             return Ok(response);
         }

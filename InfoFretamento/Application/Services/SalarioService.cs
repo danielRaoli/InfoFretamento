@@ -20,7 +20,7 @@ namespace InfoFretamento.Application.Services
             }
 
             var entity = createRequest.ToEntity();
-           
+            entity.Responsavel = responsavel;
 
             var result = await _repository.AddAsync(entity);
             if (!result)

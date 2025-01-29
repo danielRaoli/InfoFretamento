@@ -13,10 +13,33 @@ namespace InfoFretamento.Infrastructure.Repositories
             return await _context.Viagens.AsNoTracking().Where(v => v.DataHorarioSaida.Data.Month == _mesAtual).CountAsync();
         }
 
-        public async Task<decimal> DespesasMensais()
+        public async Task<decimal> MonthlyExpenses()
         {
-            return await _context.Despesas.AsNoTracking().Where(d => d.DataCompra.Month == _mesAtual).SumAsync(d => d.ValorTotal);
+            var currentDate = DateTime.Now;
+            var currentMonth = currentDate.Month;
+            var currentYear = currentDate.Year;
+
+           return await _context.Despesas
+                .AsNoTracking()
+                .Select(e =>
+                    // Check if the expense is of type "Boleto"
+                    e.FormaPagamento == "Boleto"
+                        // Sum Boleto values with due dates in the current month/year
+                        ? e.Boletos
+                            .Where(b => b.Vencimento.Month == currentMonth &&
+                                        b.Vencimento.Year == currentYear)
+                            .Sum(b => b.Valor)
+                        // For non-Boleto expenses, sum payments in the current month/year
+                        : e.Pagamentos
+                            .Where(p => p.DataPagamento.Month == currentMonth &&
+                                        p.DataPagamento.Year == currentYear)
+                            .Sum(p => p.ValorPago)
+                )
+                .SumAsync(); // Total sum of all filtered values
+
+           
         }
+
 
 
         public async Task<decimal> ReceitasMensais()

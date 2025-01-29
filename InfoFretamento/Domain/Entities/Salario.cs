@@ -3,8 +3,8 @@
     public class Salario
     {
         public int Id { get; set; }
-        public DateOnly DataVale { get; set; }
-        public DateOnly DataSalario { get; set; }
+        public int DiaVale { get; set; }
+        public int DiaSalario { get; set; }
         public decimal ValorTotal { get; set; }
         public int ResponsavelId { get; set; }
         public Pessoa Responsavel { get; set; }

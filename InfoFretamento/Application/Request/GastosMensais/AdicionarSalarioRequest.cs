@@ -6,8 +6,8 @@ namespace InfoFretamento.Application.Request.GastosMensais
     public class AdicionarSalarioRequest : IBaseAdicionarRequest<Salario>
     {
 
-        public DateTime DataVale { get; set; }
-        public DateTime DataSalario { get; set; }
+        public int DiaVale { get; set; }
+        public int DiaSalario  { get; set; }
         public decimal ValorTotal { get; set; }
         public int ResponsavelId { get; set; }
 
@@ -16,8 +16,8 @@ namespace InfoFretamento.Application.Request.GastosMensais
         {
             return new Salario
             {
-                DataSalario = DateOnly.FromDateTime(DataSalario),
-                DataVale = DateOnly.FromDateTime(DataVale),
+                DiaSalario = DiaSalario,
+                DiaVale = DiaVale,
                 ValorTotal = ValorTotal,
                 ResponsavelId = ResponsavelId
             };

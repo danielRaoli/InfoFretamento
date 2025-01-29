@@ -3,6 +3,6 @@
     public class Colaborador : Pessoa
     {
         public List<Ferias> Ferias { get; set; } = [];
-        public Salario Salario { get; set; }
+
     }
 }

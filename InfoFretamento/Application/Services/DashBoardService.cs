@@ -16,7 +16,7 @@ namespace InfoFretamento.Application.Services
 
         public async Task<Response<decimal>> TotalDespesas()
         {
-            var result = await _repository.DespesasMensais();
+            var result = await _repository.MonthlyExpenses();
             return new Response<decimal>(result);
         }
 

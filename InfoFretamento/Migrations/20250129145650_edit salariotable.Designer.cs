@@ -4,6 +4,7 @@ using InfoFretamento.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InfoFretamento.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250129145650_edit salariotable")]
+    partial class editsalariotable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -212,8 +215,8 @@ namespace InfoFretamento.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int>("DiaPagamento")
-                        .HasColumnType("int");
+                    b.Property<DateOnly>("DataPagamento")
+                        .HasColumnType("DATE");
 
                     b.Property<decimal>("ValorTotal")
                         .HasColumnType("DECIMAL(18,2)");
@@ -618,11 +621,11 @@ namespace InfoFretamento.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("DiaSalario")
-                        .HasColumnType("int");
+                    b.Property<DateOnly>("DataSalario")
+                        .HasColumnType("DATE");
 
-                    b.Property<int>("DiaVale")
-                        .HasColumnType("int");
+                    b.Property<DateOnly>("DataVale")
+                        .HasColumnType("DATE");
 
                     b.Property<int>("ResponsavelId")
                         .HasColumnType("int");
