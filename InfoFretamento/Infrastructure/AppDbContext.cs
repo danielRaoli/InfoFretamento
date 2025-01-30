@@ -357,6 +357,8 @@ namespace InfoFretamento.Infrastructure
         public DbSet<AdicionarPeca> Adicionamentos { get; set; }
         public DbSet<Ferias> Ferias { get; set; }
         public DbSet<PagamentoDespesa> PagamentosDespesa { get; set; }
+        public DbSet<Salario> Salarios { get; set; }
+        public DbSet<DespesaMensal> DespesasMensais { get; set; }
         public DbSet<Boleto> Boletos { get; set; }
 
 

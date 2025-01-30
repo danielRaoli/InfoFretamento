@@ -19,7 +19,16 @@ namespace InfoFretamento.Infrastructure.Repositories
             var currentMonth = currentDate.Month;
             var currentYear = currentDate.Year;
 
-           return await _context.Despesas
+            var abastecimentos = await _context.Abastecimentos.AsNoTracking().Include(a => a.Viagem)
+                        .Where(a => a.Viagem.DataHorarioSaida.Data.Month == currentMonth
+                            && a.Viagem.DataHorarioSaida.Data.Year == currentYear).Select(a => a.ValorTotal).SumAsync();
+            var adiantamentos = await _context.Adiantamentos.Select(a => a.ValorDeAcerto).SumAsync();
+
+            var despesasMensais = await _context.DespesasMensais.Select(d => d.ValorTotal).SumAsync();
+
+            var salarios = await _context.Salarios.Select(s => s.ValorTotal).SumAsync();
+
+           var despesas = await _context.Despesas
                 .AsNoTracking()
                 .Select(e =>
                     // Check if the expense is of type "Boleto"
@@ -37,14 +46,17 @@ namespace InfoFretamento.Infrastructure.Repositories
                 )
                 .SumAsync(); // Total sum of all filtered values
 
-           
+            return (abastecimentos + adiantamentos + despesasMensais + salarios + despesas);
         }
 
 
 
         public async Task<decimal> ReceitasMensais()
         {
-            return await _context.Receitas.AsNoTracking().Where(r => r.DataCompra.Month == _mesAtual).SumAsync(d => d.ValorTotal);
+            var currentDate = DateTime.Now;
+            var currentMonth = currentDate.Month;
+            var currentYear = currentDate.Year;
+            return await _context.Pagamentos.AsNoTracking().Where(r => r.DataPagamento.Month == _mesAtual && r.DataPagamento.Year == currentYear).SumAsync(d => d.ValorPago);
         }
 
         public async Task<List<ReceitasMensais>> ValorLiquidoMensal(int ano)
