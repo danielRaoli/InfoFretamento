@@ -22,11 +22,12 @@ namespace InfoFretamento.Infrastructure.Repositories
             var abastecimentos = await _context.Abastecimentos.AsNoTracking().Include(a => a.Viagem)
                         .Where(a => a.Viagem.DataHorarioSaida.Data.Month == currentMonth
                             && a.Viagem.DataHorarioSaida.Data.Year == currentYear).Select(a => a.ValorTotal).SumAsync();
-            var adiantamentos = await _context.Adiantamentos.Select(a => a.ValorDeAcerto).SumAsync();
+            var adiantamentos = await _context.Adiantamentos.AsNoTracking().Include(a => a.Viagem).Where(a => a.Viagem.DataHorarioSaida.Data.Month == currentMonth 
+                                         && a.Viagem.DataHorarioSaida.Data.Year == currentYear).Select(a => a.ValorDeAcerto).SumAsync();
 
-            var despesasMensais = await _context.DespesasMensais.Select(d => d.ValorTotal).SumAsync();
+            var despesasMensais = await _context.DespesaMensal.AsNoTracking().Select(d => d.ValorTotal).SumAsync();
 
-            var salarios = await _context.Salarios.Select(s => s.ValorTotal).SumAsync();
+            var salarios = await _context.Salario.AsNoTracking().Select(s => s.ValorTotal).SumAsync();
 
            var despesas = await _context.Despesas
                 .AsNoTracking()
@@ -36,12 +37,12 @@ namespace InfoFretamento.Infrastructure.Repositories
                         // Sum Boleto values with due dates in the current month/year
                         ? e.Boletos
                             .Where(b => b.Vencimento.Month == currentMonth &&
-                                        b.Vencimento.Year == currentYear)
+                                        b.Vencimento.Year == currentYear && b.Pago == true)
                             .Sum(b => b.Valor)
                         // For non-Boleto expenses, sum payments in the current month/year
                         : e.Pagamentos
                             .Where(p => p.DataPagamento.Month == currentMonth &&
-                                        p.DataPagamento.Year == currentYear)
+                                        p.DataPagamento.Year == currentYear )
                             .Sum(p => p.ValorPago)
                 )
                 .SumAsync(); // Total sum of all filtered values

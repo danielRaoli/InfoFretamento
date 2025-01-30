@@ -110,7 +110,7 @@ namespace InfoFretamento.Controllers
         [HttpDelete("/reestoque/{id}")]
         public async Task<IActionResult> RemoverAdicionamento([FromRoute] int id)
         {
-            var response = await _estoqueService.RemoverRetirada(id);
+            var response = await _estoqueService.RemoverAdicionamentos(id);
             return Ok(response);
         }
     }

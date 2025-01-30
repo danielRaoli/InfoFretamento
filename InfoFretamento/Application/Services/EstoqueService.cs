@@ -134,7 +134,7 @@ namespace InfoFretamento.Application.Services
                 var despesa = new Despesa
                 {
                     DataCompra = entity.DataDeEntrada,
-                    Vencimento = DateOnly.FromDateTime(request.TipoPagamento == "Boleto" ? request.Vencimentos.FirstOrDefault(): request.Vencimento.Value),
+                    Vencimento = DateOnly.FromDateTime(request.TipoPagamento == "Boleto" ? request.Vencimentos.FirstOrDefault() : request.Vencimento.Value),
                     EntidadeOrigem = "Estoque",
                     EntidadeId = entity.Id,
                     ValorTotal = entity.PrecoTotal,
@@ -143,7 +143,7 @@ namespace InfoFretamento.Application.Services
                     CentroCusto = "Estoque",
                     Descricao = $"Despesa gerada para o estoque da peca {entity.Peca.Nome}",
                 };
-              
+
                 var despesaCriada = await _baseDespesa.AddAsync(despesa);
                 if (!despesaCriada)
                 {
@@ -153,7 +153,7 @@ namespace InfoFretamento.Application.Services
 
                 if (request.TipoPagamento.ToUpper() == "BOLETO")
                 {
-                   
+
                     if (request.Vencimentos.Count != request.Parcelas)
                     {
                         throw new ArgumentException("O número de vencimentos fornecido não corresponde ao número de parcelas.");
@@ -186,11 +186,12 @@ namespace InfoFretamento.Application.Services
                 return new Response<AdicionarPeca?>(entity);
 
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 await transaction.RollbackAsync();
 
                 return new Response<AdicionarPeca?>(null, 500, "erro ao tentar registrar reestoque");
-            
+
             }
 
 
@@ -230,6 +231,14 @@ namespace InfoFretamento.Application.Services
                     return new Response<AdicionarPeca>(null, 404, "Registro de reestoque de peca nao encontrada no historico");
                 }
 
+                var peca = await _pecaRepository.GetByIdAsync(adicionamento.PecaId);
+                if (peca == null)
+                {
+                    return new Response<AdicionarPeca>(null, 404, "Registro de reestoque de peca nao encontrada no historico");
+                }
+
+                peca.Quantidade = peca.Quantidade - adicionamento.Quantidade;
+
 
                 var result = await _repository.RemoveAdicionamento(adicionamento);
                 if (!result)
@@ -237,22 +246,33 @@ namespace InfoFretamento.Application.Services
                     new Response<RetiradaPeca>(null, 500, "Erro ao tentar remover registro reestoque do historico");
                 }
 
+                result = await _pecaRepository.UpdateAsync(peca);
 
-
-
-                 result = await _despesaRepository.DeleteAsync(id, "Estoque");
-                if (!result) {
+                if (!result)
+                {
                     await transaction.RollbackAsync();
+                    return new Response<AdicionarPeca>(null, 500, "Registro de reestoque de peca nao encontrada no historico");
                 }
 
-                await transaction.CommitAsync();    
+
+
+                result = await _despesaRepository.DeleteAsync(id, "Estoque");
+                if (!result)
+                {
+                    await transaction.RollbackAsync();
+                    return new Response<AdicionarPeca>(null, 500, "Registro de reestoque de peca nao encontrada no historico");
+
+                }
+
+                await transaction.CommitAsync();
 
                 _cacheManager.ClearAll($"{typeof(AdicionarPeca).Name}");
                 _cacheManager.ClearAll($"{typeof(Peca).Name}");
                 _cacheManager.ClearAll($"{typeof(Despesa).Name}");
                 return new Response<AdicionarPeca>(null);
             }
-            catch (Exception ex) { 
+            catch (Exception ex)
+            {
                 await transaction.RollbackAsync();
                 return new Response<AdicionarPeca>(null, 500, "erro ao tentar remover reestoque do historico");
             }
@@ -263,11 +283,11 @@ namespace InfoFretamento.Application.Services
         public async Task<Response<ReestoqueResponse>> GetById(int id)
         {
             var reestoque = await _repository.GetAdicionamentoById(id);
-            if(reestoque == null)
+            if (reestoque == null)
             {
                 return new Response<ReestoqueResponse>(null, 404, "Reestoque nao encontrado no estoque");
             }
-            
+
 
             var despesa = await _despesaRepository.GetByEntityId(reestoque.Id, "Estoque");
 
