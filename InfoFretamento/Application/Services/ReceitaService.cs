@@ -11,18 +11,25 @@ namespace InfoFretamento.Application.Services
     {
         private readonly IBaseRepository<Receita> _repository = repository;
 
-        public async Task<Response<List<Receita?>>> GetAllWithFilterAsync(DateOnly dateStart , DateOnly dateEnd )
+        public async Task<Response<List<Receita?>>> GetAllWithFilterAsync(DateTime? dateStart = null, DateTime? dateEnd =null, int? receitaId = null)
         {
 
 
-                var filters = new List<Expression<Func<Receita, bool>>>();
+            var filters = new List<Expression<Func<Receita, bool>>>();
 
-                filters.Add(d => d.DataCompra >= dateStart); // Converte DateOnly para DateTime
+            if (receitaId == null)
+            {
+                filters.Add(d => d.DataCompra >= DateOnly.FromDateTime(dateStart.Value)); // Converte DateOnly para DateTime
+                filters.Add(d => d.DataCompra <= DateOnly.FromDateTime(dateEnd.Value)); // Converte DateOnly para DateTime
+            }
+            else
+            {
+                filters.Add(d => d.Id >= receitaId.Value);    
+            }
+       
 
 
-                filters.Add(d => d.DataCompra <= dateEnd); // Converte DateOnly para DateTime
-
-                var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Viagem", "Viagem.Cliente", "Viagem.Veiculo", "Pagamentos" });
+            var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Viagem", "Viagem.Cliente", "Viagem.Veiculo", "Pagamentos" });
 
 
             return new Response<List<Receita?>>(response.ToList());

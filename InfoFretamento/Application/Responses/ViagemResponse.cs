@@ -16,7 +16,7 @@ namespace InfoFretamento.Domain.Entities
         private decimal CalcularValorLiquido()
         {
             var valorAbastecimento = Viagem.Abastecimentos.Select(a => a.ValorTotal).Sum();
-            var valorAdiantamento = Viagem.Adiantamento?.Diferenca ?? 0;
+            var valorAdiantamento = Viagem.Adiantamento?.ValorDeAcerto ?? 0;
 
             return Viagem.ValorContratado - valorAbastecimento - valorAdiantamento - TotalDespesa;
         }

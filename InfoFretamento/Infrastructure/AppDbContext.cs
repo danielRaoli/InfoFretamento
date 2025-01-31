@@ -51,6 +51,7 @@ namespace InfoFretamento.Infrastructure
             });
             modelBuilder.Entity<Colaborador>(e =>
             {
+                e.Property(e => e.DataAdmissao).HasColumnType("DATE");
                 e.HasMany(e => e.Ferias).WithOne().HasForeignKey(f => f.ResponsavelId);
 
             });
@@ -65,7 +66,7 @@ namespace InfoFretamento.Infrastructure
             modelBuilder.Entity<Salario>(entity =>
             {
                 entity.HasOne(e => e.Responsavel).WithOne().HasForeignKey<Salario>(e => e.ResponsavelId);
-
+                entity.Property(p => p.ValorVale).HasColumnType("DECIMAL(18,2)");
                 entity.Property(p => p.ValorTotal).HasColumnType("DECIMAL(18,2)");
                 entity.HasOne(s => s.Responsavel) // Salario tem um Responsavel
                             .WithOne() // Responsavel pode ter vários Salarios
