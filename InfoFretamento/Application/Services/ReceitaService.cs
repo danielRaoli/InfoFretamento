@@ -24,7 +24,7 @@ namespace InfoFretamento.Application.Services
             }
             else
             {
-                filters.Add(d => d.Id >= receitaId.Value);    
+                filters.Add(d => d.Id == receitaId.Value);    
             }
        
 

@@ -9,6 +9,7 @@ namespace InfoFretamento.Application.Request.GastosMensais
         public int DiaVale { get; set; }
         public int DiaSalario  { get; set; }
         public decimal ValorTotal { get; set; }
+        public decimal ValorVale { get; set; }
         public int ResponsavelId { get; set; }
 
 
@@ -19,7 +20,8 @@ namespace InfoFretamento.Application.Request.GastosMensais
                 DiaSalario = DiaSalario,
                 DiaVale = DiaVale,
                 ValorTotal = ValorTotal,
-                ResponsavelId = ResponsavelId
+                ResponsavelId = ResponsavelId,
+                ValorVale = ValorVale
             };
         }
     }
