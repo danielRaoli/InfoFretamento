@@ -6,7 +6,7 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
     public record AtualizarReceitaRequest : BaseAtualizarRequest<Receita>
     {
 
-        public string NumeroDocumento { get; set; } = string.Empty;
+
         public int ViagemId { get; set; }
         public DateTime Vencimento { get; set; }
         public decimal ValorTotal { get; set; }
@@ -17,7 +17,6 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
         public override Receita UpdateEntity(Receita entity)
         {
 
-            entity.NumeroDocumento = this.NumeroDocumento;
             entity.ViagemId = this.ViagemId;
             entity.Vencimento = DateOnly.FromDateTime(Vencimento);
             entity.ValorTotal = this.ValorTotal;

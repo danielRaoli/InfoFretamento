@@ -11,6 +11,7 @@ namespace InfoFretamento.Application.Request.AdiantamentoRequests
         public decimal ValorDeAcerto { get; set; }
         public string Descricao { get; set; } = string.Empty;
 
+
         public Adiantamento ToEntity() => new Adiantamento { TipoVerba = TipoVerba, Descricao = Descricao, ValorDeAcerto = ValorDeAcerto, Verba = Verba, ViagemId = ViagemId };
     }
 }

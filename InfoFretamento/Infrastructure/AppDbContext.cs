@@ -193,8 +193,6 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(d => d.DataCompra)
                       .HasColumnType("DATE");
 
-                entity.Property(d => d.DataPagamento)
-                      .HasColumnType("DATE");
 
                 entity.Property(d => d.Vencimento)
                       .HasColumnType("DATE");
@@ -224,6 +222,7 @@ namespace InfoFretamento.Infrastructure
 
                 e.Property(p => p.DataEmissao).HasColumnType("DATE");
                 e.Property(p => p.Vencimento).HasColumnType("DATE");
+                e.Property(p => p.DataPagamento).HasColumnType("DATE");
             });
 
             modelBuilder.Entity<Receita>(entity =>
@@ -231,8 +230,7 @@ namespace InfoFretamento.Infrastructure
                 entity.Property(d => d.OrigemPagamento)
                      .HasMaxLength(100);
 
-                entity.Property(d => d.NumeroDocumento)
-                      .HasMaxLength(50);
+
 
                 entity.Property(d => d.ValorTotal)
                       .HasColumnType("DECIMAL(18,2)");

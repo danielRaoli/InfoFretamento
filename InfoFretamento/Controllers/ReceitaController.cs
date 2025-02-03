@@ -15,19 +15,10 @@ namespace InfoFretamento.Controllers
         private readonly ReceitaService _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate = null, [FromQuery] DateTime? endDate = null, [FromQuery] int? receitaId = null)
+        public async Task<IActionResult> GetAll([FromQuery] int? mes = null, [FromQuery] int? ano = null, [FromQuery] bool pendente = true, [FromQuery] int? receitaId = null)
         {
-            if (startDate == null && receitaId == null)
-            {
-                startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            }
 
-            // Define o último dia do mês caso endDate seja nulo
-            if (endDate == null && receitaId == null)
-            {
-                endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-            }
-            var result = await _service.GetAllWithFilterAsync(startDate, endDate, receitaId);
+            var result = await _service.GetAllWithFilterAsync(mes, ano,pendente, receitaId);
             return Ok(result);
         }
 

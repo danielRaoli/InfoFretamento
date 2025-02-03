@@ -10,5 +10,6 @@
         public string Descricao { get; set; } = string.Empty;
         public int ViagemId { get; set; }
         public Viagem Viagem { get; set; }
+        
     }
 }

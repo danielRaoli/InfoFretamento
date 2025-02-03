@@ -11,6 +11,8 @@
         public Despesa Despesa { get; set; }
         public bool Pago  { get; set; }
         public DateOnly Vencimento { get; set; }
+        public DateOnly? DataPagamento { get; set; }
+
 
     }
 }

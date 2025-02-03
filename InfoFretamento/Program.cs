@@ -15,7 +15,6 @@ var connectionString = "Server=srv1072.hstgr.io;Database=u111997024_InfoFretamen
 builder.Services.AddDbContext<AppDbContext>(opts => opts.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
 builder.Services.AddScoped(typeof(IBaseRepository<>),typeof(BaseRepository<>));
-builder.Services.AddScoped(typeof(IPessoaRepository<>), typeof(PessoaRepository<>));
 builder.Services.AddScoped<PagamentoRepository>();
 builder.Services.AddScoped<DashBoardRepository>();
 builder.Services.AddScoped<MotoristaViagemRepository>();

@@ -3,19 +3,19 @@ using InfoFretamento.Application.Responses;
 using InfoFretamento.Domain.Entities;
 using InfoFretamento.Domain.Repositories;
 using Microsoft.Extensions.Caching.Memory;
+using System.Linq.Expressions;
 
 namespace InfoFretamento.Application.Services
 {
-    public abstract class BasePessoaService<TEntity, TAdicionarDto, TAtualizarDto> : IPessoaService<TEntity>, IBaseService<TEntity, TAdicionarDto, TAtualizarDto> where TEntity : Pessoa where TAdicionarDto : IBaseAdicionarRequest<TEntity> where TAtualizarDto : BaseAtualizarRequest<TEntity>
+    public abstract class BasePessoaService<TEntity, TAdicionarDto, TAtualizarDto> :  IBaseService<TEntity, TAdicionarDto, TAtualizarDto> where TEntity : Pessoa where TAdicionarDto : IBaseAdicionarRequest<TEntity> where TAtualizarDto : BaseAtualizarRequest<TEntity>
     {
         private readonly IBaseRepository<TEntity> _repository;
-        private readonly IPessoaRepository<TEntity> _pessoaRepository;
+
         private readonly IMemoryCache _memoryCache;
         private readonly CacheManager _cacheManager;    
-        public BasePessoaService(IBaseRepository<TEntity> repository, IPessoaRepository<TEntity> pessoaRepository, IMemoryCache memoryCache, CacheManager cacheManager)
+        public BasePessoaService(IBaseRepository<TEntity> repository, IMemoryCache memoryCache, CacheManager cacheManager)
         {
             _repository = repository;
-            _pessoaRepository = pessoaRepository;
             _memoryCache = memoryCache;
             _cacheManager = cacheManager;
         }
@@ -39,28 +39,6 @@ namespace InfoFretamento.Application.Services
             return new Response<List<TEntity>>(result.ToList());
         }
 
-        public async Task<Response<List<TEntity>>> GetAllNameContains(string name = null)
-        {
-
-            var cachekey = $"{typeof(TEntity).Name}_{name ?? "null"}";
-            var result = await _memoryCache.GetOrCreateAsync(cachekey, async entry =>
-            {
-                _cacheManager.AddKey(cachekey);
-                if (name != null)
-                {
-                    return await _pessoaRepository.GetAllNameContains(name);
-                }
-
-
-                return await _repository.GetAllAsync();
-            });
-            
-
-
-
-
-            return new Response<List<TEntity>>(result.ToList());
-        }
 
         public async Task<Response<TEntity?>> AddAsync(TAdicionarDto createRequest)
         {

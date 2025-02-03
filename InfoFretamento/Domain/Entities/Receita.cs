@@ -5,7 +5,6 @@
         public int Id { get; set; }
         public DateOnly DataCompra { get; set; }
         public string OrigemPagamento { get; set; } = string.Empty; //motorista, cliente, fornecedor 
-        public string NumeroDocumento { get; set; } = string.Empty;
         public int ViagemId { get; set; }
         public Viagem Viagem { get; set; }
         public DateOnly Vencimento { get; set; }

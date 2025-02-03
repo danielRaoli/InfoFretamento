@@ -25,9 +25,9 @@ namespace InfoFretamento.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAllNameContains([FromQuery] string name = null)
+        public async Task<IActionResult> GetAll([FromQuery] string? name = null)
         {
-            var result = await _service.GetAllNameContains(name);
+            var result = await _service.GetAllAsync();
             return Ok(result);
         }
 

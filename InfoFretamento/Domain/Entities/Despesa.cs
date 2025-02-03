@@ -3,7 +3,6 @@
     public class Despesa 
     {
         public int Id { get; set; }
-        public DateOnly? DataPagamento { get; set; }
         public DateOnly DataCompra { get; set; }
         public string EntidadeOrigem { get; set; } = string.Empty;
         public int EntidadeId { get; set; }

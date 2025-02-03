@@ -4,15 +4,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace InfoFretamento.Controllers
 {
-    [Route("/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class ColaboradorController(ColaboradorService ColaboradorService ) : ControllerBase
     {
         private readonly ColaboradorService _service = ColaboradorService;
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? name = null)
+        public async Task<IActionResult> GetAll()
         {
-            var result = await _service.GetAllByName(name);
+            var result = await _service.GetAllAsync();
             return Ok(result);
         }
 

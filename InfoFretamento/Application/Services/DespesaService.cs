@@ -5,6 +5,7 @@ using InfoFretamento.Domain.Entities;
 using InfoFretamento.Domain.Repositories;
 using InfoFretamento.Infrastructure.Repositories;
 using InfoFretamento.Migrations;
+using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage.Json;
 using Microsoft.Extensions.Caching.Memory;
 using System.Linq.Expressions;
@@ -38,7 +39,7 @@ namespace InfoFretamento.Application.Services
             try
             {
                 var despesa = createRequest.ToEntity();
-        
+
                 await _repository.AddAsync(despesa);
 
                 if (createRequest.FormaPagamento.Equals("Boleto", StringComparison.OrdinalIgnoreCase))
@@ -57,7 +58,7 @@ namespace InfoFretamento.Application.Services
                         boletos.Add(boleto);
                     }
 
-                   var result =  await _boletoRepository.AddRange(boletos);
+                    var result = await _boletoRepository.AddRange(boletos);
                     if (!result)
                     {
                         await transaction.RollbackAsync();
@@ -68,25 +69,37 @@ namespace InfoFretamento.Application.Services
                 await transaction.CommitAsync();
                 return new Response<Despesa?>(despesa);
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 await transaction.RollbackAsync();
                 return new Response<Despesa?>(null, 500, "nao foi possivel criar a despesa");
             }
         }
 
-        public async Task<Response<List<Despesa>>> GetAllWithFilterAsync(DateTime? dateStart = null, DateTime? dateEnd = null, int? despesaCode = null)
+        public async Task<Response<List<Despesa>>> GetAllWithFilterAsync(int? mes = null, int? ano = null, int? despesaCode = null, bool pendente = true)
         {
 
 
             // Aplica os filtros
             var filters = new List<Expression<Func<Despesa, bool>>>();
 
-            if(despesaCode == null && dateStart != null && dateEnd !=null)
+            if(despesaCode == null)
             {
-                filters.Add(d => d.DataCompra >= DateOnly.FromDateTime(dateStart.Value));
-
-
-                filters.Add(d => d.DataCompra <= DateOnly.FromDateTime(dateEnd.Value));
+                if (mes != null)
+                {
+                    filters.Add(d =>
+                                    d.DataCompra.Month == mes && d.DataCompra.Year == ano || // Filtro pela data de compra
+                                    d.Pagamentos.Any(p => p.DataPagamento.Month == mes && p.DataPagamento.Year == ano) || // Filtro pela lista de pagamentos
+                                    (d.FormaPagamento == "Boleto" && d.Boletos.Any(b => b.DataPagamento.Value.Month == mes && b.DataPagamento.Value.Year == ano)));
+                }
+                if (pendente)
+                {
+                    filters.Add(d => d.FormaPagamento == "Boleto" ? d.ParcelasPagas < d.Parcelas : d.Pagamentos.Sum(p => p.ValorPago) < d.ValorTotal);
+                }
+                else
+                {
+                    filters.Add(d => d.FormaPagamento == "Boleto" ? d.ParcelasPagas == d.Parcelas : d.Pagamentos.Sum(p => p.ValorPago) == d.ValorTotal);
+                }
             }
             else
             {
@@ -125,8 +138,20 @@ namespace InfoFretamento.Application.Services
 
         public async Task<Response<PagamentoDespesa?>> AdicionarPagamento(AdicionarPagamentoDespesa request)
         {
+            var despesa = await _repository.GetWithFilterAsync(request.DespesaId,"Pagamentos");
+            if(despesa == null)
+            {
+                return new Response<PagamentoDespesa?>(null, 404, "Despesa Nao encontrada");
+            }
+
+            if(despesa.Pago || despesa.ValorParcial + request.ValorPago > despesa.ValorTotal)
+            {
+                return new Response<PagamentoDespesa?>(null, 400, "Esta despesa ja foi paga, ou os valores de pagamento estao maiores que o valor total da despesa");
+            }
+
             var entity = request.ToEntity();
             var result = await _pagamentoRepository.AdicionarPagamento(entity);
+
             if (!result)
             {
                 return new Response<PagamentoDespesa?>(null, 500, "Erro ao tentar registrar");
@@ -158,6 +183,7 @@ namespace InfoFretamento.Application.Services
                 return new Response<Boleto?>(null, 404, "Erro ao tentar remover");
             }
             boleto.Pago = true;
+            boleto.DataPagamento = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-3));
             var result = await _boletoRepository.Pagar(boleto);
             if (!result)
             {

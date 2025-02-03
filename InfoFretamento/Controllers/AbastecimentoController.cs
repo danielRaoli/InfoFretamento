@@ -15,20 +15,6 @@ namespace InfoFretamento.Controllers
         private readonly AbastecimentoService _service = service;
 
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
-        {
-            var result = await _service.GetByIdAsync(id);
-            return Ok(result);
-        }
-
-
-        [HttpGet]
-        public async Task<IActionResult> GetAll()
-        {
-            var result = await _service.GetAllAsync();
-            return Ok(result);
-        }
 
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AdicionarAbastecimentoRequest request)
@@ -37,14 +23,6 @@ namespace InfoFretamento.Controllers
             return Ok(result);
         }
 
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, [FromBody] AtualizarAbastecimentoRequest request)
-        {
-            request.Id = id;
-            var result = await _service.UpdateAsync(request);
-            return Ok(result);
-        }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)

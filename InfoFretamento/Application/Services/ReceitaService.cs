@@ -11,22 +11,29 @@ namespace InfoFretamento.Application.Services
     {
         private readonly IBaseRepository<Receita> _repository = repository;
 
-        public async Task<Response<List<Receita?>>> GetAllWithFilterAsync(DateTime? dateStart = null, DateTime? dateEnd =null, int? receitaId = null)
+        public async Task<Response<List<Receita?>>> GetAllWithFilterAsync(int? mes = null, int? ano = null,bool pendente = true, int? receitaId = null)
         {
 
 
             var filters = new List<Expression<Func<Receita, bool>>>();
-
-            if (receitaId == null)
+            if(receitaId == null)
             {
-                filters.Add(d => d.DataCompra >= DateOnly.FromDateTime(dateStart.Value)); // Converte DateOnly para DateTime
-                filters.Add(d => d.DataCompra <= DateOnly.FromDateTime(dateEnd.Value)); // Converte DateOnly para DateTime
+                if (mes != null) filters.Add(receita => receita.Vencimento.Month == receita.Vencimento.Month && receita.Vencimento.Year == ano);
+                if (pendente)
+                {
+                    filters.Add(receita => receita.Pagamentos.Sum(r => r.ValorPago) < receita.ValorTotal);
+                }
+                else
+                {
+                    filters.Add(receita => receita.Pagamentos.Sum(r => r.ValorPago) == receita.ValorTotal);
+                }
             }
             else
             {
-                filters.Add(d => d.Id == receitaId.Value);    
+                filters.Add(r => r.Id == receitaId);
             }
-       
+
+            
 
 
             var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Viagem", "Viagem.Cliente", "Viagem.Veiculo", "Pagamentos" });

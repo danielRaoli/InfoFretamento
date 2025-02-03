@@ -5,7 +5,7 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
 {
     public record AtualizarDespesaRequest : BaseAtualizarRequest<Despesa>
     {
-        public DateTime DataPagamento { get; set; }
+
         public DateTime Vencimento { get; set; }
         public decimal ValorTotal { get; set; }
         public string CentroCusto { get; set; } = string.Empty;
@@ -13,7 +13,6 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
 
         public override Despesa UpdateEntity(Despesa entity)
         {
-            entity.DataPagamento = DateOnly.FromDateTime(DataPagamento);
             entity.Vencimento = DateOnly.FromDateTime(Vencimento);
             entity.ValorTotal = this.ValorTotal;
             entity.CentroCusto = this.CentroCusto;

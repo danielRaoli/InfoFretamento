@@ -17,20 +17,9 @@ namespace InfoFretamento.Controllers
         private readonly DespesaService _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery]DateTime? endDate, [FromQuery] int? despesaCode = null)
+        public async Task<IActionResult> GetAll([FromQuery] int? mes = null, [FromQuery]int? ano =null, [FromQuery] int? despesaCode = null, bool pendente = true)
         {
-            if (startDate == null && despesaCode == null)
-            {
-                startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
-            }
-
-            // Define o último dia do mês caso endDate seja nulo
-            if (endDate == null && despesaCode == null)
-            {
-                endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
-            }
-
-            var result = await _service.GetAllWithFilterAsync(startDate, endDate, despesaCode);
+            var result = await _service.GetAllWithFilterAsync(mes, ano, despesaCode,pendente);
             return Ok(result);
         }
 
