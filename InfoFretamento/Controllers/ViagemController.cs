@@ -15,7 +15,7 @@ namespace InfoFretamento.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate, [FromQuery] DateTime? endDate, [FromQuery] string? prefixoVeiculo)
+        public async Task<IActionResult> GetAll([FromQuery] DateTime? startDate= null, [FromQuery] DateTime? endDate = null, [FromQuery] string? prefixoVeiculo = null)
         {
             if (startDate == null)
             {
@@ -25,7 +25,7 @@ namespace InfoFretamento.Controllers
             // Define o último dia do mês caso endDate seja nulo
             if (endDate == null)
             {
-                endDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                endDate = new DateTime(DateTime.Now.Year, 12, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
             }
             var result = await _service.GetAllWithFilters(startDate: DateOnly.FromDateTime(startDate.Value), endDate: DateOnly.FromDateTime(endDate.Value), prefixoVeiculo: prefixoVeiculo);
             return Ok(result);

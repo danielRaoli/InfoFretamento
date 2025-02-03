@@ -25,7 +25,7 @@ namespace InfoFretamento.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? name = null)
+        public async Task<IActionResult> GetAll()
         {
             var result = await _service.GetAllAsync();
             return Ok(result);
