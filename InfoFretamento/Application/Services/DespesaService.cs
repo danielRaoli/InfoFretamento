@@ -76,30 +76,41 @@ namespace InfoFretamento.Application.Services
             }
         }
 
-        public async Task<Response<List<Despesa>>> GetAllWithFilterAsync(int? mes = null, int? ano = null, int? despesaCode = null, bool pendente = true)
+        public async Task<Response<List<Despesa>>> GetAllWithFilterAsync(int mes, int ano, int? despesaCode = null, string status = "todas")
         {
 
 
             // Aplica os filtros
             var filters = new List<Expression<Func<Despesa, bool>>>();
 
-            if(despesaCode == null)
+            if (despesaCode == null)
             {
-                if (mes != null)
+                switch (status)
                 {
-                    filters.Add(d =>
-                                    d.DataCompra.Month == mes && d.DataCompra.Year == ano || // Filtro pela data de compra
+                    case "todas":
+                        filters.Add(d =>
+                                    d.DataCompra.Month == mes && d.DataCompra.Year == ano ||
+                                   d.FormaPagamento != "Boleto" && d.Vencimento.Value.Month == mes && d.Vencimento.Value.Year == ano ||// Filtro pela data de compra
                                     d.Pagamentos.Any(p => p.DataPagamento.Month == mes && p.DataPagamento.Year == ano) || // Filtro pela lista de pagamentos
-                                    (d.FormaPagamento == "Boleto" && d.Boletos.Any(b => b.DataPagamento.Value.Month == mes && b.DataPagamento.Value.Year == ano)));
+                                    (d.FormaPagamento == "Boleto" && d.Boletos.Any(b => b.DataPagamento.Value.Month == mes && b.DataPagamento.Value.Year == ano)) ||
+                                    d.Pagamentos.Sum(p => p.ValorPago) < d.ValorTotal && d.FormaPagamento != "Boleto" || d.Boletos.Count(b => b.Pago) < d.Parcelas && d.FormaPagamento == "Boleto");
+                        break;
+                    case "paga":
+                        filters.Add(d => (
+                            d.Pagamentos.Sum(p => p.ValorPago) == d.ValorTotal && d.FormaPagamento != "Boleto" 
+                            || d.Boletos.Count(b => b.Pago) == d.Parcelas && d.FormaPagamento == "Boleto") 
+                            && (d.DataCompra.Month == mes && d.DataCompra.Year == ano || d.FormaPagamento != "Boleto" && d.Vencimento.Value.Month == mes && d.Vencimento.Value.Year == ano 
+                            || d.Pagamentos.Any(p => p.DataPagamento.Month == mes && p.DataPagamento.Year == ano 
+                            || d.FormaPagamento == "Boleto" && d.Boletos.Any(b => b.DataPagamento.Value.Month == mes && b.DataPagamento.Value.Year == ano))));
+                        break;
+                    case "pendente":
+                        filters.Add(d =>( d.Pagamentos.Sum(p => p.ValorPago) < d.ValorTotal && d.FormaPagamento != "Boleto" || d.Boletos.Count(b => b.Pago) < d.Parcelas && d.FormaPagamento == "Boleto")
+                            && (d.DataCompra.Month == mes && d.DataCompra.Year == ano || d.FormaPagamento != "Boleto" && d.Vencimento.Value.Month == mes && d.Vencimento.Value.Year == ano
+                            || d.Pagamentos.Any(p => p.DataPagamento.Month == mes && p.DataPagamento.Year == ano
+                            || d.FormaPagamento == "Boleto" && d.Boletos.Any(b => b.DataPagamento.Value.Month == mes && b.DataPagamento.Value.Year == ano))));
+                        break;
                 }
-                if (pendente)
-                {
-                    filters.Add(d => d.FormaPagamento == "Boleto" ? d.ParcelasPagas < d.Parcelas : d.Pagamentos.Sum(p => p.ValorPago) < d.ValorTotal);
-                }
-                else
-                {
-                    filters.Add(d => d.FormaPagamento == "Boleto" ? d.ParcelasPagas == d.Parcelas : d.Pagamentos.Sum(p => p.ValorPago) == d.ValorTotal);
-                }
+
             }
             else
             {
@@ -117,34 +128,15 @@ namespace InfoFretamento.Application.Services
         }
 
 
-        public async Task<Response<List<Despesa>>> GetAllPendentes(string status)
-        {
-            var filters = new List<Expression<Func<Despesa, bool>>>();
-
-            if (status == "pendente")
-            {
-                filters.Add(d => d.Pagamentos.Sum(p => p.ValorPago) < d.ValorTotal && d.FormaPagamento != "Boleto" || d.Boletos.Count(b => b.Pago) < d.Parcelas && d.FormaPagamento == "Boleto");
-            }
-            else if (status == "paga")
-            {
-                filters.Add(d => d.Pagamentos.Sum(p => p.ValorPago) == d.ValorTotal || d.Boletos.Count(b => b.Pago) == d.Parcelas);
-            }
-
-            var despesas = await _repository.GetAllWithFilterAsync(filters, ["Boletos", "Pagamentos"]);
-
-            return new Response<List<Despesa>>(despesas.ToList());
-
-        }
-
         public async Task<Response<PagamentoDespesa?>> AdicionarPagamento(AdicionarPagamentoDespesa request)
         {
-            var despesa = await _repository.GetWithFilterAsync(request.DespesaId,"Pagamentos");
-            if(despesa == null)
+            var despesa = await _repository.GetWithFilterAsync(request.DespesaId, "Pagamentos");
+            if (despesa == null)
             {
                 return new Response<PagamentoDespesa?>(null, 404, "Despesa Nao encontrada");
             }
 
-            if(despesa.Pago || despesa.ValorParcial + request.ValorPago > despesa.ValorTotal)
+            if (despesa.Pago || despesa.ValorParcial + request.ValorPago > despesa.ValorTotal)
             {
                 return new Response<PagamentoDespesa?>(null, 400, "Esta despesa ja foi paga, ou os valores de pagamento estao maiores que o valor total da despesa");
             }

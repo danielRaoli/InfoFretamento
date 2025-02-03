@@ -31,5 +31,14 @@ namespace InfoFretamento.Application.Services
             entity.Responsavel = responsavel;
             return new Response<Salario?>(entity);
         }
+
+
+        public async Task<Response<List<Salario>>> GetAll()
+        {
+            var response = await _repository.GetAllWithFilterAsync(includes: "Responsavel");
+
+            return new Response<List<Salario>>(response.ToList());
+        }
     }
+
 }

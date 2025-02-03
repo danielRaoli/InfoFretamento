@@ -201,20 +201,52 @@ namespace InfoFretamento.Application.Services
 
         public async Task<Response<RetiradaPeca>> RemoverRetirada(int id)
         {
-            var retirada = await _repository.GetRetiradaById(id);
-            if (retirada == null)
+            using var transaction = await _pecaRepository.BeginTransactionAsync();
+            try
             {
-                return new Response<RetiradaPeca>(null, 404, "Retirada de peca nao encontrada no historico");
+                var retirada = await _repository.GetRetiradaById(id);
+                if (retirada == null)
+                {
+                    return new Response<RetiradaPeca>(null, 404, "Retirada de peca nao encontrada no historico");
+                }
+
+
+                var peca = await _pecaRepository.GetByIdAsync(retirada.PecaId);
+                if (peca == null)
+                {
+                    return new Response<RetiradaPeca>(null, 404, "Registro de reestoque de peca nao encontrada no historico");
+                }
+
+                peca.Quantidade = peca.Quantidade + retirada.Quantidade;
+
+
+                var result = await _repository.RemoveRetirada(retirada);
+                if (!result)
+                {
+                    return new Response<RetiradaPeca>(null, 500, "Erro ao tentar remover retirada do historico");
+                }
+
+                result = await _pecaRepository.UpdateAsync(peca);
+
+                if (!result)
+                {
+                    await transaction.RollbackAsync();
+                    return new Response<RetiradaPeca>(null, 500, "Erro ao tentar remover retirada do historico");
+                }
+
+
+                _cacheManager.ClearAll($"{typeof(RetiradaPeca).Name}");
+                _cacheManager.ClearAll($"{typeof(Peca).Name}");
+
+                await transaction.CommitAsync();
+                return new Response<RetiradaPeca>(null);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return new Response<RetiradaPeca>(null, 500, "Erro ao tentar remover retirada do historico");
             }
 
-            var result = await _repository.RemoveRetirada(retirada);
-            if (!result)
-            {
-                new Response<RetiradaPeca>(null, 500, "Erro ao tentar remover retirada do historico");
-            }
-            _cacheManager.ClearAll($"{typeof(RetiradaPeca).Name}");
-            _cacheManager.ClearAll($"{typeof(Peca).Name}");
-            return new Response<RetiradaPeca>(null);
         }
 
 

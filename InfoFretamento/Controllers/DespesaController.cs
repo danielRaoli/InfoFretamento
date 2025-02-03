@@ -17,9 +17,18 @@ namespace InfoFretamento.Controllers
         private readonly DespesaService _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int? mes = null, [FromQuery]int? ano =null, [FromQuery] int? despesaCode = null, bool pendente = true)
+        public async Task<IActionResult> GetAll([FromQuery] int? mes = null, [FromQuery]int? ano =null, [FromQuery] int? despesaCode = null,[FromQuery] string status = "todas")
         {
-            var result = await _service.GetAllWithFilterAsync(mes, ano, despesaCode,pendente);
+            var dataAtual = DateTime.UtcNow.AddHours(-3);
+            if(mes == null)
+            {
+                mes = dataAtual.Month;
+            }
+            if(ano == null)
+            {
+                ano = dataAtual.Year;
+            }
+            var result = await _service.GetAllWithFilterAsync(mes.Value, ano.Value, despesaCode,status);
             return Ok(result);
         }
 
@@ -28,15 +37,6 @@ namespace InfoFretamento.Controllers
         {
           
             var result = await _service.GetByEntityId(id, name);
-            return Ok(result);
-        }
-
-        [HttpGet("despesastatus")]
-        public async Task<IActionResult> GetAllPendentes([FromQuery] string status)
-        {
-
-
-            var result = await _service.GetAllPendentes(status);
             return Ok(result);
         }
 

@@ -15,10 +15,19 @@ namespace InfoFretamento.Controllers
         private readonly ReceitaService _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] int? mes = null, [FromQuery] int? ano = null, [FromQuery] bool pendente = true, [FromQuery] int? receitaId = null)
+        public async Task<IActionResult> GetAll([FromQuery] int? mes = null, [FromQuery] int? ano = null, [FromQuery] string status = "todas", [FromQuery] int? receitaId = null)
         {
+            var dataAtual = DateTime.UtcNow.AddHours(-3);
+            if (mes == null)
+            {
+                mes = dataAtual.Month;
+            }
+            if (ano == null)
+            {
+                ano = dataAtual.Year;
+            }
 
-            var result = await _service.GetAllWithFilterAsync(mes, ano,pendente, receitaId);
+            var result = await _service.GetAllWithFilterAsync(mes.Value, ano.Value,status, receitaId);
             return Ok(result);
         }
 

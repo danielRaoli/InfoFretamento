@@ -11,30 +11,30 @@ namespace InfoFretamento.Application.Services
     {
         private readonly IBaseRepository<Receita> _repository = repository;
 
-        public async Task<Response<List<Receita?>>> GetAllWithFilterAsync(int? mes = null, int? ano = null,bool pendente = true, int? receitaId = null)
+        public async Task<Response<List<Receita?>>> GetAllWithFilterAsync(int mes , int ano , string status, int? receitaId = null)
         {
 
 
             var filters = new List<Expression<Func<Receita, bool>>>();
             if(receitaId == null)
             {
-                if (mes != null) filters.Add(receita => receita.Vencimento.Month == receita.Vencimento.Month && receita.Vencimento.Year == ano);
-                if (pendente)
+                switch (status)
                 {
-                    filters.Add(receita => receita.Pagamentos.Sum(r => r.ValorPago) < receita.ValorTotal);
-                }
-                else
-                {
-                    filters.Add(receita => receita.Pagamentos.Sum(r => r.ValorPago) == receita.ValorTotal);
+                    case "todas":
+                        filters.Add(r => r.Vencimento.Month == mes && r.Vencimento.Year == ano || r.Pagamentos.Any(p => p.DataPagamento.Month == mes && p.DataPagamento.Year == ano) || r.DataCompra.Month == mes && r.DataCompra.Year == ano || r.Pagamentos.Sum(p=> p.ValorPago) < r.ValorTotal);
+                        break;
+                    case "paga":
+                        filters.Add(r => (r.Vencimento.Month == mes && r.Vencimento.Year == ano || r.Pagamentos.Any(p => p.DataPagamento.Month == mes && p.DataPagamento.Year == ano) || r.DataCompra.Month == mes && r.DataCompra.Year == ano) && r.Pagamentos.Sum(p => p.ValorPago) == r.ValorTotal);
+                        break;
+                    case "pendente":
+                        filters.Add(r => (r.Vencimento.Month == mes && r.Vencimento.Year == ano || r.Pagamentos.Any(p => p.DataPagamento.Month == mes && p.DataPagamento.Year == ano) || r.DataCompra.Month == mes && r.DataCompra.Year == ano) && r.Pagamentos.Sum(p => p.ValorPago) < r.ValorTotal);
+                        break;
                 }
             }
             else
             {
                 filters.Add(r => r.Id == receitaId);
             }
-
-            
-
 
             var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Viagem", "Viagem.Cliente", "Viagem.Veiculo", "Pagamentos" });
 
