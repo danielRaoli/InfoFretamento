@@ -19,13 +19,13 @@ namespace InfoFretamento.Controllers
         {
             if (startDate == null)
             {
-                startDate = new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+                startDate = new DateTime(DateTime.Now.Year, DateTime.UtcNow.AddHours(-3).Month, 1);
             }
 
             // Define o último dia do mês caso endDate seja nulo
             if (endDate == null)
             {
-                endDate = new DateTime(DateTime.Now.Year, 12, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.Now.Month));
+                endDate = new DateTime(DateTime.Now.Year, 12, DateTime.DaysInMonth(DateTime.Now.Year, DateTime.UtcNow.AddHours(-3).Month));
             }
             var result = await _service.GetAllWithFilters(startDate: DateOnly.FromDateTime(startDate.Value), endDate: DateOnly.FromDateTime(endDate.Value), prefixoVeiculo: prefixoVeiculo);
             return Ok(result);

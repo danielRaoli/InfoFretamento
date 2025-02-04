@@ -122,11 +122,10 @@ namespace InfoFretamento.Application.Services
                 entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(30);
                 entry.SlidingExpiration = TimeSpan.FromMinutes(10);
 
-                var filters = new List<Expression<Func<Viagem, bool>>>
-            {
-                d => d.DataHorarioSaida.Data >= startDate,
-                d => d.DataHorarioSaida.Data <= endDate
-            };
+                var filters = new List<Expression<Func<Viagem, bool>>>();
+
+                filters.Add(v =>( v.DataHorarioSaida.Data >= startDate && v.DataHorarioSaida.Data <= endDate) || (v.DataHorarioChegada.Data >= startDate && v.DataHorarioChegada.Data <= endDate) || ( (v.DataHorarioRetorno.Data >= startDate && v.DataHorarioRetorno.Data <= endDate)) || v.Status == "PENDENTE" );
+
 
                 if (!string.IsNullOrEmpty(prefixoVeiculo))
                     filters.Add(d => d.Veiculo.Prefixo == prefixoVeiculo);
