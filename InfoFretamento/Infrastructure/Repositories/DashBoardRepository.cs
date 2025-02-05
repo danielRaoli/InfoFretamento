@@ -130,7 +130,7 @@ namespace InfoFretamento.Infrastructure.Repositories
                     var abastecimentos = gastosAbastecimentos.FirstOrDefault(a => a.Month == mes)?.Total ?? 0;
                     var adiantamentos =  gastosAdiantamentos.FirstOrDefault(a => a.Month ==mes)?.Total ?? 0;
 
-                    var totalDespesa = despesas + boletos + salarios + desepsasaFixas + abastecimentos + adiantamentos,
+                    var totalDespesa = despesas + boletos + salarios + desepsasaFixas + abastecimentos + adiantamentos;
 
                     return new ReceitasMensais
                     {
