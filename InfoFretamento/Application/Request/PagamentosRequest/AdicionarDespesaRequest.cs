@@ -10,7 +10,8 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
         public string FormaPagamento { get; set; } = string.Empty;
         public string CentroCusto { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;
-        public string EntidadeOrigem { get; set; } = string.Empty;
+        public string EntidadeOrigem { get; set; } = string.Empty; 
+
         public int Parcelas { get; set; }
         public List<DateTime> VencimentosBoleto { get; set; } = [];
         public int EntidadeId { get; set; }

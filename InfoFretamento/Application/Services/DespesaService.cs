@@ -54,7 +54,7 @@ namespace InfoFretamento.Application.Services
                     var boletos = new List<Boleto>();
                     foreach (var vencimento in createRequest.VencimentosBoleto)
                     {
-                        var boleto = new Boleto { DataEmissao = DateOnly.FromDateTime(DateTime.Now), DespesaId = despesa.Id, Pago = false, Referencia = $"Boleto da despesa ${despesa.Id}", Valor = despesa.ValorTotal / createRequest.Parcelas };
+                        var boleto = new Boleto { DataEmissao = DateOnly.FromDateTime(DateTime.Now), DespesaId = despesa.Id, Pago = false, Referencia = $"Boleto da despesa ${despesa.Id}", Valor = despesa.ValorTotal / createRequest.Parcelas, Vencimento = DateOnly.FromDateTime(vencimento) };
                         boletos.Add(boleto);
                     }
 
