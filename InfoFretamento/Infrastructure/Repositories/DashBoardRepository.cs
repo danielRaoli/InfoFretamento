@@ -59,9 +59,9 @@ namespace InfoFretamento.Infrastructure.Repositories
             var currentYear = currentDate.Year;
 
             var receitasViagem = await _context.Pagamentos.AsNoTracking().Where(r => r.DataPagamento.Month == _mesAtual && r.DataPagamento.Year == currentYear).SumAsync(d => d.ValorPago);
-            var receitaPacotes = await _context.Passagens.AsNoTracking().Include(p => p.Viagem).Where(p => p.Viagem.Saida.Data.Month == currentMonth && p.Viagem.Saida.Data.Year == currentYear).SumAsync(p => p.ValorTotal);
 
-            return receitaPacotes + receitasViagem;
+
+            return receitasViagem ;
         }
 
         public async Task<List<ReceitasMensais>> ValorLiquidoMensal(int ano)
