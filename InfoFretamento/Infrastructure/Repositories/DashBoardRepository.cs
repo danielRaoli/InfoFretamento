@@ -10,7 +10,7 @@ namespace InfoFretamento.Infrastructure.Repositories
         public async Task<int> TotalViagens()
         {
 
-            return await _context.Viagens.AsNoTracking().Where(v => v.DataHorarioSaida.Data.Month == _mesAtual).CountAsync();
+            return await _context.Viagens.AsNoTracking().CountAsync();
         }
 
         public async Task<decimal> MonthlyExpenses()

@@ -95,7 +95,7 @@ namespace InfoFretamento.Infrastructure.Repositories
 
 
             // Executa a query e retorna o resultado
-            return await query.ToListAsync();
+            return await query.AsNoTracking().ToListAsync();
         }
     }
 }
