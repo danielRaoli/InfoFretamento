@@ -15,15 +15,9 @@ namespace InfoFretamento.Infrastructure.Repositories
 
         public async Task<decimal> MonthlyExpenses()
         {
-            var currentDate = DateTime.UtcNow.AddHours(-3);
-            var currentMonth = currentDate.Month;
-            var currentYear = currentDate.Year;
 
-            var abastecimentos = await _context.Abastecimentos.AsNoTracking()
-                        .Where(a => a.DataPagamento.Month == currentMonth
-                            && a.DataPagamento.Year == currentYear).Select(a => a.ValorTotal).SumAsync();
-            var adiantamentos = await _context.Adiantamentos.AsNoTracking().Include(a => a.Viagem).Where(a => a.Viagem.DataHorarioSaida.Data.Month == currentMonth
-                                         && a.Viagem.DataHorarioSaida.Data.Year == currentYear).Select(a => a.ValorDeAcerto).SumAsync();
+            var abastecimentos = await _context.Abastecimentos.AsNoTracking().Select(a => a.ValorTotal).SumAsync();
+            var adiantamentos = await _context.Adiantamentos.AsNoTracking().Include(a => a.Viagem).Select(a => a.ValorDeAcerto).SumAsync();
 
             var despesasMensais = await _context.DespesaMensal.AsNoTracking().Select(d => d.ValorTotal).SumAsync();
 
@@ -35,15 +29,9 @@ namespace InfoFretamento.Infrastructure.Repositories
                      // Check if the expense is of type "Boleto"
                      e.FormaPagamento == "Boleto"
                          // Sum Boleto values with due dates in the current month/year
-                         ? e.Boletos
-                             .Where(b => b.Pago == true && b.DataPagamento.Value.Month == currentMonth &&
-                                         b.DataPagamento.Value.Year == currentYear)
-                             .Sum(b => b.Valor)
+                         ? e.Boletos.Where(b => b.Pago == true).Sum(b => b.Valor)
                          // For non-Boleto expenses, sum payments in the current month/year
-                         : e.Pagamentos
-                             .Where(p => p.DataPagamento.Month == currentMonth &&
-                                         p.DataPagamento.Year == currentYear)
-                             .Sum(p => p.ValorPago)
+                         : e.Pagamentos.Sum(p => p.ValorPago)
                  )
                  .SumAsync(); // Total sum of all filtered values
 
@@ -54,14 +42,11 @@ namespace InfoFretamento.Infrastructure.Repositories
 
         public async Task<decimal> ReceitasMensais()
         {
-            var currentDate = DateTime.UtcNow.AddHours(-3);
-            var currentMonth = currentDate.Month;
-            var currentYear = currentDate.Year;
 
-            var receitasViagem = await _context.Pagamentos.AsNoTracking().Where(r => r.DataPagamento.Month == _mesAtual && r.DataPagamento.Year == currentYear).SumAsync(d => d.ValorPago);
+            var receitasViagem = await _context.Pagamentos.AsNoTracking().SumAsync(d => d.ValorPago);
 
 
-            return receitasViagem ;
+            return receitasViagem;
         }
 
         public async Task<List<ReceitasMensais>> ValorLiquidoMensal(int ano)
@@ -99,7 +84,7 @@ namespace InfoFretamento.Infrastructure.Repositories
             .ToListAsync();
 
             var gastosAbastecimentos = await _context.Abastecimentos.AsNoTracking()
-            .Where(d =>  d.DataPagamento.Year == ano) // Filtra despesas pelo ano
+            .Where(d => d.DataPagamento.Year == ano) // Filtra despesas pelo ano
             .GroupBy(d => d.DataPagamento.Month)    // Agrupa por mês
             .Select(g => new
             {
@@ -128,15 +113,15 @@ namespace InfoFretamento.Infrastructure.Repositories
                     var despesas = despesasMensais.FirstOrDefault(d => d.Month == mes)?.Total ?? 0;
                     var boletos = boletosDespesas.FirstOrDefault(b => b.Month == mes)?.Total ?? 0;
                     var abastecimentos = gastosAbastecimentos.FirstOrDefault(a => a.Month == mes)?.Total ?? 0;
-                    var adiantamentos =  gastosAdiantamentos.FirstOrDefault(a => a.Month ==mes)?.Total ?? 0;
+                    var adiantamentos = gastosAdiantamentos.FirstOrDefault(a => a.Month == mes)?.Total ?? 0;
 
                     var totalDespesa = despesas + boletos + salarios + desepsasaFixas + abastecimentos + adiantamentos;
 
                     return new ReceitasMensais
                     {
                         Month = new DateTime(ano, mes, 1).ToString("MMM", new System.Globalization.CultureInfo("pt-BR")), // Nome reduzido do mês
-                        Receitas = receitas ,
-                        Despesas =  totalDespesa,
+                        Receitas = receitas,
+                        Despesas = totalDespesa,
                         ValorLiquido = receitas - totalDespesa,
                     };
                 }).ToList();

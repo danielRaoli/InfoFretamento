@@ -7,10 +7,10 @@ namespace InfoFretamento.Application.Request.PagamentosRequest
     {
         public int ReceitaId  { get; set; }
         public decimal ValorPago { get; set; }
-       
+        public DateTime DataPagamento { get; set; }
         public Pagamento ToEntity()
         {
-            return new Pagamento { ReceitaId = ReceitaId, ValorPago = ValorPago, DataPagamento = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-3)) };
+            return new Pagamento { ReceitaId = ReceitaId, ValorPago = ValorPago, DataPagamento = DateOnly.FromDateTime(DataPagamento) };
         }
     }
 }
