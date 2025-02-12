@@ -19,7 +19,7 @@ namespace InfoFretamento.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] AdicionarAbastecimentoRequest request)
         {
-            var result = await _service.AddAsync(request);
+            var result = await _service.Add(request);
             return Ok(result);
         }
 

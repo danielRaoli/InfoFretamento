@@ -83,15 +83,6 @@ namespace InfoFretamento.Infrastructure.Repositories
             })
             .ToListAsync();
 
-            var gastosAbastecimentos = await _context.Abastecimentos.AsNoTracking()
-            .Where(d => d.DataPagamento.Year == ano) // Filtra despesas pelo ano
-            .GroupBy(d => d.DataPagamento.Month)    // Agrupa por mês
-            .Select(g => new
-            {
-                Month = g.Key,
-                Total = g.Sum(d => d.ValorTotal) // Soma os valores das despesas no mês
-            })
-            .ToListAsync();
 
             var gastosAdiantamentos = await _context.Adiantamentos.AsNoTracking().Include(a => a.Viagem)
            .Where(d => d.Viagem.DataHorarioSaida.Data.Year == ano) // Filtra despesas pelo ano
@@ -112,10 +103,9 @@ namespace InfoFretamento.Infrastructure.Repositories
 
                     var despesas = despesasMensais.FirstOrDefault(d => d.Month == mes)?.Total ?? 0;
                     var boletos = boletosDespesas.FirstOrDefault(b => b.Month == mes)?.Total ?? 0;
-                    var abastecimentos = gastosAbastecimentos.FirstOrDefault(a => a.Month == mes)?.Total ?? 0;
                     var adiantamentos = gastosAdiantamentos.FirstOrDefault(a => a.Month == mes)?.Total ?? 0;
 
-                    var totalDespesa = despesas + boletos + salarios + desepsasaFixas + abastecimentos + adiantamentos;
+                    var totalDespesa = despesas + boletos + salarios + desepsasaFixas  + adiantamentos;
 
                     return new ReceitasMensais
                     {

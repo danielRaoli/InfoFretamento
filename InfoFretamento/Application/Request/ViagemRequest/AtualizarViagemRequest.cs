@@ -16,6 +16,7 @@ namespace InfoFretamento.Application.Request.ViagemRequest
         public string TipoServico { get; set; } = string.Empty;
         public string Itinerario { get; set; } = string.Empty;
         public string Status { get; set; } = string.Empty;
+        public int KmInicialVeiculo { get; set; }
         public int KmFinalVeiculo { get; set; }
         public decimal ValorParcial { get; set; }
 
@@ -30,6 +31,7 @@ namespace InfoFretamento.Application.Request.ViagemRequest
             entity.Status = Status;
             entity.KmFinalVeiculo = KmFinalVeiculo;
             entity.VeiculoId = VeiculoId;
+            entity.KmInicialVeiculo = KmInicialVeiculo;
             entity.Itinerario = Itinerario;
             return entity;
         }
