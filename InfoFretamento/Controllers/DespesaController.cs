@@ -62,10 +62,10 @@ namespace InfoFretamento.Controllers
             return Ok(result);
         }
 
-        [HttpPost("pagamentoboleto/{id}")]
-        public async Task<IActionResult> PagarBoleto([FromRoute]int id)
+        [HttpPost("pagamentoboleto")]
+        public async Task<IActionResult> PagarBoleto([FromBody] AdicionarPagamentoBoleto request)
         {
-            var result = await _service.PagarBoleto(id);
+            var result = await _service.PagarBoleto(request);
             return Ok(result);
         }
 

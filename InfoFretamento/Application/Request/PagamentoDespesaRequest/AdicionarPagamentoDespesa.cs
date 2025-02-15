@@ -7,6 +7,7 @@ namespace InfoFretamento.Application.Request.PagamentoDespesaRequest
     {
         public decimal ValorPago { get; set; }
         public int DespesaId { get; set; }
+        public DateTime? DataPagamento { get; set; }
 
 
         public PagamentoDespesa ToEntity()
@@ -15,7 +16,7 @@ namespace InfoFretamento.Application.Request.PagamentoDespesaRequest
             {
                 ValorPago = ValorPago,
                 DespesaId = DespesaId,
-                DataPagamento = DateOnly.FromDateTime(DateTime.Now)
+                DataPagamento = DateOnly.FromDateTime(DataPagamento ?? DateTime.UtcNow.AddHours(-3))
             };
         }
     }

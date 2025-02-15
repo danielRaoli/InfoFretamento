@@ -4,12 +4,8 @@ using InfoFretamento.Application.Responses;
 using InfoFretamento.Domain.Entities;
 using InfoFretamento.Domain.Repositories;
 using InfoFretamento.Infrastructure.Repositories;
-using InfoFretamento.Migrations;
-using Microsoft.AspNetCore.Mvc.Diagnostics;
-using Microsoft.EntityFrameworkCore.Storage.Json;
 using Microsoft.Extensions.Caching.Memory;
 using System.Linq.Expressions;
-using System.Net;
 
 namespace InfoFretamento.Application.Services
 {
@@ -89,23 +85,22 @@ namespace InfoFretamento.Application.Services
                 {
                     case "todas":
                         filters.Add(d =>
-                                    d.DataCompra.Month == mes && d.DataCompra.Year == ano ||
                                    d.FormaPagamento != "Boleto" && d.Vencimento.Value.Month == mes && d.Vencimento.Value.Year == ano ||// Filtro pela data de compra
                                     d.Pagamentos.Any(p => p.DataPagamento.Month == mes && p.DataPagamento.Year == ano) || // Filtro pela lista de pagamentos
                                     (d.FormaPagamento == "Boleto" && d.Boletos.Any(b => b.DataPagamento.Value.Month == mes && b.DataPagamento.Value.Year == ano)) ||
-                                    d.Pagamentos.Sum(p => p.ValorPago) < d.ValorTotal && d.FormaPagamento != "Boleto" || d.Boletos.Count(b => b.Pago) < d.Parcelas && d.FormaPagamento == "Boleto");
+                                    d.Pagamentos.Sum(p => p.ValorPago) < d.ValorTotal && d.FormaPagamento != "Boleto" && d.Vencimento.Value.Month <= mes || d.Boletos.Count(b => b.Pago) < d.Parcelas && d.FormaPagamento == "Boleto" && d.Boletos.Any(b => b.Vencimento.Month == mes && b.Vencimento.Year == ano && b.Pago == false));
                         break;
                     case "paga":
                         filters.Add(d => (
-                            d.Pagamentos.Sum(p => p.ValorPago) == d.ValorTotal && d.FormaPagamento != "Boleto" 
+                            d.Pagamentos.Sum(p => p.ValorPago) == d.ValorTotal && d.FormaPagamento != "Boleto"  
                             || d.Boletos.Count(b => b.Pago) == d.Parcelas && d.FormaPagamento == "Boleto") 
-                            && (d.DataCompra.Month == mes && d.DataCompra.Year == ano || d.FormaPagamento != "Boleto" && d.Vencimento.Value.Month == mes && d.Vencimento.Value.Year == ano 
+                            && ( d.FormaPagamento != "Boleto" && d.Vencimento.Value.Month == mes && d.Vencimento.Value.Year == ano 
                             || d.Pagamentos.Any(p => p.DataPagamento.Month == mes && p.DataPagamento.Year == ano 
                             || d.FormaPagamento == "Boleto" && d.Boletos.Any(b => b.DataPagamento.Value.Month == mes && b.DataPagamento.Value.Year == ano))));
                         break;
                     case "pendente":
                         filters.Add(d =>( d.Pagamentos.Sum(p => p.ValorPago) < d.ValorTotal && d.FormaPagamento != "Boleto" || d.Boletos.Count(b => b.Pago) < d.Parcelas && d.FormaPagamento == "Boleto")
-                            && (d.DataCompra.Month == mes && d.DataCompra.Year == ano || d.FormaPagamento != "Boleto" && d.Vencimento.Value.Month == mes && d.Vencimento.Value.Year == ano
+                            && ( d.FormaPagamento != "Boleto" && d.Vencimento.Value.Month == mes && d.Vencimento.Value.Year == ano
                             || d.Pagamentos.Any(p => p.DataPagamento.Month == mes && p.DataPagamento.Year == ano
                             || d.FormaPagamento == "Boleto" && d.Boletos.Any(b => b.DataPagamento.Value.Month == mes && b.DataPagamento.Value.Year == ano))));
                         break;
@@ -167,15 +162,15 @@ namespace InfoFretamento.Application.Services
             return new Response<PagamentoDespesa?>(entity);
         }
 
-        public async Task<Response<Boleto?>> PagarBoleto(int id)
+        public async Task<Response<Boleto?>> PagarBoleto(AdicionarPagamentoBoleto request)
         {
-            var boleto = await _boletoRepository.GetById(id);
+            var boleto = await _boletoRepository.GetById(request.Id);
             if (boleto == null)
             {
                 return new Response<Boleto?>(null, 404, "Erro ao tentar remover");
             }
             boleto.Pago = true;
-            boleto.DataPagamento = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-3));
+            boleto.DataPagamento = DateOnly.FromDateTime(request.DataPagamento ??  DateTime.UtcNow.AddHours(-3));
             var result = await _boletoRepository.Pagar(boleto);
             if (!result)
             {

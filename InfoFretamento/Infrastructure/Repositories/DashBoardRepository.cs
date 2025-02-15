@@ -16,7 +16,6 @@ namespace InfoFretamento.Infrastructure.Repositories
         public async Task<decimal> MonthlyExpenses()
         {
 
-            var abastecimentos = await _context.Abastecimentos.AsNoTracking().Select(a => a.ValorTotal).SumAsync();
             var adiantamentos = await _context.Adiantamentos.AsNoTracking().Include(a => a.Viagem).Select(a => a.ValorDeAcerto).SumAsync();
 
             var despesasMensais = await _context.DespesaMensal.AsNoTracking().Select(d => d.ValorTotal).SumAsync();
@@ -35,7 +34,7 @@ namespace InfoFretamento.Infrastructure.Repositories
                  )
                  .SumAsync(); // Total sum of all filtered values
 
-            return (abastecimentos + adiantamentos + despesasMensais + salarios + despesas);
+            return (adiantamentos + despesasMensais + salarios + despesas);
         }
 
 
