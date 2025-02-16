@@ -18,9 +18,6 @@ namespace InfoFretamento.Infrastructure.Repositories
 
             var adiantamentos = await _context.Adiantamentos.AsNoTracking().Include(a => a.Viagem).Select(a => a.ValorDeAcerto).SumAsync();
 
-            var despesasMensais = await _context.DespesaMensal.AsNoTracking().Select(d => d.ValorTotal).SumAsync();
-
-            var salarios = await _context.Salario.AsNoTracking().Select(s => s.ValorTotal).SumAsync();
 
             var despesas = await _context.Despesas
                  .AsNoTracking()
@@ -34,7 +31,7 @@ namespace InfoFretamento.Infrastructure.Repositories
                  )
                  .SumAsync(); // Total sum of all filtered values
 
-            return (adiantamentos + despesasMensais + salarios + despesas);
+            return (adiantamentos + despesas);
         }
 
 
@@ -93,8 +90,7 @@ namespace InfoFretamento.Infrastructure.Repositories
            })
            .ToListAsync();
 
-            var salarios = await _context.Salario.AsNoTracking().Select(s => s.ValorTotal).SumAsync();
-            var desepsasaFixas = await _context.DespesaMensal.AsNoTracking().Select(d => d.ValorTotal).SumAsync();
+
             // Combina receitas e despesas para cada mês
             var resumoMensal = Enumerable.Range(1, 12).Select(mes =>
                 {
@@ -104,7 +100,7 @@ namespace InfoFretamento.Infrastructure.Repositories
                     var boletos = boletosDespesas.FirstOrDefault(b => b.Month == mes)?.Total ?? 0;
                     var adiantamentos = gastosAdiantamentos.FirstOrDefault(a => a.Month == mes)?.Total ?? 0;
 
-                    var totalDespesa = despesas + boletos + salarios + desepsasaFixas  + adiantamentos;
+                    var totalDespesa = despesas + boletos + adiantamentos;
 
                     return new ReceitasMensais
                     {
