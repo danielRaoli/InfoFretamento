@@ -82,7 +82,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(opts => opts.AddPolicy("AppCors", policy =>
 {
-    policy.WithOrigins("https://sistema-fretamento.vercel.app", "http://localhost:3000")
+    policy.WithOrigins("https://sistema-fretamento.vercel.app", "http://localhost:3000", "https://www.marceloturismo.com")
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials();
