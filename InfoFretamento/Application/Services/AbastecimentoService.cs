@@ -32,6 +32,7 @@ namespace InfoFretamento.Application.Services
 
                 var novaDespesa = new Despesa
                 {
+                    Id= 1,
                     DataCompra = DateOnly.FromDateTime(DateTime.UtcNow.AddHours(-3)),
                     CentroCusto = "Abastecimento",
                     EntidadeId = entity.Id,
@@ -42,17 +43,17 @@ namespace InfoFretamento.Application.Services
                     FormaPagamento = "Cartão"
                 };
 
-                var despesaCriada = await _basedespesaRepository.AddAsync(novaDespesa);
-                if (despesaCriada is false)
-                {
-                    await transaction.RollbackAsync();
-                    return new Response<AbastecimentoDespesaViagem?>(null, 500, "Não foi possivel criar o abastecimento");
-                }
+                //var despesaCriada = await _basedespesaRepository.AddAsync(novaDespesa);
+                //if (despesaCriada is false)
+                //{
+                //    await transaction.RollbackAsync();
+                //    return new Response<AbastecimentoDespesaViagem?>(null, 500, "Não foi possivel criar o abastecimento");
+                //}
 
-                _cacheManager.ClearAll(typeof(Despesa).Name);
+                //_cacheManager.ClearAll(typeof(Despesa).Name);
                 await transaction.CommitAsync();
 
-                return new Response<AbastecimentoDespesaViagem?>(new AbastecimentoDespesaViagem { Abastecimento = entity, Despesa = novaDespesa});
+                return new Response<AbastecimentoDespesaViagem?>(new AbastecimentoDespesaViagem { Abastecimento = entity, Despesa = novaDespesa });
             }
             catch (Exception ex)
             {
@@ -81,7 +82,7 @@ namespace InfoFretamento.Application.Services
                 }
 
                 var despesas = await _despesaRepository.GetByEntityId(id, "Abastecimento");
-                if(despesas.Count > 0)
+                if (despesas.Count > 0)
                 {
                     var despesaRemovida = await _despesaRepository.DeleteAsync(abastecimento.Id, "Abastecimento");
 
