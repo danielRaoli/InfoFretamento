@@ -19,9 +19,15 @@ namespace InfoFretamento.Application.Request.ViagemRequest
         public int KmInicialVeiculo { get; set; }
         public int KmFinalVeiculo { get; set; }
         public decimal ValorParcial { get; set; }
+        public decimal ValorContratado { get; set; }
 
         public override Viagem UpdateEntity(Viagem entity)
         {
+            if(entity.Status == "PENDENTE")
+            {
+               
+                entity.ValorContratado = ValorContratado;
+            }
             entity.Rota = Rota;
             entity.DataHorarioSaida = DataHorarioSaida;
             entity.DataHorarioChegada = DataHorarioChegada;

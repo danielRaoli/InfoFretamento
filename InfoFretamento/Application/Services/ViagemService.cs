@@ -51,6 +51,7 @@ namespace InfoFretamento.Application.Services
                 // Verifica se o status da viagem é CONFIRMADO
                 if (viagem.Status.Equals("CONFIRMADO", StringComparison.OrdinalIgnoreCase))
                 {
+                    
                     var receita = new Receita
                     {
                         CentroCusto = "viagens",
