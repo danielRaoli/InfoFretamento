@@ -1,12 +1,10 @@
 ﻿using InfoFretamento.Application.Responses;
-using InfoFretamento.Domain.ValueObjects;
 
 namespace InfoFretamento.Domain.Entities
 {
     public class ViagemResponse
     {
         public Viagem Viagem { get; set; }
-        public List<AbastecimentoDespesaViagem> Abastecimentos { get; set; } = [];
         public List<Despesa> Despesas { get; set; }
         public decimal ValorPago => Viagem.Receita?.ValorPago ?? 0;
         public decimal TotalDespesa => Despesas?.Sum(d => d.ValorTotal) ?? 0;

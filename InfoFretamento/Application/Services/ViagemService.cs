@@ -122,25 +122,11 @@ namespace InfoFretamento.Application.Services
 
             var despesas = await _despesaRepository.GetByEntityId(id, "Viagem");
 
-            var abastecimentosDespesas = new List<AbastecimentoDespesaViagem>();
-
-            // Processa cada abastecimento sequencialmente
-            foreach (var abastecimento in viagem.Abastecimentos)
-            {
-                var despesasAbastecimento = await _despesaRepository.GetByEntityId(abastecimento.Id, "Abastecimento");
-
-                abastecimentosDespesas.Add(new AbastecimentoDespesaViagem
-                {
-                    Abastecimento = abastecimento,
-                    Despesa = despesasAbastecimento.FirstOrDefault()
-                });
-            }
 
             return new Response<ViagemResponse>(new ViagemResponse
             {
                 Viagem = viagem,
                 Despesas = despesas,
-                Abastecimentos = abastecimentosDespesas
             });
         }
 
@@ -161,7 +147,7 @@ namespace InfoFretamento.Application.Services
         if (!string.IsNullOrEmpty(prefixoVeiculo))
             filters.Add(d => d.Veiculo.Prefixo == prefixoVeiculo);
 
-        var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Receita", "Receita.Pagamentos", "Abastecimentos", "MotoristaViagens", "MotoristaViagens.Motorista", "Cliente", "Veiculo" });
+        var response = await _repository.GetAllWithFilterAsync(filters, new string[] { "Receita", "Receita.Pagamentos", "Abastecimentos", "MotoristaViagens", "MotoristaViagens.Motorista", "Cliente", "Adiantamento", "Veiculo" });
         return response.ToList();
     });
 
