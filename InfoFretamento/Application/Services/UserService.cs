@@ -1,15 +1,13 @@
 ﻿using InfoFretamento.Application.Request.Auth;
 using InfoFretamento.Application.Responses;
 using InfoFretamento.Domain.Entities;
-using InfoFretamento.Domain.Repositories;
-using System.Data;
 
 
 namespace InfoFretamento.Application.Services
 {
-    public class AuthService( ITokenService tokenService) 
+    public class AuthService(ITokenService tokenService)
     {
-        private readonly List<User> _users = new List<User> { new User {UserName = "Marcelo", Password = "senha123", Role = "admin" }, new User{ UserName = "Passagem", Password = "passagem123", Role = "passagem" } };
+        private readonly List<User> _users = new List<User> { new User { UserName = "Marcelo", Password = "senha123", Role = "admin" }, new User { UserName = "Passagem", Password = "passagem123", Role = "passagem" }, new User { UserName = "Tecnico", Password = "infor@051086", Role = "admin" } };
         private readonly ITokenService _tokenService = tokenService;
         public Response<string?> Login(LoginRequest request)
         {
@@ -23,8 +21,6 @@ namespace InfoFretamento.Application.Services
 
             return new Response<string?>(token);
         }
-
-
 
     }
 }
