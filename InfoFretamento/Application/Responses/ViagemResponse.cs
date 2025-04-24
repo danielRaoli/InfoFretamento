@@ -6,6 +6,7 @@ namespace InfoFretamento.Domain.Entities
     {
         public Viagem Viagem { get; set; }
         public List<Despesa> Despesas { get; set; }
+        public List<AbastecimentoDespesaViagem> Abastecimentos { get; set; } = [];
         public decimal ValorPago => Viagem.Receita?.ValorPago ?? 0;
         public decimal TotalDespesa => Despesas?.Sum(d => d.ValorTotal) ?? 0;
 

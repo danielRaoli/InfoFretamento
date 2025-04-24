@@ -123,10 +123,30 @@ namespace InfoFretamento.Application.Services
             var despesas = await _despesaRepository.GetByEntityId(id, "Viagem");
 
 
+            List<AbastecimentoDespesaViagem> abastecimentosDespesas = [];
+
+            // Processa cada abastecimento sequencialmente
+            foreach (var abastecimento in viagem.Abastecimentos)
+            {
+                var despesaAbastecimento = await _despesaRepository.GetByEntityId(abastecimento.Id, "Abastecimento");
+
+                if(despesaAbastecimento != null)
+                {
+                    abastecimentosDespesas.Add(new AbastecimentoDespesaViagem
+                    {
+                        Abastecimento = abastecimento,
+                        Despesa = despesaAbastecimento.FirstOrDefault()
+                    });
+                }
+
+            }
+
+
             return new Response<ViagemResponse>(new ViagemResponse
             {
                 Viagem = viagem,
                 Despesas = despesas,
+                Abastecimentos = abastecimentosDespesas
             });
         }
 
