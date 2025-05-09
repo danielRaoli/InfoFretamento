@@ -5,6 +5,7 @@ namespace InfoFretamento.Domain.Entities
     public class Viagem
     {
         public int Id { get; set; }
+        public DateTime CreatedAt { get; set; }
         public Rota Rota { get; set; }
         public Horario DataHorarioSaida { get; set; }
         public Horario DataHorarioRetorno { get; set; }

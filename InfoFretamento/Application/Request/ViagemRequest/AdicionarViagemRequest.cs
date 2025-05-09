@@ -46,7 +46,8 @@ public record AdicionarViagemRequest : IBaseAdicionarRequest<Viagem>
                 MotoristaId = motoristaId
             }).ToList(),
             KmFinalVeiculo = KmFinalVeiculo,
-            KmInicialVeiculo= KmInicialVeiculo
+            KmInicialVeiculo= KmInicialVeiculo,
+            CreatedAt = DateTime.Now,
 
         };
     }
