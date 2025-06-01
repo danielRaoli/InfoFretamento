@@ -16,9 +16,17 @@ namespace InfoFretamento.Controllers
         private readonly ViagemProgramadaService _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] int? ano = null, [FromQuery] int? mes = null)
         {
-            var result = await _service.GetAllWithIncludes();
+            if(ano == null)
+            {
+               ano = DateTime.UtcNow.Year;
+            }
+            if(mes == null)
+            {
+                mes = DateTime.UtcNow.Month;
+            }
+            var result = await _service.GetAllWithIncludes(ano.Value,mes.Value);
             return Ok(result);
         }
 

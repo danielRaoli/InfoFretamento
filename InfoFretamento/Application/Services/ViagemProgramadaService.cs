@@ -1,4 +1,6 @@
-﻿using InfoFretamento.Application.Request.ViagemProgramadaRequest;
+﻿using System.Linq.Expressions;
+using System;
+using InfoFretamento.Application.Request.ViagemProgramadaRequest;
 using InfoFretamento.Application.Responses;
 using InfoFretamento.Domain.Entities;
 using InfoFretamento.Domain.Repositories;
@@ -28,12 +30,19 @@ namespace InfoFretamento.Application.Services
         }
 
 
-        public  async Task<Response<List<ViagemProgramada>>> GetAllWithIncludes ()
+        public  async Task<Response<List<ViagemProgramada>>> GetAllWithIncludes (int ano, int mes)
         {
+            var firstDay = new DateOnly(ano, mes, 1);
+            var lastDay = firstDay.AddMonths(1).AddDays(-1);
+
+            var filters = new List<Expression<Func< ViagemProgramada, bool>>>()
+            {
+                x => x.Saida.Data >= firstDay && x.Saida.Data <= lastDay
+            };
 
             // Chama o repositório genérico
             var viagem = await _repository.GetAllWithFilterAsync(
-                      
+                      filters: filters,
                         includes: new string[]
                         {
                             "Passagens",

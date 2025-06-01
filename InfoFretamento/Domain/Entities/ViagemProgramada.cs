@@ -20,5 +20,6 @@ namespace InfoFretamento.Domain.Entities
         public int VeiculoId { get; set; }
         public Veiculo Veiculo { get; set; }
         public List<Passagem> Passagens { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }
